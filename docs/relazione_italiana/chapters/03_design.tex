@@ -1,290 +1,134 @@
 \chapter{Design}
 \label{cap:design}
 
-Il presente capitolo illustra la progettazione di \textbf{CiboAmico} per il caso
-d'uso \textbf{Ordina un Prodotto} (UC-04): la vista di analisi (VOPC), il
-diagramma delle classi di progettazione con i pattern GoF applicati e la
-modellazione comportamentale (activity, sequence e state) dell'UC-04.
+Il capitolo illustra la progettazione del caso d'uso \textbf{Ordina un Prodotto}
+(UC-04): vista di analisi (VOPC), class diagram di progettazione con i pattern
+GoF applicati e modellazione comportamentale (activity, sequence, state).
 
-\section{View of Participating Classes (VOPC)}
+\section{VOPC (Analysis)}
 \label{sec:vopc}
 
-Il \textbf{VOPC} è il diagramma delle classi di analisi che mostra \emph{solo} i
-partecipanti del caso d'uso \textbf{Ordina un Prodotto} (UC-04). L'architettura
-segue il pattern \textbf{Boundary--Control--Entity} puro (pre-MVC):
-\begin{itemize}
-    \item ogni caso d'uso possiede \textbf{esattamente un} controller applicativo;
-    \item la boundary media l'interazione con l'attore senza esporre dettagli
-    della GUI (Lezione 24);
-    \item il controller è \emph{stateless}: l'utente corrente è passato dalla
-    view e risolto dalla sessione;
-    \item la logica risiede nelle entità (GRASP Information Expert).
-\end{itemize}
-
-La tabella~\ref{tab:vopc} riassume le classi partecipanti dello scope ristretto
-a UC-04 e all'autenticazione come prerequisito.
-
-\begin{table}[H]
-    \centering
-    \small
-    \begin{tabular}{@{}p{3.4cm}p{4.6cm}p{3.6cm}p{4.6cm}@{}}
-        \toprule
-        \textbf{Use Case} & \textbf{Boundary} & \textbf{Control} & \textbf{Entity} \\ \midrule
-        UC-04 Ordina un Prodotto &
-        \texttt{MarketplaceView}, \texttt{PaymentView} &
-        \texttt{OrdinaProdottoController} &
-        \texttt{Ordine}, \texttt{VoceOrdine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Utente} \\ \midrule
-        Autenticazione (prerequisito) &
-        \texttt{LoginView} & \texttt{AutenticazioneController} & \texttt{Utente} \\
-        \bottomrule
-    \end{tabular}
-    \caption{VOPC: tracciabilità Use Case $\rightarrow$ classi partecipanti (Boundary/Control/Entity).}
-    \label{tab:vopc}
-\end{table}
-
-La Figura~\ref{fig:vopc} mostra il VOPC di UC-04 secondo il modello
-\emph{Boundary--Control--Entity} puro: le boundary \texttt{MarketplaceView} e
-\texttt{PaymentView} (a cui si collega l'attore Cliente), il control
-\texttt{OrdinaProdottoController} (unico per caso d'uso) e le entity di dominio
-\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale} e \texttt{Utente}.
-Le boundary esterne \texttt{PaymentGateway} (autorizzazione pagamento, passo 6)
-e \texttt{VenditoreNotifier} (notifica asincrona al Venditore) chiudono i
-confronti con il mondo esterno. Nel diagramma sono presenti SOLO attributi
-strutturali rilevanti e operazioni di \emph{business}, senza getter/setter e
-senza dettagli implementativi (niente reverse engineering). I Bean/DTO e i DAO
-appartengono al \emph{design-level}: compaiono nel class diagram e nei sequence
-diagram di progettazione, non in questa vista di analisi.
+Il VOPC è il diagramma delle classi di analisi che partecipano a UC-04, secondo
+il pattern \textbf{Boundary--Control--Entity}: le boundary
+\texttt{MarketplaceView} e \texttt{PaymentView} (con l'attore Cliente), il
+control \texttt{OrdinaProdottoController} (unico per caso d'uso) e le entity
+\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Utente}.
+I Bean e i DAO appartengono al design-level e non compaiono qui.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/vopc_uc04.png}
-    \caption{VOPC (analisi BCE pura) del caso d'uso Ordina un Prodotto: solo
-    Boundary, Control ed Entity con attributi rilevanti e operazioni di
-    business; attori Cliente/Venditore a margine, Bean/DAO a design-level.}
+    \caption{VOPC (analisi BCE) di UC-04: Boundary, Control ed Entity.}
     \label{fig:vopc}
 \end{figure}
 
-\section{Design-Level Class Diagram}
+\section{Class Diagram (Design-level)}
 \label{sec:class_diagram}
 
-Il \textbf{Design-Level} ingegnerizza la soluzione emersa dal VOPC (analisi):
-introduce le \textbf{interfacce}, i \textbf{tipi effettivi Java}, le
-\textbf{eccezioni} e i \textbf{pattern GoF} per risolvere requisiti non
-funzionali come estendibilità, disaccoppiamento dei layer e persistenza
-dinamica (NFR-01). Per la leggibilità, il diagramma di progettazione è mostrato
-focalizzato sui sotto-sistemi per pattern, che sono anche i punti d'esame delle
-domande di De Angelis (disallineamento \emph{analisi vs design}).
+Il design-level introduce interfacce, tipi Java, eccezioni e pattern GoF per
+gestire estensibilità e persistenza dinamica (NFR-01). Gli schemi dei pattern
+utilizzati sono mostrati di seguito.
 
-\subsection{Abstract Factory: persistenza (NFR-01)}
-
-\textbf{Intento} --- fornire un'interfaccia per creare famiglie di oggetti
-correlati senza specificare le classi concrete. La persistenza è intercambiabile
-a runtime: \texttt{DAOFactory} è l'Abstract Factory, mentre
-\texttt{DemoDAOFactory}, \texttt{FSDAOFactory} e \texttt{JDBCDAOFactory} sono le
-factory concrete che espongono i DAO coerenti (utente, prodotto, ordine, buono)
-come \emph{Abstract Products}. I DAO sono istanziati esclusivamente dalla
-factory, mai con \texttt{new} nel controller.
+\subsection{Abstract Factory (persistenza)}
+La persistenza è intercambiabile a runtime: \texttt{DAOFactory} è l'Abstract
+Factory; \texttt{Demo/FS/JDBCDAOFactory} sono le concrete factory che espongono
+i DAO di utente, prodotto, ordine e buono.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/dl_factory_hr.png}
-    \caption{Design-level: Abstract Factory della persistenza (DAOFactory + concrete factory Demo/FS/JDBC e interfacce DAO).}
+    \caption{Abstract Factory della persistenza.}
     \label{fig:dl_factory}
 \end{figure}
 
-\subsection{Pattern Strategy: scontistica del buono}
-
-\textbf{Intento} --- definire una famiglia di algoritmi intercambiabili e
-incapsularli dietro un'interfaccia stabile. Gli sconti del buono promozionale
-sono calcolati tramite la \texttt{ScontoStrategy} (concrete: percentuale,
-importo fisso), impiegata dal \emph{Context} \texttt{Ordine} in
-\texttt{ricalcolaTotale()} e costruita dalla Simple Factory
-\texttt{ScontoStrategyFactory}.
+\subsection{Strategy (scontistica del buono)}
+Gli sconti del buono sono calcolati tramite la \texttt{ScontoStrategy}
+(percentuale o importo fisso), usata da \texttt{Ordine} in
+\texttt{ricalcolaTotale()} e costruita da \texttt{ScontoStrategyFactory}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/dl_strategy_hr.png}
-    \caption{Design-level: sotto-sistema del buono promozionale (Context Ordine, Strategy sconto e factory).}
+    \caption{Strategy della scontistica del buono.}
     \label{fig:dl_strategy}
 \end{figure}
 
-\subsection{Pattern Observer: notifica al venditore}
-
-\textbf{Intento} --- definire una dipendenza uno-a-molti per la quale il
-soggetto notifica automaticamente gli osservatori al cambio di stato.
-\texttt{OrdineSubject} (Subject) notifica gli osservatori
-\texttt{VenditoreNotifier} e \texttt{UtenteNotifier} (entrambi
-\texttt{OrdineEventListener}) quando un ordine cambia stato, mantenendo il
-controller disaccoppiato dalla tecnologia di notifica.
+\subsection{Observer (notifica al venditore)}
+\texttt{Ordine} delega le notifiche di cambio stato a \texttt{OrdineSubject},
+che notifica gli osservatori \texttt{VenditoreNotifier} e \texttt{UtenteNotifier}
+(interfaccia \texttt{OrdineEventListener}) al cambio stato dell'ordine.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.55\textwidth]{figures/dl_observer_hr.png}
-    \caption{Design-level: sistema di notifica asincrona (Observer Subject/listener/notifier).}
+    \caption{Observer della notifica del cambio stato dell'ordine.}
     \label{fig:dl_observer}
 \end{figure}
 
-\subsection{Pattern Singleton: sessione e modalità}
-
+\subsection{Singleton (sessione e modalità)}
 \texttt{SessionManager} (sessione utente) e \texttt{ApplicationModeManager}
-(modalità applicativa) garantiscono un'unica istanza accessibile globalmente
-(\emph{Holder Idiom}, thread-safe). \texttt{ScontoStrategyFactory} espone un
-metodo statico di creazione come semplice punto di accesso.
+(modalità applicativa) garantiscono un'unica istanza tramite \emph{Holder
+idiom}; \texttt{ScontoStrategyFactory} espone un metodo statico di creazione.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/dl_singleton_hr.png}
-    \caption{Design-level: Singleton della sessione e della modalità applicativa.}
+    \includegraphics[width=0.55\textwidth]{figures/dl_singleton_hr.png}
+    \caption{Singleton della sessione e della modalità.}
     \label{fig:dl_singleton}
 \end{figure}
 
-\subsection{Macchina a stati dell'Ordine (BR-04)}
-
-La macchina a stati \texttt{BR-04} è implementata nell'entità
-\texttt{Ordine}, nel metodo \texttt{cambiaStato()}. Il metodo ammette solo le
-transizioni previste e, dopo una transizione valida, notifica gli osservatori.
-Non viene introdotto un ulteriore pattern GoF: il codice usa un'enumerazione
-per rappresentare lo stato e una guardia per validare ogni passaggio. La
-specifica degli stati e dei trigger è descritta nella modellazione
-comportamentale (Sezione~\ref{sec:comportamentale}, Figura~\ref{fig:state}).
+\subsection{State (ciclo di vita dell'Ordine)}
+La macchina a stati BR-04 di \texttt{Ordine} è implementata in
+\texttt{cambiaStato()}, che valida le transizioni e notifica gli osservatori
+guardie mutuamente esclusive (il dettaglio in Sezione~\ref{sec:comportamentale}).
 
 \section{Modellazione Comportamentale}
 \label{sec:comportamentale}
 
-\subsection{Activity Diagram (Ordina un Prodotto)}
-
-Il diagramma di attività descrive il flusso del caso d'uso UC-04: caricamento
-del catalogo, selezione del prodotto, applicazione opzionale del buono (4a),
-accesso al pagamento e gestione degli esiti positivi o negativi.
+\subsection{Activity Diagram (UC-04)}
+Il flusso dell'UC-04: selezione prodotto, verifica disponibilità, applicazione
+opzionale del buono (4a), pagamento (6/6a) e registrazione dell'ordine.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=0.88\textheight]{figures/activity_full.drawio.png}
-    \caption{Activity diagram del caso d'uso Ordina un Prodotto.}
+    \includegraphics[height=0.8\textheight]{figures/activity_full.drawio.png}
+    \caption{Activity diagram di UC-04.}
     \label{fig:activity}
 \end{figure}
 
-\subsection{Sequence Diagram (Ordina un Prodotto)}
-\label{sec:sequence}
-
-Il sequence diagram segue la \textbf{catena a gradino} standard (Lezione~32):
-l'attore \texttt{Cliente} si autentica, la boundary \texttt{MarketplaceView}
-istanzia il control con \texttt{<<create>> Initialize
-OrdinaProdottoController()}, poi la selezione del prodotto crea
-l'\texttt{OrdineBean}, rispettando il pattern \textbf{BCE} con i bean ai
-confini. Le lifeline sono: \texttt{Cliente} \(\rightarrow\)
-\texttt{MarketplaceView}, \texttt{PaymentView} (boundary),
-\texttt{OrdinaProdottoController} (control), i bean \texttt{OrdineBean},
-\texttt{UtenteBean}, \texttt{PaymentInfoBean}, le boundary esterne
-\texttt{BuonoDAO}, \texttt{ProdottoDAO}, \texttt{OrdineDAO} e
-\texttt{PaymentGateway}, le entity \texttt{BuonoPromozionale},
-\texttt{Prodotto}, \texttt{Ordine} e l'osservatore \texttt{VenditoreNotifier}
-sino all'attore \texttt{Venditore}. Le frecce riportano i \emph{nomi reali dei
-metodi Java}: le sincrone sono piene a punta piena (il chiamante attende), le
-asincrone con stanghetta aperta e i ritorni tratteggiati.
-
-La \texttt{MarketplaceView} e la \texttt{PaymentView} non si chiamano
-direttamente: la seconda è creata dalla prima passando il bean
-(\texttt{<<create>> Initialize PaymentView(ordineBean)}), rispettando
-l'isolamento BCE. L'estensione \emph{buono promozionale} (4a) è un frammento
-\texttt{opt} che invoca \texttt{applicaBuonoPromozionale(codice, bean, utente)}:
-valida il codice (\texttt{BuonoDAO.findByCodice}, \texttt{isValido}) e ritorna
-l'\texttt{OrdineBean} col totale scontato. \texttt{OrdinaProdottoController} ha
-due attivazioni disgiunte (\emph{deactivate} tra le due invocazioni
-dell'utente), evitando due sincrone in ingresso nello stesso box: una per
-\texttt{applicaBuonoPromozionale} e una per \texttt{processaPagamento}.
-
-Nel flusso principale la \texttt{PaymentView} invoca
-\texttt{processaPagamento(bean, utente, paymentInfoBean)}, crea il
-\texttt{PaymentInfoBean} e richiede \texttt{paymentGateway.autorizza(importo)}
-(passo~6). Nel ramo \texttt{alt} autorizzato il sistema esegue
-\texttt{prodottoDAO.findByNome}, \texttt{prodotto.riduciDisponibilita(1)},
-\texttt{prodottoDAO.update}, \texttt{<<create>> Initialize Ordine()},
-\texttt{ordine.aggiungiVoce}, \texttt{ordineDAO.save} e infine
-\texttt{ordine.notificaSottomissione()}: la sincrona si ferma al
-\texttt{VenditoreNotifier} (boundary) che invia la notifica asincrona
-\texttt{onStatoCambiato(ordine)} all'attore \texttt{Venditore} senza
-activation box (best-practice). Se l'autorizzazione è rifiutata (estensione
-\textbf{6a}) il controller solleva \texttt{BusinessValidationException}
-gestita dalla \texttt{PaymentView} inline (si resta su \texttt{On Payment}),
-senza creare ordini ``fantasma''.
+\subsection{Sequence Diagram (UC-04)}
+Il sequence segue la \emph{catena a gradino} (Lezione~32): \texttt{Cliente}
+autenticato crea \texttt{OrdineBean}, valida il buono (4a, frammento
+\texttt{opt}), e paga (\texttt{processaPagamento}) con autorizzazione
+(\texttt{PaymentGateway}), riduzione scorte, salvataggio e notifica asincrona
+\texttt{onStatoCambiato()} al Venditore tramite Observer (6a gestito inline).
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/seq_uc04_clean.png}
-    \caption{Sequence diagram del caso d'uso Ordina un Prodotto: catena a
-    gradino, estensione buono (4a) in \texttt{opt}, creazione di
-    \texttt{PaymentView}, \texttt{alt} autorizzazione (passo 6) con
-    \texttt{riduciDisponibilita}, \texttt{ordineDAO.save} e notifica asincrona
-    \texttt{onStatoCambiato()} tramite Observer; ramo \texttt{else} per
-    l'estensione 6a.}
+    \caption{Sequence diagram di UC-04.}
     \label{fig:sequence}
 \end{figure}
 
-\subsection{State Diagram (Ordina un Prodotto, navigazione UI)}
-
-Lo state diagram segue le regole di stile del corso (Lezione 39): è una
-macchina a \emph{schermate} UI che si apre sulla \emph{Home Page} e si richiude
-su di essa, con tre stati piatti \texttt{On Home} \(\rightarrow\)
-\texttt{On Marketplace} \(\rightarrow\) \texttt{On Payment}. Ogni transizione
-è scritta nel formato \texttt{trigger [ guardia ] / behavior} (la prima e
-l'ultima senza etichetta). Gli scenari coperti derivano dal codice reale:
-caricamento del catalogo, selezione del prodotto, voucher/buono promozionale
-(estensione 4a), pagamento (passo 6) e le estensioni di errore (3a scorte,
-6a rifiuto). Le guardie sono mutuamente esclusive (determinismo); gli errori
-restano nella view corrente come \emph{self-loop} con aggiornamento inline del
-messaggio (design-code consistency).
-
-\textbf{On Marketplace} (catalogo, selezione, buono):
-\begin{itemize}
-    \item self-loop \emph{caricamento catalogo}: \texttt{click [btnAggiorna] / getProdottiDisponibili()}.
-    \item self-loop \emph{prodotto non selezionato}: \texttt{clickOrdina [prodotto nullo] / mostraErrore("Seleziona un prodotto")}.
-    \item self-loop \emph{prodotto rimosso}: \texttt{clickOrdina [prodotto non trovato] / mostraErrore("Non più disponibile")}.
-    \item self-loop \emph{estensione 4a} (voucher), guardie disgiunte su \texttt{applicaBuono}:
-    \begin{itemize}
-        \item \texttt{[codice vuoto] / mostraErrore("Codice manca")};
-        \item \texttt{[codice ok \&\& !buonoValido] / mostraErroreBuono()};
-        \item \texttt{[codice ok \&\& buonoValido] / applicaSconto()} (resta su \texttt{On Marketplace}).
-    \end{itemize}
-    \item \(\to\) \texttt{On Payment}: \texttt{clickOrdina [prodotto presente] / displayPayment()}.
-    \item \(\to\) \texttt{On Home}: \texttt{click [sidebar Dashboard] / displayHome()}.
-\end{itemize}
-
-\textbf{On Payment} (dati carta, pagamento):
-\begin{itemize}
-    \item self-loop \emph{ordine nullo}: \texttt{clickPaga [ordine == null] / mostraErrore("Nessun ordine")}.
-    \item self-loop \emph{campi non validi}: \texttt{clickPaga [campi non validi] / mostraErroreCampi()} (CVV 3 cifre).
-    \item self-loop \emph{estensione 3a} (scorte insufficienti): \texttt{clickPaga [scorte insufficienti] / mostraErroreScorte()}.
-    \item self-loop \emph{estensione 6a} (rifiutato): \texttt{clickPaga [!autorizzato] / mostraErrorePagamento()}.
-    \item \(\to\) \texttt{On Marketplace}: \texttt{clickAnnulla [ok] / resetCheckout()}.
-    \item \(\to\) \texttt{On Home}: \texttt{click [sidebar Dashboard] / displayHome()}.
-    \item \(\to\) \texttt{On Marketplace}: \texttt{clickPaga [ok \&\& autorizzato \&\& scorte ok] / processaPagamento() \&\& saveOrdine() \&\& notificaVenditore()}.
-\end{itemize}
-
-Come nel codice, dopo il pagamento riuscito la vista torna al
-\texttt{marketplace} (\texttt{Navigator.switchTo("marketplace")}); la Home resta
-l'unico stato di apertura e chiusura, e da \texttt{On Payment} le transizioni
-funzionali (annulla e successo) confluiscono entrambe al \texttt{Marketplace}.
+\subsection{State Diagram (UC-04, navigazione UI)}
+Macchina a stati a schermate (Lezione~39), stati piatti \texttt{On Home}
+\(\rightarrow\) \texttt{On Marketplace} \(\rightarrow\) \texttt{On Payment},
+transizioni \texttt{trigger [guardia] / behavior} e self-loop per le estensioni
+(3a scorte, 4a buono, 6a rifiuto). Successo e annullo confluiscono al
+\texttt{Marketplace}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/state_uc04.png}
-    \caption{State diagram (navigazione UI) del caso d'uso Ordina un Prodotto
-    secondo la Lezione 39: guardie mutuamente esclusive su \texttt{On
-    Marketplace} e \texttt{On Payment}; successo e annullo confluiscono al
-    \texttt{Marketplace}, la Home resta lo stato di apertura e chiusura.}
+    \caption{State diagram (navigazione UI) di UC-04.}
     \label{fig:state}
 \end{figure}
 
 \section{Realizzazione del Buono Promozionale}
 \label{sec:buono}
 
-Il buono promozionale (estensione di UC-04) è implementato con il pattern
-\textbf{Strategy}: l'interfaccia \texttt{ScontoStrategy} incapsula l'algoritmo;
-\texttt{ScontoPercentualeStrategy} and \texttt{ScontoImportoFissoStrategy} sono
-le strategie concrete; \texttt{ScontoStrategyFactory} ricostruisce la strategia
-dai dati piatti della persistenza. \texttt{Ordine} fa da \emph{Context}
-(\texttt{applicaBuono()} + \texttt{ricalcolaTotale()}). Il controller
-\texttt{OrdinaProdottoController} coordina le validazioni (esistenza,
-scadenza, appartenenza, monouso). La persistenza del buono è gestita da
-\texttt{BuonoDAO} nelle tre modalità (Demo, FS JSON, JDBC).
+Il buono è implementato con \textbf{Strategy}: \texttt{ScontoStrategy} con
+strategie concrete (percentuale, importo fisso) e factory
+\texttt{ScontoStrategyFactory}; \texttt{Ordine} funge da Context
+(\texttt{applicaBuono()} + \texttt{ricalcolaTotale()}). La validazione
+(esistenza, scadenza, monouso) è coordinata da \texttt{OrdinaProdottoController}.

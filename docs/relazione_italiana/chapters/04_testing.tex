@@ -2,178 +2,54 @@
 \chapter{Testing}
 \label{cap:testing}
 
-La verifica delle funzionalità e dei requisiti del caso d'uso
-\textbf{UC-04 Ordina un Prodotto} (con autenticazione come prerequisito) è
-effettuata tramite una suite di test automatizzati \textbf{JUnit 5}
-(\emph{Jupiter}) eseguita da \textbf{Maven} (\texttt{mvn verify}) con la
-copertura misurata da \textbf{JaCoCo}. La build è riproducibile e la soglia di
-copertura è imposta come \emph{quality gate}.
+La verifica del caso d'uso UC-04 è effettuata con una suite di test
+\textbf{JUnit 5} eseguita da \textbf{Maven} (\texttt{mvn verify}) e la copertura
+misurata da \textbf{JaCoCo}. La soglia di copertura \textbf{LINE} $\geq$ 70\% è
+imposta come \emph{quality gate} (la build fallisce se non viene raggiunta).
 
-\section{Strumenti e organizzazione}
-\label{sec:testing_strumenti}
+\section{Organizzazione}
+\label{sec:testing_org}
 
-I test sono scritti con \texttt{JUnit 5} e risiedono in \texttt{src/test/java},
-percorso mirror dell'architettura \textbf{BCE} del codice applicativo
-(\texttt{src/main/java}). La suite verifica i layer \emph{control}
-(\texttt{OrdinaProdottoController}, \texttt{AutenticazioneController}),
-\emph{entity} (\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}),
-i \textbf{pattern} di dominio (Strategy degli sconti, Observer, Singleton,
-factory) e la \textbf{persistenza} (\textbf{DAO Demo} e \textbf{FS}). I DAO
-\textbf{JDBC} (richiedono un MySQL reale) sono esclusi dalla copertura
-automatizzata e validati manualmente, come documentato nel
-Capitolo~\ref{cap:persistenza}.
+I test risiedono in \texttt{src/test/java}, mirror dell'architettura BCE. LA
+suite copre il layer applicativo (\texttt{OrdinaProdottoController},
+\texttt{AutenticazioneController}), le entity (\texttt{Ordine},
+\texttt{Prodotto}, \texttt{BuonoPromozionale}), i pattern (Strategy, Observer,
+Singleton, factory) e la persistenza (DAO Demo e FS). I DAO JDBC (richiedono un
+MySQL reale) e le boundary JavaFX sono esclusi dalla copertura automatizzata.
 
-Il plugin \texttt{jacoco-maven-plugin} misura la copertura e impone il
-\emph{quality gate}: la build fallisce se la copertura del contatore
-\textbf{LINE} scende sotto l'\(70\%\). Gli stessi target esclusi (boundary
-JavaFX che richiedono display, bootstrap e DAO JDBC) sono dichiarati nella
-configurazione del plugin.
-
-\section{Specifiche dei casi di test}
+\section{Specifiche dei test}
 \label{sec:testing_specifiche}
 
-Di seguito sono descritti i casi di test della suite, che coprono il flusso
-completo dell'UC-04.
-
-\subsection{Bean e DTO}
-Il test \texttt{BeanTest} verifica la corretta creazione e il ciclo di vita dei
-\textbf{Bean} che attraversano i confini BCE (\texttt{OrdineBean},
-\texttt{UtenteBean}, \texttt{ProdottoBean}, \texttt{PaymentInfoBean}):
-costruttori, valorizzazione iniziale e getter/setter.
-
-\subsection{Controller applicativi}
-La suite \texttt{OrdinaProdottoControllerTest} (il test del caso d'uso core)
-verifica in stile \emph{We tested that}:
+I principali casi di test verificano:
 \begin{itemize}
-  \item \emph{submit ordine con utente nullo}: rifiutato quando non esiste una
-  sessione autenticata;
-  \item \emph{submit ordine prodotto non trovato}: un ordine su un prodotto
-  inesistente nel catalogo viene scartato;
-  \item \emph{submit ordine venditore dal prodotto}: il venditore è risalito
-  dal prodotto acquistato (whole-part) e associato correttamente all'ordine;
-  \item \emph{riduzione disponibilità}: dopo l'acquisto la scorta del prodotto
-  è decrementata di 1 (RF-3);
-  \item \emph{quantità eccedente la scorta}: un acquisto oltre le quantità
-  disponibili solleva un'eccezione (estensione 3a);
-  \item \emph{pagamento autorizzato}: un pagamento approvato dal
-  \texttt{PaymentGateway} porta alla creazione dell'ordine in stato
-  \texttt{CREATED};
-  \item \emph{pagamento rifiutato}: un rifiuto del gateway solleva
-  \texttt{BusinessValidationException} senza creare ordini (estensione 6a).
+    \item \textbf{OrdinaProdottoControllerTest} (7 test): ordine con utente
+    nullo respinto, prodotto non trovato, venditore risolto dal prodotto,
+    riduzione scorte, quantità eccedente (3a), pagamento autorizzato (ordine
+    CREATED) e rifiutato (6a);
+    \item \textbf{AutenticazioneControllerTest}: login/registrazione con
+    credenziali valide e invalide;
+    \item \textbf{OrdineControllerTest} (2 test): transizione di stato BR-04 e
+    notifica Observer;
+    \item \textbf{ProdottoTest}/\textbf{OrdineTest}: riduzione disponibilità e
+    macchina a stati;
+    \item \textbf{BuonoPromozionaleStrategyTest}/\textbf{ScontoStrategyFactoryTest}:
+    scontistica e Simple Factory;
+    \item \textbf{OrdineLazyFactoryTest}/\textbf{PatternTest}: factory e
+    pattern;
+    \item \textbf{DemoDAOTest}/\textbf{FSDaoTest}/\textbf{ApplicationModeManagerTest}:
+    persistenza e modalità.
 \end{itemize}
 
-\noindent Inoltre:
-\begin{description}
-    \item[\texttt{AutenticazioneControllerTest}] verifica autenticazione e
-    registrazione (credenziali valide/invalide, creazione profilo con il ruolo,
-    sessione);
-    \item[\texttt{OrdineControllerTest}] verifica il ciclo di vita dell'ordine,
-    la transizione di stato (BR-04) e la notifica Observer.
-\end{description}
-
-\subsection{Entità e dominio}
-\begin{itemize}
-    \item \texttt{OrdineTest}: transizione di \texttt{cambiaStato}, applicazione
-    del buono, ricalcolo totale e notifica;
-    \item \texttt{ProdottoTest}: riduzione della disponibilità e regole di
-    quantità;
-\end{itemize}
-
-\subsection{Pattern e factory}
-\begin{itemize}
-    \item \texttt{BuonoPromozionaleStrategyTest} e \texttt{ScontoStrategyFactoryTest}:
-    scontistica percentuale/importo fisso e Simple Factory (incluso il ramo di
-    errore su tipo ignoto);
-    \item \texttt{OrdineLazyFactoryTest}, \texttt{PatternTest}: factory lazy e
-    pattern Observer/strategy;
-    \item \texttt{ControllerNoArgConstructionTest}: tutti i controller sono
-    istanziabili col costruttore no-arg via ServiceLocator (BCE).
-\end{itemize}
-
-\subsection{Persistenza}
-\begin{itemize}
-    \item \texttt{DemoDAOTest} e \texttt{FSDaoTest}: verifica dei DAO Demo
-    (in-memory) e Filesystem (JSON);
-    \item \texttt{ApplicationModeManagerTest}: risoluzione della modalità
-    applicativa (Demo/FS/JDBC) e idempotenza del seed.
-\end{itemize}
-
-\section{Tracciabilità Requisiti{-}Test}
-\label{sec:testing_tracciabilita}
-
-La matrice collega i Requisiti Funzionali dell'UC-04 (Capitolo~\ref{cap:srs})
-alle classi di test JUnit che li verificano.
-
-\begin{table}[H]
-    \centering
-    \small
-    \setlength{\tabcolsep}{4pt}
-    \begin{tabular}{@{}llp{4.6cm}@{}} \toprule
-        \textbf{Requirement} & \textbf{Passo UC-04} & \textbf{Classe di test}\\ \midrule
-        RF-3 / US-3 & selezione e ordine & \texttt{OrdinaProdottoControllerTest}\\
-        & passo 3a (scorte) & \texttt{OrdinaProdottoControllerTest}\\
-        & passo 6 (pagamento) & \texttt{OrdinaProdottoControllerTest}\\
-        & 6a (pagamento negato) & \texttt{OrdinaProdottoControllerTest}\\
-        & 4a (buono) & \texttt{BuonoPromozionaleStrategyTest}, \\ & & \texttt{ScontoStrategyFactoryTest}\\
-        & BR-04 (stato ordine) & \texttt{OrdineControllerTest}\\
-        & Autenticazione & \texttt{AutenticazioneControllerTest}\\
-        & Persistenza & \texttt{DemoDAOTest}, \texttt{FSDaoTest}\\
-        \bottomrule
-    \end{tabular}
-    \caption{Matrice di tracciabilità Requisiti{-}Test (JUnit 5/JaCoCo).}
-    \label{tab:tracciabilita_test}
-\end{table}
-
-\section{Risultati dell'esecuzione}
+\section{Risultati}
 \label{sec:testing_risultati}
 
-La suite viene eseguita con \texttt{mvn verify}. L'ultima esecuzione (report
-JaCoCo, post scope-restrict UC-04) riporta:
+L'ultima esecuzione riporta \textbf{69 test passati, 0 falliti, 0 errori}, con
+coperture JaCoCo: LINE 74.4\%, INSTRUCTION 73.6\%, BRANCH 57.7\%, METHOD 74.6\%,
+CLASS 96.2\% (soglia LINE $\geq$ 70\% rispettata). La copertura è concentrata
+su UC-04 e autenticazione.
 
-\begin{table}[H]
-    \centering
-    \small
-    \begin{tabular}{@{}lr@{}} \toprule
-        \textbf{Metrica} & \textbf{Valore} \\ \midrule
-        Test eseguiti & 69 \\ \midrule
-        Passati & 69 \\ \midrule
-        Falliti & 0 \\ \midrule
-        Errori & 0 \\ \midrule
-        Copertura INSTRUCTION & 73.6\% \\ \midrule
-        Copertura LINE & 74.4\% \\ \midrule
-        Copertura BRANCH & 57.7\% \\ \midrule
-        Copertura METHOD & 74.6\% \\ \midrule
-        Copertura CLASS & 96.2\% \\ \bottomrule
-    \end{tabular}
-    \caption{Risultato complessivo della suite di test (scope UC-04).}
-    \label{tab:testriassunto}
-\end{table}
-
-Tutti i \textbf{69 test passano} con \textbf{0 errori} e \textbf{0 fallimenti}.
-La copertura \textbf{LINE 74.4\%} supera la soglia richiesta (\(70\%\),
-imposta nel plugin: la build fallisce in caso contrario). La copertura
-\textbf{CLASS 96.2\%} conferma che quasi tutte le classi applicative dello
-scope UC-04 sono esercitate.
-
-\section{Copertura per sotto-sistema}
-\label{sec:testing_copertura}
-
-La copertura è concentrata sul caso d'uso core: controller
-\texttt{OrdinaProdottoController} e \texttt{AutenticazioneController}, entity
-\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, pattern
-(Strategy/Observer) e persistenza Demo/FS superano la soglia, a garanzia dei
-requisiti del UC-04.
-
-\section{SonarCloud e quality gate}
+\section{SonarCloud}
 \label{sec:testing_sonar}
 
-Come nelle relazioni di riferimento, è utilizzata l'integrazione
-\textbf{SonarCloud} per l'analisi statica (bugs, vulnerabilities, code smells e
-duplicati). Il progetto supera il \emph{Quality Gate} configurato ed è
-analizzabile con \texttt{mvn sonar:sonar} (plugin \texttt{sonar-maven-plugin}
-già presente nel \texttt{pom.xml}).
-
-\begin{quote}
-\textbf{Nota di consegna}: da includere lo screenshot del \emph{Quality Gate}
-di SonarCloud (stato PASSED) e l'URL pubblico del progetto.
-\end{quote}
+Il progetto è analizzato con \textbf{SonarCloud} (Quality Gate). \emph{Nota di
+consegna}: includere lo screenshot del Quality Gate PASSED e l'URL pubblico.

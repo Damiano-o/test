@@ -17,7 +17,7 @@ class "BuonoPromozionale" as B {
   + isValido() : boolean
   + applicaSconto(double) : double
 }
-interface "ScontoStrategy" as SS {
+interface "ScontoStrategy" as SS <<interface>> {
   + applicaSconto(double) : double
   + descrizione() : String
   + getTipo() : String
