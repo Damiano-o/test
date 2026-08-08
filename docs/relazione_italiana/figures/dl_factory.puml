@@ -17,7 +17,6 @@ left to right direction
 class "OrdinaProdottoController" as CTL <<control>> {
   - utenteDAO : UtenteDAO
   - prodottoDAO : ProdottoDAO
-  - ricettaDAO : RicettaDAO
   - ordineDAO : OrdineDAO
   - buonoDAO : BuonoDAO
 }
@@ -26,7 +25,6 @@ class "OrdinaProdottoController" as CTL <<control>> {
 interface "DAOFactory" {
   + getUtenteDAO() : UtenteDAO
   + getProdottoDAO() : ProdottoDAO
-  + getRicettaDAO() : RicettaDAO
   + getOrdineDAO() : OrdineDAO
   + getBuonoDAO() : BuonoDAO
 }
@@ -41,19 +39,16 @@ JDBCDAOFactory ..|> DAOFactory
 ' ---------- Abstract Products (DAO) ----------
 interface "UtenteDAO"
 interface "ProdottoDAO"
-interface "RicettaDAO"
 interface "OrdineDAO"
 interface "BuonoDAO"
 
 ' ---------- Concrete Products (una famiglia esemplificativa, per concisione) ----------
 class "JDBCUtenteDAO"
 class "JDBCProdottoDAO"
-class "JDBCRicettaDAO"
 class "JDBCOrdineDAO"
 class "JDBCBuonoDAO"
 JDBCUtenteDAO ..|> UtenteDAO
 JDBCProdottoDAO ..|> ProdottoDAO
-JDBCRicettaDAO ..|> RicettaDAO
 JDBCOrdineDAO ..|> OrdineDAO
 JDBCBuonoDAO ..|> BuonoDAO
 
@@ -61,7 +56,6 @@ JDBCBuonoDAO ..|> BuonoDAO
 OrdinaProdottoController --> DAOFactory : <<use>>\nApplicationModeManager.getDAOFactory()
 JDBCDAOFactory ..> JDBCUtenteDAO : <<create>>
 JDBCDAOFactory ..> JDBCProdottoDAO : <<create>>
-JDBCDAOFactory ..> JDBCRicettaDAO : <<create>>
 JDBCDAOFactory ..> JDBCOrdineDAO : <<create>>
 JDBCDAOFactory ..> JDBCBuonoDAO : <<create>>
 
