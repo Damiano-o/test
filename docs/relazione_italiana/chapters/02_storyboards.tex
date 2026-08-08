@@ -14,44 +14,15 @@ La schermata di accesso permette all'utente di autenticarsi inserendo le proprie
 \end{figure}
 
 \subsection{Home (Cliente)}
-Completata l'autenticazione, il Cliente raggiunge la dashboard principale, dalla quale accede alle aree del sistema.
+Completata l'autenticazione, il Cliente raggiunge la dashboard principale; nell'ambito dello scope UC-04 la Home offre l'accesso diretto al Marketplace per ordinare un prodotto locale.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/schermata-home.png}
-    \caption{Dashboard principale lato Cliente.}
+    \caption{Dashboard principale (accesso al Marketplace).}
     \label{fig:sb_home}
 \end{figure}
 
-\section{Gestione Domestica}
-
-\subsection{Gestisci Dispensa}
-L'interfaccia di gestione dell'inventario mostra gli alimenti della dispensa con quantità e date di scadenza, evidenziando i prodotti prossimi alla scadenza.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/schermata-inventario.png}
-    \caption{Interfaccia per il monitoraggio della dispensa e delle scadenze.}
-    \label{fig:sb_inventario}
-\end{figure}
-
-\subsection{Trova Ricette Compatibili}
-L'utente visualizza le ricette suggerite in base agli ingredienti disponibili in dispensa, con l'elenco degli ingredienti di ciascuna.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/schermata-ricette.png}
-    \caption{Schermata dei suggerimenti per le ricette compatibili.}
-    \label{fig:sb_ricette}
-\end{figure}
-
-\section{Acquisti e Marketplace}
-
-\subsection{Calcola Lista della Spesa}
-Il sistema determina gli ingredienti mancanti per una ricetta selezionata, restituendo la lista della spesa precisa.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/schermata-lista-spesa.png}
-    \caption{Lista della spesa calcolata a partire dagli ingredienti mancanti.}
-    \label{fig:sb_lista}
-\end{figure}
+\section{Acquisti e Marketplace (UC-04 Ordina un Prodotto)}
 
 \subsection{Marketplace (Ricerca Prodotti)}
 L'area dedicata all'acquisto diretto mostra i prodotti locali dei venditori, con prezzo e disponibilità residua.
@@ -87,15 +58,4 @@ Confermato l'ordine, l'interfaccia passa alla schermata di pagamento: l'utente i
     \includegraphics[width=0.8\textwidth]{figures/schermata-payment.png}
     \caption{Schermata di pagamento (dati carta e autorizzazione all'addebito).}
     \label{fig:sb_payment}
-\end{figure}
-
-\section{Area Amministratore}
-
-\subsection{Approvazioni venditori e ricette}
-L'Amministratore gestisce le richieste di approvazione: la vista mostra i venditori e le ricette in attesa di validazione e consente di approvarle o rifiutarle. L'area amministrativa è separata da quella del Cliente, come da modello dei casi d'uso.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/schermata-admin-approvazioni.png}
-    \caption{Vista amministratore per le approvazioni di venditori e ricette.}
-    \label{fig:sb_admin}
 \end{figure}

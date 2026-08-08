@@ -10,8 +10,8 @@ realizzato dal componente \texttt{Persistence} in
 \texttt{src/main/java/\ldots/persistence}.
 
 \section{Pattern Abstract Factory}
-L'interfaccia \texttt{DAOFactory} definisce i metodi di creazione dei cinque
-DAO (\texttt{UtenteDAO}, \texttt{ProdottoDAO}, \texttt{RicettaDAO},
+L'interfaccia \texttt{DAOFactory} definisce i metodi di creazione dei
+DAO (\texttt{UtenteDAO}, \texttt{ProdottoDAO},
 \texttt{OrdineDAO}, \texttt{BuonoDAO}). Le tre concrete factory
 \texttt{DemoDAOFactory}, \texttt{FSDAOFactory} e \texttt{JDBCDAOFactory}
 restituiscono implementazioni coerenti dello stesso set di DAO.
@@ -39,7 +39,7 @@ esterno, riavvio sempre coerente con i dati demo (\texttt{DemoDAOTest}).
 \section{Modalità Filesystem (JSON)}
 \texttt{FSDAOFactory} produce DAO che serializzano le entità su \textbf{file
 JSON} locali tramite \texttt{Gson} (configurato in \texttt{GsonConfig}).
-Ogni DAO (\texttt{FSUtenteDAO}, \texttt{FSProdottoDAO}, \texttt{FSRicettaDAO},
+Ogni DAO (\texttt{FSUtenteDAO}, \texttt{FSProdottoDAO},
 \texttt{FSOrdineDAO}, \texttt{FSBuonoDAO}) gestisce il caricamento/salvataggio
 delle rilevanti collezioni. La modalità è coperta da \texttt{FSDaoTest}.
 

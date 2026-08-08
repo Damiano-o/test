@@ -20,18 +20,11 @@ La tabella~\ref{tab:vopc} riassume le classi partecipanti di tutti i casi d'uso 
     \centering
     \footnotesize
     \resizebox{\textwidth}{!}{
-    \begin{tabular}{@{}llll@{}}
+\begin{tabular}{@{}llll@{}}
         \toprule
-        \textbf{Use Case} & \textbf{Boundary} & \textbf{Control} & \textbf{Entity / Bean}\ \\ \midrule
-        UC-01 Dispensa & \texttt{InventarioView} & \texttt{GestisciInventarioController} & \texttt{ProdottoInventario}, \texttt{Prodotto}, \texttt{ProdottoBean}\\ \midrule
-        UC-02 Ricette compatibili & \texttt{RicetteView} & \texttt{TrovaRicetteController} & \texttt{Ricetta}, \texttt{ProdottoInventario}, \texttt{RicettaBean}\\ \midrule
-        UC-03 Lista spesa & \texttt{ListaSpesaView} & \texttt{GestisciListaSpesaController} & \texttt{Ricetta}, \texttt{Ingrediente}, \texttt{ProdottoInventario}\\\midrule
-        UC-04 Ordina Prodotto & \texttt{MarketplaceView} & \texttt{OrdinaProdottoController} & \texttt{Ordine}, \texttt{VoceOrdine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Utente}\\ \midrule
-        UC-05 Catalogo venditore & \texttt{CatalogoVenditoreView} & \texttt{GestisciCatalogoVenditoreController} & \texttt{Prodotto}, \texttt{RuoloVenditore}\\ \midrule
-        UC-06 Ordini ricevuti & \texttt{OrdiniRicevutiView} & \texttt{GestisciOrdiniRicevutiController} & \texttt{Ordine}, \texttt{OrdineBean}\\ \midrule
-        UC-07 Ricette nutrizionista & \texttt{RicetteNutrizionistaView} & \texttt{GestisciRicetteNutrizionistaController} & \texttt{Ricetta}, \texttt{Ingrediente}, \texttt{RuoloNutrizionista}, \texttt{RicettaBean}\\ \midrule
-        UC-08 Approvazioni & \texttt{AdminView} & \texttt{ApprovazioneController} & \texttt{RuoloVenditore}, \texttt{Ricetta}\\ \midrule
-        UC-11 Login & \texttt{LoginView} & \texttt{AutenticazioneController} & \texttt{Utente}, \texttt{UtenteBean}\\ \bottomrule
+        \textbf{Use Case} & \textbf{Boundary} & \textbf{Control} & \textbf{Entity / Beam}\\ \midrule
+        Complete codice (UC-04 Ordina) & \texttt{MarketplaceView}, \texttt{PaymentView} & \texttt{OrdinaProdottoController} & \texttt{Ordine}, \texttt{VoceOrdine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Utente}\\ \midrule
+        Autenticazione (prerequisito) & \texttt{LoginView} & \texttt{AutenticazioneController} & \texttt{Utente}, \texttt{UtenteBean}\\bottomrule
     \end{tabular}
     }
     \caption{VOPC: matrice di tracciabilità Use Case $\rightarrow$ classi partecipanti (Boundary/Control/Entity/Bean).}

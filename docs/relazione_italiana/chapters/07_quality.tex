@@ -26,7 +26,7 @@ pattern, ciascuno con una responsabilità netta e verificabile:
         \texttt{boundary/cli} & Boundary CLI & Abstract Factory della famiglia CLI (\texttt{CLIViewFactory}, \texttt{CLIContext}) \\
         \texttt{control} & Control & Controller applicativi: \texttt{OrdinaProdottoController}, \texttt{TrovaRicetteController}... \\
         \texttt{bean} & Bean/DTO & \texttt{OrdineBean}, \texttt{ProdottoBean}, \texttt{UtenteBean}... \\
-        \texttt{entity} & Entity & \texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Ricetta}... \\
+        \texttt{entity} & Entity & \texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}... \\
         \texttt{persistence} & Persistenza & Interfacce DAO e implementazioni \texttt{demo}/\texttt{fs}/\texttt{jdbc} \\
         \texttt{pattern} & GoF & \texttt{observer}, \texttt{strategy}, \texttt{factory}, \texttt{singleton}, \texttt{adapter}, \texttt{facade} \\
         \texttt{exception} & - & Eccezioni di dominio (\texttt{BusinessValidationException}, ...) \\
@@ -63,7 +63,7 @@ debt:
     così il cambio di persistenza non tocca la logica di business;
     \item i \textbf{pattern creazionali/comportamentali/strutturali} sono
     introdotti solo dove riducono davvero la complessità (Strategy per gli
-    sconti, Observer per le notifiche, Adapter/Facade per i servizi esterni).
+    sconti, Observer per le notifiche).
 \end{itemize}
 
 \section{Verifica dei design pattern GoF}
@@ -83,11 +83,8 @@ reali presenti nel repository.
         Abstract Factory & \texttt{DAOFactory} + \texttt{Demo}/\texttt{FS}/\texttt{JDBC}DAOFactory & Creazionale\\
         DAO & 5 interfacce DAO + impl demo/fs/jdbc & Persistenza\\
         Strategy (sconti) & \texttt{ScontoStrategy} + Percentuale/ImportoFisso & Comportamentale\\
-        Strategy (matching) & \texttt{MatchingStrategy} + Strict/Substitution & Comportamentale\\
         Observer & \texttt{OrdineSubject} + \texttt{Utente}/\texttt{Venditore}Notifier & Comportamentale\\
         Singleton & \texttt{SessionManager}, \texttt{ApplicationModeManager} & Creazionale\\
-        Adapter & \texttt{JakartaMailAdapter}, \texttt{OpenFoodFactsAdapter} & Strutturale\\
-        Facade & \texttt{RicettaMatchingFacade} & Strutturale\\
         Simple Factory & \texttt{ScontoStrategyFactory} & Creazionale\\
         \bottomrule
     \end{tabular}
