@@ -1,37 +1,87 @@
 @startuml
 skinparam style strictuml
 skinparam classAttributeIconSize 0
-skinparam nodesep 50
-skinparam ranksep 60
-' Observer - notifiche cambio stato Ordine (utente + venditore)
-' Allineato al codice reale: Ordine concreta con notificaSottomissione()
-class "OrdinaProdottoController" as CTL <<control>>
-class "Ordine" as O <<entity>> {
-  - subject : OrdineSubject
-  + subscribe(OrdineEventListener)
-  + notificaSottomissione()
+skinparam nodesep 45
+skinparam ranksep 45
+skinparam classFontSize 11
+skinparam classAttributeFontSize 10
+top to bottom direction
+
+' ============================================================
+' Design-level — Pattern Observer (notifica cambio stato Ordine)
+' Stile event-driven (come il progetto di riferimento):
+' OrdineEvent + OrdineEventListener + OrdineSubject (publisher con
+' listeners) + observer concreti (VenditoreNotifier, UtenteNotifier).
+' ============================================================
+
+' ---------- Evento (dati del cambio stato) ----------
+class "OrdineEvent" {
+  - numeroOrdine : Long
+  - totale : double
+  - stato : String
+  - timestamp : LocalDateTime
+  - clienteId : String
+  + getNumeroOrdine() : Long
+  + getTotale() : double
+  + getStato() : String
+  + getTimestamp() : LocalDateTime
+  + getClienteId() : String
 }
-class "OrdineSubject" as OS {
+
+' ---------- Interfaccia listener ----------
+interface "OrdineEventListener" <<interface>> {
+  + onStatoCambiato(OrdineEvent) : void
+}
+
+' ---------- Publisher (Subject) ----------
+class "OrdineSubject" {
+  - logger : Logger
+  - instance : OrdineSubject
   - listeners : List<OrdineEventListener>
-  + subscribe(OrdineEventListener)
-  + unsubscribe(OrdineEventListener)
-  + notifyObservers(Ordine)
+  + addListener(OrdineEventListener) : void
+  + removeListener(OrdineEventListener) : void
+  + clearListeners() : void
+  + notifyObservers(OrdineEvent) : void
+  + getListenerCount() : int
+  {static} + getInstance() : OrdineSubject
 }
-interface "OrdineEventListener" as EL {
-  + onStatoCambiato(Ordine) : void
+
+' ---------- Controller (pubblica l'evento) ----------
+class "CreaOrdineController" as CTL <<control>> {
+  + confermaOrdine() : boolean
 }
-class "VenditoreNotifier" as VN {
-  + onStatoCambiato(Ordine) : void
+class "OrdinaProdottoController" as OPC <<control>> {
+  + processaPagamento(...) : OrdineBean
 }
-class "UtenteNotifier" as UN {
-  + onStatoCambiato(Ordine) : void
+
+' ---------- Observer concreti ----------
+class "VenditoreNotifier" {
+  - logger : Logger
+  + onStatoCambiato(OrdineEvent) : void
+  + notificaPopup(OrdineEvent) : void
 }
-O "1" o-- "1" OS : soggetto
-OS "1" o-- "*" EL : listeners
-VN -up-|> EL
-UN -up-|> EL
-VN ..> O : <<use>>
-UN ..> O : <<use>>
-CTL ..> O : <<use>>\nsubscribe + notificaSottomissione
-CTL ..> VN : <<create>>
+class "UtenteNotifier" {
+  - logger : Logger
+  + onStatoCambiato(OrdineEvent) : void
+}
+
+' ============================================================
+' Relazioni
+' ============================================================
+' Publisher usa l'evento e notifica i listener
+OrdineSubject ..> OrdineEvent : genera/notifica
+OrdineEventListener ..> OrdineEvent : <<use>> param
+OrdineSubject "1" o-- "*" OrdineEventListener : listeners
+
+' interfaccia realizzata dagli observer concreti
+VenditoreNotifier ..|> OrdineEventListener
+UtenteNotifier ..|> OrdineEventListener
+
+' controller pubblica l'evento via publisher
+OPC ..> OrdineSubject : <<use>>\ngetInstance().notify
+CTL ..> OrdineSubject : <<use>>\npubblica evento
+
+' il publisher è un singleton: una sola istanza
+OrdineSubject::instance --> OrdineSubject : "tiene l'unica\nistanza"
+
 @enduml
