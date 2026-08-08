@@ -10,7 +10,7 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import java.util.List;
 
 /**
- * Boundary CLI — Marketplace (UC-06). Mostra i prodotti disponibili e
+ * Boundary CLI — Marketplace (UC-04 Ordina un Prodotto). Mostra i prodotti disponibili e
  * crea un ordine tramite OrdinaProdottoController (scambio Solo Bean).
  */
 public class MarketplaceCLIView implements IView {
@@ -30,7 +30,7 @@ public class MarketplaceCLIView implements IView {
             System.out.println("Nessun utente loggato.");
             return;
         }
-        System.out.println("\n=== Marketplace (UC-06) ===");
+        System.out.println("\n=== Marketplace (UC-04) ===");
         List<ProdottoBean> prodotti = controller.getProdottiDisponibili();
         if (prodotti.isEmpty()) {
             System.out.println("Nessun prodotto in vendita.");

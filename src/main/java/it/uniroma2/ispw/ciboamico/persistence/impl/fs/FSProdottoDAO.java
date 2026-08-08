@@ -3,7 +3,6 @@ package it.uniroma2.ispw.ciboamico.persistence.impl.fs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
-import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 
 import java.io.IOException;
@@ -42,26 +41,7 @@ public class FSProdottoDAO implements ProdottoDAO {
         }
     }
 
-    private List<ProdottoInventario> caricaInventario() {
-        try {
-            if (!Files.exists(FILE_INVENTARIO)) {
-                return new ArrayList<>();
-            }
-            return GSON.fromJson(Files.readString(FILE_INVENTARIO),
-                    new TypeToken<List<ProdottoInventario>>() { }.getType());
-        } catch (IOException e) {
-            throw new RuntimeException("Errore lettura inventario.json", e);
-        }
-    }
 
-    private void salvaInventario(List<ProdottoInventario> prodotti) {
-        try {
-            Files.createDirectories(FILE_INVENTARIO.getParent());
-            Files.writeString(FILE_INVENTARIO, GSON.toJson(prodotti));
-        } catch (IOException e) {
-            throw new RuntimeException("Errore scrittura inventario.json", e);
-        }
-    }
 
     @Override
     public List<Prodotto> findAll() { return caricaCatalogo(); }
@@ -100,18 +80,5 @@ public class FSProdottoDAO implements ProdottoDAO {
             }
         }
         throw new RuntimeException("Prodotto non trovato in catalogo per update");
-    }
-
-    @Override
-    public List<ProdottoInventario> findInventario(String utenteEmail) {
-        return caricaInventario();
-    }
-
-    @Override
-    public ProdottoInventario saveInventario(String utenteEmail, ProdottoInventario prodotto) {
-        List<ProdottoInventario> prodotti = caricaInventario();
-        prodotti.add(prodotto);
-        salvaInventario(prodotti);
-        return prodotto;
     }
 }

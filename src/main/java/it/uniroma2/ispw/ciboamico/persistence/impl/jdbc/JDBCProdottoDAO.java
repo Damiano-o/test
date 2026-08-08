@@ -2,7 +2,6 @@ package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
-import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
 import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
@@ -118,59 +117,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
         }
     }
 
-    @Override
-    public List<ProdottoInventario> findInventario(String utenteEmail) {
-        String sql = "SELECT id, nome, quantita, scadenza, posizione, unita "
-                + "FROM inventario WHERE utente_email = ? ORDER BY scadenza"; // FR-02
-        List<ProdottoInventario> risultati = new ArrayList<>();
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, utenteEmail);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    risultati.add(new ProdottoInventario(
-                            rs.getString("nome"),
-                            rs.getInt("quantita"),
-                            rs.getDate("scadenza").toLocalDate(),
-                            rs.getString("posizione"),
-                            UnitaEnum.valueOf(rs.getString("unita")),
-                            null));
-                }
-            }
-            return risultati;
-        } catch (SQLException e) {
-            throw new DAOException("Errore lettura inventario", e);
-        }
-    }
-
-    @Override
-    public ProdottoInventario saveInventario(String utenteEmail, ProdottoInventario prodotto) {
-        String sql = "INSERT INTO inventario (utente_email, nome, quantita, scadenza, posizione, unita) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            conn.setAutoCommit(false);
-            try {
-                ps.setString(1, utenteEmail);
-                ps.setString(2, prodotto.getNome());
-                ps.setInt(3, prodotto.getQuantita());
-                ps.setDate(4, Date.valueOf(prodotto.getScadenza()));
-                ps.setString(5, prodotto.getPosizione());
-                ps.setString(6, prodotto.getUnita().name());
-                ps.executeUpdate();
-                conn.commit();
-            } catch (SQLException tex) {
-                conn.rollback();
-                throw tex;
-            } finally {
-                conn.setAutoCommit(true);
-            }
-            return prodotto;
-        } catch (SQLException e) {
-            throw new DAOException("Errore salvataggio inventario", e);
-        }
-    }
-
+    
     private Prodotto mappa(ResultSet rs) throws SQLException {
         RuoloVenditore venditore = new RuoloVenditore(
                 rs.getString("venditore_zona"), rs.getString("venditore_recapito"));

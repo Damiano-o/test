@@ -30,16 +30,8 @@ public final class MainApplication extends Application {
         // senza ricevere la DAOFactory: la View non conosce la persistenza.
         navigator.register("login", new LoginView()::build);
         navigator.register("home", new HomeView()::build);
-        navigator.register("inventario", new InventarioView()::build);
-        navigator.register("ricette", new RicetteView()::build);
-        navigator.register("lista-spesa", new ListaSpesaView()::build);
         navigator.register("marketplace", new MarketplaceView()::build);
         navigator.register("payment", new PaymentView()::build);
-        navigator.register("catalogo", new CatalogoVenditoreView()::build);
-        navigator.register("ordini", new OrdiniRicevutiView()::build);
-        navigator.register("crea-ricetta", new RicetteNutrizionistaView()::build);
-        navigator.register("admin", new AdminView()::build);
-
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");
     }

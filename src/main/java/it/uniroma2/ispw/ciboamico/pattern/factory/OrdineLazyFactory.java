@@ -28,14 +28,13 @@ public final class OrdineLazyFactory {
         private static OrdineLazyFactory INSTANCE;
     }
 
-    /** Configura la factory con la DAOFactory attiva (chiamata UNA volta al bootstrap).
-     *  Separate from getInstance() per evitare doppia responsabilità (PMD SingleMethodSingleton). */
+    /** Configura la factory con la DAOFactory attiva (chiamata al bootstrap).
+     *  Idempotente: se già configurata, ri-configura con la factory corrente
+     *  (consente l'avvio sia via {@code Runner} sia diretto da MainCLI senza crash).
+     *  Separata da getInstance() per evitare doppia responsabilità (PMD SingleMethodSingleton). */
     public static synchronized void configure(DAOFactory factory) {
         if (factory == null) {
             throw new IllegalArgumentException("La DAOFactory di configurazione non può essere nulla.");
-        }
-        if (Container.INSTANCE != null) {
-            throw new IllegalStateException("OrdineLazyFactory già configurata: chiamare configure una sola volta (bootstrap).");
         }
         Container.INSTANCE = new OrdineLazyFactory(factory);
     }

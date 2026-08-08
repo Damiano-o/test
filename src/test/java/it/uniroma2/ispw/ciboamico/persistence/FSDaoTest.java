@@ -3,7 +3,6 @@ package it.uniroma2.ispw.ciboamico.persistence;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSProdottoDAO;
-import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSRicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSUtenteDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,14 +75,7 @@ class FSDaoTest {
         assertEquals("Pomodori", trovato.getNome());
     }
 
-    @Test
-    void testRicettaFSCircolare() throws Exception {
-        FSRicettaDAO dao = new FSRicettaDAO();
-        Ricetta r = new Ricetta("Insalata", "tagliare", new RuoloNutrizionista());
-        dao.save(r);
 
-        assertEquals(1, dao.findByStato("PROPOSTA").size());
-    }
 
     @Test
     void testOrdineFSCircolare() throws Exception {

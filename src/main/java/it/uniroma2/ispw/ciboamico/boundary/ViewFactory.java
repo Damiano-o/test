@@ -8,6 +8,11 @@ import java.util.Locale;
  * legge la modalità di avvio e istanzia a runtime l'unica factory concreta
  * corretta (GUI o CLI). I controller applicativi restano invariati: cambiano
  * solo le view (prodotti astratti {@code IView}).
+ *
+ * <p>Scope UC-04 (Ordina un Prodotto): sono esposte le sole boundary che
+ * partecipano al caso d'uso — autenticazione, area personale, marketplace
+ * e pagamento. Le versioni inventario/ricetta/lista-spesa/catalogo/ordini/
+ * admin sono state escluse dalla riduzione a caso d'uso singolo.</p>
  */
 public abstract class ViewFactory {
 
@@ -45,21 +50,7 @@ public abstract class ViewFactory {
 
     public abstract IView createHomeView();
 
-    public abstract IView createInventarioView();
-
-    public abstract IView createRicetteView();
-
-    public abstract IView createListaSpesaView();
-
     public abstract IView createMarketplaceView();
 
     public abstract IView createPaymentView();
-
-    public abstract IView createCatalogoVenditoreView();
-
-    public abstract IView createOrdiniRicevutiView();
-
-    public abstract IView createRicetteNutrizionistaView();
-
-    public abstract IView createAdminView();
 }

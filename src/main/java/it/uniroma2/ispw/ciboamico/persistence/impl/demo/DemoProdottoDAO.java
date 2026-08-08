@@ -1,7 +1,6 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.demo;
 
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
-import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.Map;
 public class DemoProdottoDAO implements ProdottoDAO {
 
     private final Map<Long, Prodotto> catalogo = new HashMap<>();
-    private final Map<String, List<ProdottoInventario>> inventari = new HashMap<>();
     private long nextId = 1;
 
     @Override
@@ -49,17 +47,6 @@ public class DemoProdottoDAO implements ProdottoDAO {
                 .filter(e -> e.getValue().getNome().equalsIgnoreCase(nome))
                 .findFirst()
                 .ifPresent(e -> catalogo.put(e.getKey(), prodotto));
-        return prodotto;
-    }
-
-    @Override
-    public List<ProdottoInventario> findInventario(String utenteEmail) {
-        return new ArrayList<>(inventari.getOrDefault(utenteEmail, new ArrayList<>()));
-    }
-
-    @Override
-    public ProdottoInventario saveInventario(String utenteEmail, ProdottoInventario prodotto) {
-        inventari.computeIfAbsent(utenteEmail, k -> new ArrayList<>()).add(prodotto);
         return prodotto;
     }
 }

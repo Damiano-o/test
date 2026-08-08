@@ -72,22 +72,7 @@ public final class UiKit {
         s.getStyleClass().add("sidebar");
 
         s.getChildren().add(nav("Dashboard", "home", attiva));
-        s.getChildren().add(nav("Ricette", "ricette", attiva));
-        s.getChildren().add(nav("Inventario", "inventario", attiva));
-        s.getChildren().add(nav("Lista spesa", "lista-spesa", attiva));
         s.getChildren().add(nav("Marketplace", "marketplace", attiva));
-
-        // Voci specifiche per ruolo
-        String ruolo = ruoloAttivo();
-        if ("RuoloVenditore".equals(ruolo)) {
-            s.getChildren().add(nav("Pubblica prodotto", "catalogo", attiva));
-            s.getChildren().add(nav("Ordini ricevuti", "ordini", attiva));
-        } else if ("RuoloNutrizionista".equals(ruolo)) {
-            s.getChildren().add(nav("Crea ricetta", "crea-ricetta", attiva));
-        } else if ("RuoloAmministratore".equals(ruolo)) {
-            s.getChildren().add(nav("Amministrazione", "admin", attiva));
-        }
-
         Button esci = new Button("Esci");
         esci.getStyleClass().add("button-outline");
         esci.setMaxWidth(Double.MAX_VALUE);

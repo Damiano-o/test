@@ -39,21 +39,7 @@ class BeanTest {
         assertFalse(bean.datiObbligatoriPresenti());
     }
 
-    @Test
-    void testRicettaBean() throws Exception {
-        RicettaBean bean = new RicettaBean();
-        assertFalse(bean.haAlmenoDueIngredienti());
 
-        bean.setIngredientiNomi(java.util.List.of("A", "B"));
-        assertTrue(bean.haAlmenoDueIngredienti());
-        assertEquals("A", bean.getIngredientiNomi().get(0));}
-
-    @Test
-    void testUtenteBean() throws Exception {
-        UtenteBean bean = new UtenteBean();
-        bean.setRuoloAttivo("VENDITORE");
-        assertEquals("VENDITORE", bean.getRuoloAttivo());
-    }
 
     @Test
     void testOrdineBean() throws Exception {

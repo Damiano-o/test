@@ -1,12 +1,11 @@
 package it.uniroma2.ispw.ciboamico.persistence.dao;
 
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
-import it.uniroma2.ispw.ciboamico.entity.ProdottoInventario;
 
 import java.util.List;
 
 /**
- * Interfaccia DAO per Prodotto (marketplace) e ProdottoInventario (frigo).
+ * Interfaccia DAO per Prodotto (marketplace locale, UC-04).
  */
 public interface ProdottoDAO {
 
@@ -16,7 +15,4 @@ public interface ProdottoDAO {
     Prodotto findByNome(String nome);
     Prodotto save(Prodotto prodotto);
     Prodotto update(Prodotto prodotto);
-
-    List<ProdottoInventario> findInventario(String utenteEmail);
-    ProdottoInventario saveInventario(String utenteEmail, ProdottoInventario prodotto);
 }

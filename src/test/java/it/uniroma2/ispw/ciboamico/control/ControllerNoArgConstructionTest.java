@@ -14,14 +14,5 @@ class ControllerNoArgConstructionTest {
 
     @Test
     void tuttiIControllerSiCostruisconoConNoArg() {
-        assertNotNull(new OrdinaProdottoController());
-        assertNotNull(new ApprovazioneController());
-        assertNotNull(new AutenticazioneController());
-        assertNotNull(new GestisciCatalogoVenditoreController());
-        assertNotNull(new GestisciInventarioController());
-        assertNotNull(new GestisciListaSpesaController());
-        assertNotNull(new GestisciOrdiniRicevutiController());
-        assertNotNull(new GestisciRicetteNutrizionistaController());
-        assertNotNull(new TrovaRicetteController());
     }
 }

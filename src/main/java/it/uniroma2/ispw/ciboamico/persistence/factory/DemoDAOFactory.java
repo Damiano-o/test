@@ -5,12 +5,10 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
-import it.uniroma2.ispw.ciboamico.persistence.dao.RicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoProdottoDAO;
-import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoRicettaDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoUtenteDAO;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
@@ -28,7 +26,6 @@ public class DemoDAOFactory extends DAOFactory {
 
     private final UtenteDAO utenteDAO = new DemoUtenteDAO();
     private final ProdottoDAO prodottoDAO = new DemoProdottoDAO();
-    private final RicettaDAO ricettaDAO = new DemoRicettaDAO();
     private final OrdineDAO ordineDAO = new DemoOrdineDAO();
     private final BuonoDAO buonoDAO = new DemoBuonoDAO();
     private boolean seeded;
@@ -53,29 +50,19 @@ public class DemoDAOFactory extends DAOFactory {
         }
     }
 
-    /** Carica dati dimostrativi: 4 utenti (tutti i ruoli), prodotti, ricette. */
+    /** Carica dati demo dello scope UC-04: 2 utenti (Cliente, Venditore), prodotti, buono. */
     private void seed() throws BusinessValidationException {
-        // Utente client
+        // Cliente che ordina
         Utente mario = new Utente("Mario", "mario@cibo.it", hash("password123"));
         mario.aggiungiRuolo(new RuoloCliente());
         utenteDAO.save(mario);
 
-        // Venditore approvato
+        // Venditore approvato (dal marketplace locale)
         Utente marco = new Utente("Marco", "marco@cibo.it", hash("password123"));
         RuoloVenditore rv = new RuoloVenditore("RM", "marco@cibo.it");
         rv.setStato(StatoVenditoreEnum.APPROVATO);
         marco.aggiungiRuolo(rv);
         utenteDAO.save(marco);
-
-        // Nutrizionista
-        Utente anna = new Utente("Anna", "anna@cibo.it", hash("password123"));
-        anna.aggiungiRuolo(new RuoloNutrizionista());
-        utenteDAO.save(anna);
-
-        // Amministratore
-        Utente admin = new Utente("Admin", "admin@cibo.it", hash("password123"));
-        admin.aggiungiRuolo(new RuoloAmministratore());
-        utenteDAO.save(admin);
 
         // Prodotti del venditore (marketplace)
         Prodotto miele = new Prodotto("Miele locale", 6.50, 20,
@@ -85,51 +72,10 @@ public class DemoDAOFactory extends DAOFactory {
         prodottoDAO.save(miele);
         prodottoDAO.save(pomodori);
 
-        // Buono promozionale del venditore (es. -20% valido un mese, monouso per cliente)
+        // Buono promozionale del venditore (-20% valido un mese, monouso)
         buonoDAO.save(new BuonoPromozionale("SALUTI20", rv,
                 LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
                 new ScontoPercentualeStrategy(0.20)));
-
-        // Inventario del client (per il matching ricette) — dati demo ricchi
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Pasta", 1000, LocalDate.now().plusDays(200),
-                        "Dispensa", UnitaEnum.GRAMMI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Passata di pomodoro", 500, LocalDate.now().plusDays(30),
-                        "Dispensa", UnitaEnum.GRAMMI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Pomodori", 800, LocalDate.now().plusDays(4),
-                        "Frigo", UnitaEnum.GRAMMI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Latte intero", 1000, LocalDate.now(),
-                        "Frigo", UnitaEnum.ML, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Uova", 6, LocalDate.now().plusDays(1),
-                        "Frigo", UnitaEnum.PEZZI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Riso", 750, LocalDate.now().plusDays(300),
-                        "Dispensa", UnitaEnum.GRAMMI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Pepe nero", 3, LocalDate.now().plusDays(500),
-                        "Dispensa", UnitaEnum.GRAMMI, null));
-        prodottoDAO.saveInventario("mario@cibo.it",
-                new ProdottoInventario("Formaggio stagionato", 250, LocalDate.now().plusDays(2),
-                        "Frigo", UnitaEnum.GRAMMI, null));
-
-        // Ricetta PROPOSTA del nutrizionista
-        Ricetta ricetta = new Ricetta("Pasta al pomodoro", "Bollire la pasta e condire.",
-                anna.getRuolo(RuoloNutrizionista.class));
-        ricetta.aggiungiIngrediente(new Ingrediente(
-                new Prodotto("Pasta", 1.0, 100, LocalDate.now().plusYears(1),
-                        UnitaEnum.GRAMMI, null), 500, UnitaEnum.GRAMMI));
-        ricetta.aggiungiIngrediente(new Ingrediente(
-                new Prodotto("Passata di pomodoro", 1.0, 100, LocalDate.now().plusYears(1),
-                        UnitaEnum.GRAMMI, null), 3, UnitaEnum.GRAMMI));
-
-        // Approvazione della ricetta (come farebbe l'Admin, UC-09):
-        // solo le ricette APPROVATE compaiono in "Trova ricette compatibili".
-        ricetta.setStato(StatoRicettaEnum.APPROVATA);
-        ricettaDAO.save(ricetta);
     }
 
     /** Hash SHA-256 con salt fisso — identico ad AutenticazioneController. */
@@ -149,9 +95,6 @@ public class DemoDAOFactory extends DAOFactory {
 
     @Override
     public ProdottoDAO getProdottoDAO() { return prodottoDAO; }
-
-    @Override
-    public RicettaDAO getRicettaDAO() { return ricettaDAO; }
 
     @Override
     public OrdineDAO getOrdineDAO() { return ordineDAO; }

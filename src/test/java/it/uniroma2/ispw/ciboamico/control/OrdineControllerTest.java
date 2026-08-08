@@ -12,11 +12,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test OrdinaProdottoController (UC-04), GestisciOrdiniRicevutiController (UC-06)
- * e GestisciListaSpesaController (UC-03).
- 
+ * Test del flusso di dominio dell'Ordine (UC-04) e del pattern Observer.
+ *
  * @author Michele Damiano
-*/
+ */
 class OrdineControllerTest {
 
     private DemoDAOFactory factory() { return new DemoDAOFactory(); }
@@ -46,40 +45,9 @@ class OrdineControllerTest {
         assertTrue(notificato[0]);
     }
 
-    @Test
-    void testVisualizzaOrdiniRicevuti() throws Exception {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
 
-        List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
 
-        assertEquals(1, ricevuti.size());
-        assertEquals(StatoOrdineEnum.CREATED.name(), ricevuti.get(0).getStato());}
 
-    @Test
-    void testAggiornaStatoOrdine() throws Exception {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        OrdineBean aggiornato = controller.aggiornaStato(1L, "CONFIRMED");
-
-        assertEquals(StatoOrdineEnum.CONFIRMED.name(), aggiornato.getStato());
-    }
-
-    @Test
-    void testAggiornaStatoNonValido() throws Exception {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        assertThrows(InvalidStateTransitionException.class,
-                () -> controller.aggiornaStato(1L, "DELIVERED")); // da CREATED non valido
-    }
 
     @Test
     void testVoceOrdineParziale() throws Exception {
