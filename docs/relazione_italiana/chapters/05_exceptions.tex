@@ -2,56 +2,25 @@
 \chapter{Exceptions}
 \label{cap:exceptions}
 
-Il progetto introduce un piccolo insieme di eccezioni applicative per separare
-gli errori di \emph{validazione del dominio} (regole di business) dalla
-gestione tecnica dell'infrastruttura. La gerarchia è organizzata attorno alla
-classe base \texttt{BusinessValidationException}; ogni eccezione è \emph{checked}
-e viene catturata a livello di \texttt{Boundary} per la presentazione del
-messaggio all'utente, senza mai propagare stack infratilistici fuori dai
-confini BCE.
+Le eccezioni applicative separano gli errori di \emph{validazione del dominio}
+dalla gestione tecnica. La gerarchia è radicata in
+\texttt{BusinessValidationException} (checked), catturata dalle Boundary per
+il messaggio all'utente.
 
 \section{BusinessValidationException}
-\texttt{BusinessValidationException} estende \texttt{java.lang.Exception}
-ed è la radice delle violazioni di regola di business nel progetto. Viene
-sollevata ogni volta che l'input dell'utente (o lo stato del dominio) viola
-una regola applicativa, ad esempio:
-\begin{itemize}
-    \item \texttt{OrdinaProdottoController} la solleva quando l'autorizzazione
-    del pagamento è rifiutata (estensione \textbf{6a}) o le scorte sono
-    insufficienti (estensione \textbf{3a});
-    \item la validazione dei campi carta (\texttt{validaCampi}) la usa per
-    segnalare campi mancanti o CVV non valido;
-    \item il buono promozionale non valido (inesistente, scaduto, già usato,
-    venditore errato) ritorna \texttt{BusinessValidationException}.
-\end{itemize}
-Gradualmente le Boundary la catturano e mostrano il messaggio in una
-\texttt{Label} inline (nessuna view fittizia), mantenendo l'utente nella
-schermata corrente.
+Radice delle violazioni di business; sollevata quando l'input viola una regola
+applicativa (estensione 3a scorte, 6a pagamento rifiutato, buono non valido,
+campi carta). Le Boundary la catturano e mostrano il messaggio inline nella
+\texttt{Label}.
 
 \section{AutenticazioneException}
-Sottoclasse di \texttt{BusinessValidationException} che racchiude gli errori
-di \textbf{autenticazione} e \textbf{registrazione}: credenziali errate,
-utente o password non valide, violazioni sulla creazione del profilo. È
-usata dal controllare \texttt{AutenticazioneController} per uniformare i
-messaggi di login.
+\texttt{BusinessValidationException} per errori di autenticazione/
+registrazione (credenziali errate, password non valide); usata da
+\texttt{AutenticazioneController}.
 
 \section{InvalidStateTransitionException}
-Sottoclasse di \texttt{BusinessValidationException} usata dalla macchina a
-stati dell'\texttt{Ordine} (BR-04): quando si tenta una transizione di stato
-non prevista (es. passare direttamente da \texttt{CREATED} a
-\texttt{DELIVERED}), \texttt{Ordine.cambiaStato()} solleva
-\texttt{InvalidStateTransitionException}, bloccando l'operazione illegale e
-conservando l'integrità del modello.
+\texttt{BusinessValidationException} per transizioni di stato non previste
+(la macchina BR-04 \texttt{Ordine.cambiaStato()} blocca l'operazione illegale).
 
-\section{Gestione nelle Boundary}
-Tutte le eccezioni applicative sono catturate nei \texttt{handler} delle
-view JavaFX (es. \texttt{catcher} \texttt{BusinessValidationException} nel
-\texttt{setOnAction} della \texttt{PaymentView}): il messaggio viene mostrato
-inline nella \emph{Label} di stato ed è fornito dal costruttore
-dell'eccezione; ciò garantisce coerenza con la modellazione BCE (le Entity
-non dipendono da GUI) e con lo State Diagram a \emph{schermate}.
-
-\textbf{Nota:} gli errori di infrastruttura invece (es. \texttt{SQLException})
-sono gestiti dai DAO e non si propagano alle view, come documentato nel
-Capitolo~\ref{cap:persistenza}; il Quality Gate impone test automatizzati
-per tutti i rami di errore (Capitolo~\ref{cap:testing}).
+\textbf{Nota:} gli errori infrastrutturali (es. \texttt{SQLException}) sono
+gestiti dai DAO e non si propagano alle view.

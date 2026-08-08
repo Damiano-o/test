@@ -2,71 +2,38 @@
 \chapter{Persistenza}
 \label{cap:persistenza}
 
-La persistenza di \textbf{CiboAmico} è progettata per essere
-\emph{intercambiabile a runtime} (NFR-01): la stessa logica applicativa
-funziona con tre backend di memorizzazione senza alcuna modifica ai
-controller, grazie al pattern \textbf{Abstract Factory}. Il requisito è
-realizzato dal componente \texttt{Persistence} in
-\texttt{src/main/java/\ldots/persistence}.
+La persistenza è intercambiabile a runtime (NFR-01) con tre backend tramite
+il pattern \textbf{Abstract Factory}: \texttt{DAOFactory} +
+concrete factory per modalità.
 
-\section{Pattern Abstract Factory}
-L'interfaccia \texttt{DAOFactory} definisce i metodi di creazione dei
-DAO (\texttt{UtenteDAO}, \texttt{ProdottoDAO},
-\texttt{OrdineDAO}, \texttt{BuonoDAO}). Le tre concrete factory
-\texttt{DemoDAOFactory}, \texttt{FSDAOFactory} e \texttt{JDBCDAOFactory}
-restituiscono implementazioni coerenti dello stesso set di DAO.
+\section{Modalità}
+\begin{itemize}
+    \item \textbf{DEMO} (default): \texttt{DemoDAOFactory}, dati in-memory,
+    seed idempotente. \texttt{DemoDAOTest}.
+    \item \textbf{FS}: \texttt{FSDAOFactory}, entità su file JSON via
+    \texttt{Gson}. \texttt{FSDaoTest}.
+    \item \textbf{JDBC}: \texttt{JDBCDAOFactory}, database MySQL
+    (\texttt{sql/CiboAmico.sql}). Escluso da JaCoCo (richiede MySQL), test
+    manuale.
+\end{itemize}
 
-Il \texttt{ApplicationModeManager} (\textbf{Singleton}) seleziona la factory
-corretta a runtime in base alla modalità attiva:
+\section{Scelta a runtime}
+\texttt{ApplicationModeManager} (Singleton) seleziona la factory secondo la
+modalità attiva; i controller ottengono i DAO solo via
+\texttt{getDAOFactory()}, mai con \texttt{new} diretto.
+
 \begin{verbatim}
 factory = switch (activeMode) {
     case MODE_JDBC -> new JDBCDAOFactory();
     case MODE_FS   -> new FSDAOFactory();
     case MODE_DEMO -> new DemoDAOFactory();
-}
+};
 \end{verbatim}
-Tutti i controller accedono ai DAO esclusivamente tramite
-\texttt{getDAOFactory()}: la decisione di \emph{quale} backend usare è
-confinata in \texttt{ApplicationModeManager}, mantenendo i controller
-indipendenti dalla tecnologia di persistenza (coesione e disaccoppiamento BCE).
 
-\section{Modalità Demo (in-memory)}
-\texttt{DemoDAOFactory} produce DAO che tengono i dati in un \emph{mappa in
-memoria} (seed demo idempotente al primo avvio). È la modalità predefinita,
-utile per la demo e per i test automatizzati: nessun file né database
-esterno, riavvio sempre coerente con i dati demo (\texttt{DemoDAOTest}).
-
-\section{Modalità Filesystem (JSON)}
-\texttt{FSDAOFactory} produce DAO che serializzano le entità su \textbf{file
-JSON} locali tramite \texttt{Gson} (configurato in \texttt{GsonConfig}).
-Ogni DAO (\texttt{FSUtenteDAO}, \texttt{FSProdottoDAO},
-\texttt{FSOrdineDAO}, \texttt{FSBuonoDAO}) gestisce il caricamento/salvataggio
-delle rilevanti collezioni. La modalità è coperta da \texttt{FSDaoTest}.
-
-\section{Modalità JDBC (MySQL)}
-\texttt{JDBCDAOFactory} produce DAO che interagiscono con un \textbf{database
-MySQL} tramite JDBC. Lo schema relazionale è definito in
-\texttt{sql/CiboAmico.sql} e comprende, per UC-04, le tabelle:
-\emph{utenti}, \emph{ruoli}, \emph{prodotti}, \emph{ordini} e
-\emph{voci\_ordine}.
-
+\section{Connessione e transazioni (JDBC)}
 \begin{itemize}
-    \item la connessione è centralizzata in \texttt{ConnectionManager}, che
-    legge le credenziali da \emph{system properties}
-    (\texttt{ciboamico.db.url}, \texttt{ciboamico.db.user},
-    \texttt{ciboamico.db.password}) con fallback a valori di sviluppo locali;
-    \item le transazioni (es. ordine + riduzione scorte) sono gestite
-    atomicamente con \texttt{setAutoCommit(false)} e \texttt{commit/rollback};
-    \item i DAO JDBC \textbf{non partecipano alla copertura automatizzata}
-    (esclusi dal JaCoCo perché richiedono un MySQL reale) e sono validati
-    manualmente, come documentato nel Capitolo~\ref{cap:testing}.
+    \item \texttt{ConnectionManager}: credenziali da system properties
+    (\texttt{ciboamico.db.url}, \texttt{ciboamico.db.user}, \texttt{ciboamico.db.password}) con fallback locale;
+    \item transazioni atomiche con \texttt{setAutoCommit(false)} e
+    \texttt{commit/rollback} (ordine + riduzione scorte).
 \end{itemize}
-
-\section{Coerenza con il sequence e gli use case}
-La scelta del DAO nel controller è visibile nel \emph{sequence diagram}
-(Capitolo~\ref{cap:design}): \texttt{OrdinaProdottoController} interroga
-\texttt{OrdineDAO}, \texttt{ProdottoDAO}, \texttt{BuonoDAO} e
-\texttt{UtenteDAO} attraverso l'Abstract Factory, per poi delegare la
-persistenza dell'ordine a \texttt{ordineDAO.save}. La tracciabilitá
-persistenza-test è coperta da \texttt{DemoDAOTest} e \texttt{FSDaoTest}
-(Capitolo~\ref{cap:testing}).
