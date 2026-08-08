@@ -9,8 +9,8 @@ top to bottom direction
 
 ' ============================================================
 ' Design-level — Singleton (sessione utente e modalità applicativa)
-' Stile EventBus/Holder: classe client -> Singleton,
-' <<static nested>> Holder con INSTANCE, freccia "Holds unique instance".
+' Stile EventBus/Container: classe client -> Singleton,
+' <<static nested>> Container con INSTANCE, freccia "Holds unique instance".
 ' ============================================================
 
 ' ---------- Client / chi usa il Singleton ----------
@@ -38,7 +38,7 @@ class "SessionManager" {
   + logout() : void
 }
 
-class "«static nested»\nHolder" as H1 <<static nested>> {
+class "Container" as H1 <<static nested>> {
   {static} + INSTANCE : SessionManager
 }
 SessionManager +-- H1 : "Holds unique\ninstance"
@@ -55,7 +55,7 @@ class "ApplicationModeManager" {
   + getDAOFactory() : DAOFactory
 }
 
-class "«static nested»\nHolder" as H2 <<static nested>> {
+class "Container" as H2 <<static nested>> {
   {static} + INSTANCE : ApplicationModeManager
 }
 ApplicationModeManager +-- H2 : "Holds unique\ninstance"
