@@ -107,17 +107,6 @@
     {\large Data di consegna: \today}
 \end{titlepage}
 
-% --- Abstract / Sommario ---
-\chapter*{Sommario}
-\markboth{Sommario}{}
-\addcontentsline{toc}{chapter}{Sommario}
-
-CiboAmico risolve il problema dello spreco alimentare domestico e della frammentazione del commercio a chilometro zero. La piattaforma offre una gestione intelligente della dispensa, un motore di matching delle ricette con sostituzione automatica degli ingredienti e un marketplace locale per l'interazione diretta tra clienti, commercianti e amministratori. L'architettura software si basa sul pattern \emph{Boundary-Control-Entity} (BCE). Ho implementato una doppia interfaccia utente intercambiabile a runtime---un'interfaccia grafica in JavaFX e una riga di comando (CLI)---orchestrata tramite una \texttt{ViewFactory} e disaccoppiata dai controller applicativi stateless mediante l'uso di Bean (DTO).
-
-Per la persistenza ho progettato tre modalità (JDBC MySQL, File System JSON e Demo in-memory) gestite da un'Abstract Factory di DAO. Ho inoltre applicato diversi pattern GoF, tra cui \emph{Strategy} per la logica di matching, \emph{Facade}, \emph{Observer} per la gestione degli ordini, \emph{Singleton} e due \emph{Adapter} per OpenFoodFacts e JakartaMail, garantendo la sicurezza delle credenziali tramite hashing SHA-256 e salt. La correttezza e la qualità della logica di business sono verificate da 92 unit test JUnit 5, con una Line Coverage dell'81.4\%, e dall'assenza di violazioni rilevate su SonarCloud.
-
-\newpage
-
 % --- Indice ---
 \tableofcontents
 \newpage
@@ -131,7 +120,6 @@ Per la persistenza ho progettato tre modalità (JDBC MySQL, File System JSON e D
 \input{chapters/04_testing}
 \input{chapters/05_exceptions}
 \input{chapters/06_persistency}
-\input{chapters/07_quality}
 \input{chapters/08_links}
 
 \end{document}
