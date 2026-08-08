@@ -1,16 +1,16 @@
 @startuml
 skinparam style strictuml
 skinparam classAttributeIconSize 0
-skinparam nodesep 55
-skinparam ranksep 55
+skinparam nodesep 50
+skinparam ranksep 45
 skinparam classFontSize 12
 skinparam classAttributeFontSize 11
 top to bottom direction
 
 ' ============================================================
-' Design-level — Singleton (sessione utente)
-' Stile EventBus: Holder idiom con <<static nested>> e freccia
-' "Holds unique instance".
+' Design-level — Singleton (sessione utente e modalità applicativa)
+' Stile EventBus/Holder: classe client -> Singleton,
+' <<static nested>> Holder con INSTANCE, freccia "Holds unique instance".
 ' ============================================================
 
 ' ---------- Client / chi usa il Singleton ----------
@@ -21,14 +21,11 @@ class "MarketplaceView" {
   + build() : Parent
 }
 class "OrdinaProdottoController" <<control>> {
-  + (usa la sessione per l'utente corrente)
+  + usa la sessione
+  + getDAOFactory()
 }
 
-LoginView --> SessionManager : getLoggedUser()
-MarketplaceView --> SessionManager : getLoggedUser()
-OrdinaProdottoController --> SessionManager : utente in checkout
-
-' ---------- Singleton ----------
+' ---------- Singleton 1: sessione utente ----------
 class "SessionManager" {
   - loggedUser : UtenteBean
   - ordineInCorso : OrdineBean
@@ -41,12 +38,33 @@ class "SessionManager" {
   + logout() : void
 }
 
-' ---------- Holder (istanza unica) ----------
-class "«static nested»\nHolder" as HOLDER <<static nested>> {
+class "«static nested»\nHolder" as H1 <<static nested>> {
   {static} + INSTANCE : SessionManager
 }
+SessionManager +-- H1 : "Holds unique\ninstance"
+H1 ..> SessionManager : crea
 
-SessionManager +-- HOLDER : "Holds unique\ninstance"
-HOLDER ..> SessionManager : crea
+' ---------- Singleton 2: modalità applicativa ----------
+class "ApplicationModeManager" {
+  - activeMode : String
+  - factory : DAOFactory
+  - ApplicationModeManager()
+  {static} + getInstance() : ApplicationModeManager
+  + getActiveMode() : String
+  + setActiveMode(String) : void
+  + getDAOFactory() : DAOFactory
+}
+
+class "«static nested»\nHolder" as H2 <<static nested>> {
+  {static} + INSTANCE : ApplicationModeManager
+}
+ApplicationModeManager +-- H2 : "Holds unique\ninstance"
+H2 ..> ApplicationModeManager : crea
+
+' ---------- usi ----------
+LoginView --> SessionManager : getLoggedUser()
+MarketplaceView --> SessionManager : getLoggedUser()
+OrdinaProdottoController --> SessionManager : utente in checkout
+OrdinaProdottoController --> ApplicationModeManager : getDAOFactory()
 
 @enduml
