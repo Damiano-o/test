@@ -1,35 +1,52 @@
 @startuml
 skinparam style strictuml
 skinparam classAttributeIconSize 0
-skinparam nodesep 45
-skinparam ranksep 45
-' Singleton (Holder Idiom) - sessione utente e modalità applicativa
+skinparam nodesep 55
+skinparam ranksep 55
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+top to bottom direction
+
+' ============================================================
+' Design-level — Singleton (sessione utente)
+' Stile EventBus: Holder idiom con <<static nested>> e freccia
+' "Holds unique instance".
+' ============================================================
+
+' ---------- Client / chi usa il Singleton ----------
+class "LoginView" {
+  + build() : Parent
+}
+class "MarketplaceView" {
+  + build() : Parent
+}
+class "OrdinaProdottoController" <<control>> {
+  + (usa la sessione per l'utente corrente)
+}
+
+LoginView --> SessionManager : getLoggedUser()
+MarketplaceView --> SessionManager : getLoggedUser()
+OrdinaProdottoController --> SessionManager : utente in checkout
+
+' ---------- Singleton ----------
 class "SessionManager" {
   - loggedUser : UtenteBean
+  - ordineInCorso : OrdineBean
   - SessionManager()
   {static} + getInstance() : SessionManager
   + getLoggedUser() : UtenteBean
   + setLoggedUser(UtenteBean) : void
+  + getOrdineInCorso() : OrdineBean
+  + setOrdineInCorso(OrdineBean) : void
   + logout() : void
 }
-class "SessionManager$Container" {
-  - INSTANCE : SessionManager
-}
-SessionManager +-- SessionManager$Container
-SessionManager$Container ..> SessionManager : crea
 
-class "ApplicationModeManager" {
-  - activeMode : String
-  - factory : DAOFactory
-  - ApplicationModeManager()
-  {static} + getInstance() : ApplicationModeManager
-  + getActiveMode() : String
-  + setActiveMode(String) : void
-  + getDAOFactory() : DAOFactory
+' ---------- Holder (istanza unica) ----------
+class "«static nested»\nHolder" as HOLDER <<static nested>> {
+  {static} + INSTANCE : SessionManager
 }
-class "ApplicationModeManager$Container" {
-  - INSTANCE : ApplicationModeManager
-}
-ApplicationModeManager +-- ApplicationModeManager$Container
-ApplicationModeManager$Container ..> ApplicationModeManager : crea
+
+SessionManager +-- HOLDER : "Holds unique\ninstance"
+HOLDER ..> SessionManager : crea
+
 @enduml
