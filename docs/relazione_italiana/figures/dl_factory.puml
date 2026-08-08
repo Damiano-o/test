@@ -22,6 +22,11 @@ class "OrdinaProdottoController" as CTL <<control>> {
 }
 
 ' ---------- Abstract Factory ----------
+class "ApplicationModeManager" <<singleton>> {
+  - factory : DAOFactory
+  + getInstance() : ApplicationModeManager
+  + getDAOFactory() : DAOFactory
+}
 interface "DAOFactory" <<interface>> {
   + getUtenteDAO() : UtenteDAO
   + getProdottoDAO() : ProdottoDAO
@@ -53,7 +58,8 @@ JDBCOrdineDAO ..|> OrdineDAO
 JDBCBuonoDAO ..|> BuonoDAO
 
 ' ---------- relazioni: controller -> factory -> prodotti ----------
-OrdinaProdottoController --> DAOFactory : <<use>>\nApplicationModeManager.getDAOFactory()
+OrdinaProdottoController --> ApplicationModeManager : <<use>>\n' getInstance()'
+ApplicationModeManager --> DAOFactory : <<create>> getDAOFactory()
 JDBCDAOFactory ..> JDBCUtenteDAO : <<create>>
 JDBCDAOFactory ..> JDBCProdottoDAO : <<create>>
 JDBCDAOFactory ..> JDBCOrdineDAO : <<create>>
