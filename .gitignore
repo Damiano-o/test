@@ -46,3 +46,5 @@ docs/relazione_italiana/fix_state3.py
 docs/relazione_italiana/*_bak*.txt
 docs/relazione_italiana/pgs-*.png
 docs/relazione_italiana/sc-*.png
+docs/relazione_italiana/main.out
+docs/relazione_italiana/figures/*_ref.png
