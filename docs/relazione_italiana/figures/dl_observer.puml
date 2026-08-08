@@ -8,80 +8,63 @@ skinparam classAttributeFontSize 10
 top to bottom direction
 
 ' ============================================================
-' Design-level — Pattern Observer (notifica cambio stato Ordine)
-' Stile event-driven (come il progetto di riferimento):
-' OrdineEvent + OrdineEventListener + OrdineSubject (publisher con
-' listeners) + observer concreti (VenditoreNotifier, UtenteNotifier).
+' Design-level — Pattern Observer (GoF classico, variante Push)
+' Notifica del cambio stato dell'Ordine. Niente classi evento:
+' la notifica passa l'oggetto di dominio Ordine stesso.
+' Fedele al codice reale (tracciabilità): OrdineSubject NON è singleton.
 ' ============================================================
 
-' ---------- Evento (dati del cambio stato) ----------
-class "OrdineEvent" {
-  - numeroOrdine : Long
-  - totale : double
-  - stato : String
-  - timestamp : LocalDateTime
-  - clienteId : String
-  + getNumeroOrdine() : Long
-  + getTotale() : double
-  + getStato() : String
-  + getTimestamp() : LocalDateTime
-  + getClienteId() : String
+' ---------- Controller (istanzia e registra l'osservatore) ----------
+class "OrdinaProdottoController" as CTL <<control>> {
+  + processaPagamento(bean, utente, payment) : OrdineBean
+  + submitOrdine(bean, utente) : OrdineBean
 }
 
-' ---------- Interfaccia listener ----------
-interface "OrdineEventListener" <<interface>> {
-  + onStatoCambiato(OrdineEvent) : void
-}
-
-' ---------- Publisher (Subject) ----------
+' ---------- Subject concreto ----------
 class "OrdineSubject" {
-  - logger : Logger
-  - instance : OrdineSubject
   - listeners : List<OrdineEventListener>
-  + addListener(OrdineEventListener) : void
-  + removeListener(OrdineEventListener) : void
-  + clearListeners() : void
-  + notifyObservers(OrdineEvent) : void
-  + getListenerCount() : int
-  {static} + getInstance() : OrdineSubject
+  + subscribe(OrdineEventListener) : void
+  + unsubscribe(OrdineEventListener) : void
+  + notifyObservers(Ordine) : void
 }
 
-' ---------- Controller (pubblica l'evento) ----------
-class "CreaOrdineController" as CTL <<control>> {
-  + confermaOrdine() : boolean
+' ---------- Entity (Subject host) ----------
+class "Ordine" <<entity>> {
+  - subject : OrdineSubject
+  + subscribe(OrdineEventListener) : void
+  + notificaSottomissione() : void
+  + cambiaStato(StatoOrdineEnum) : void
 }
-class "OrdinaProdottoController" as OPC <<control>> {
-  + processaPagamento(...) : OrdineBean
+
+' ---------- Observer astratto ----------
+interface "OrdineEventListener" <<interface>> {
+  + onStatoCambiato(Ordine) : void
 }
 
 ' ---------- Observer concreti ----------
-class "VenditoreNotifier" {
-  - logger : Logger
-  + onStatoCambiato(OrdineEvent) : void
-  + notificaPopup(OrdineEvent) : void
+class "VenditoreNotifier" <<observer>> {
+  + onStatoCambiato(Ordine) : void
 }
-class "UtenteNotifier" {
-  - logger : Logger
-  + onStatoCambiato(OrdineEvent) : void
+class "UtenteNotifier" <<observer>> {
+  + onStatoCambiato(Ordine) : void
 }
 
 ' ============================================================
 ' Relazioni
 ' ============================================================
-' Publisher usa l'evento e notifica i listener
-OrdineSubject ..> OrdineEvent : genera/notifica
-OrdineEventListener ..> OrdineEvent : <<use>> param
+' Composizione: Ordine possiede il suo subject (rombo pieno, 1:1)
+Ordine "1" *-- "1" OrdineSubject
+
+' Realizzazione: gli observer implementano l'interfaccia
+VenditoreNotifier ..|> OrdineEventListener
+UtenteNotifier    ..|> OrdineEventListener
+
+' Subject notifica i listener (aggregazione)
 OrdineSubject "1" o-- "*" OrdineEventListener : listeners
 
-' interfaccia realizzata dagli observer concreti
-VenditoreNotifier ..|> OrdineEventListener
-UtenteNotifier ..|> OrdineEventListener
-
-' controller pubblica l'evento via publisher
-OPC ..> OrdineSubject : <<use>>\ngetInstance().notify
-CTL ..> OrdineSubject : <<use>>\npubblica evento
-
-' il publisher è un singleton: una sola istanza
-OrdineSubject::instance --> OrdineSubject : "tiene l'unica\nistanza"
+' Dipendenze del controller (<<use>>)
+CTL ..> Ordine : <<use>> submitOrdine
+CTL ..> OrdineSubject : <<use>>\nordine.subscribe / notifica
+CTL ..> VenditoreNotifier : <<use>>\nnew VenditoreNotifier()
 
 @enduml
