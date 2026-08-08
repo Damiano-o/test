@@ -22,7 +22,7 @@ class "OrdinaProdottoController" as CTL <<control>> {
 }
 
 ' ---------- Abstract Factory ----------
-interface "DAOFactory" {
+interface "DAOFactory" <<interface>> {
   + getUtenteDAO() : UtenteDAO
   + getProdottoDAO() : ProdottoDAO
   + getOrdineDAO() : OrdineDAO
@@ -37,10 +37,10 @@ FSDAOFactory  ..|> DAOFactory
 JDBCDAOFactory ..|> DAOFactory
 
 ' ---------- Abstract Products (DAO) ----------
-interface "UtenteDAO"
-interface "ProdottoDAO"
-interface "OrdineDAO"
-interface "BuonoDAO"
+interface "UtenteDAO" <<interface>>
+interface "ProdottoDAO" <<interface>>
+interface "OrdineDAO" <<interface>>
+interface "BuonoDAO" <<interface>>
 
 ' ---------- Concrete Products (una famiglia esemplificativa, per concisione) ----------
 class "JDBCUtenteDAO"
