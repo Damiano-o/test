@@ -123,12 +123,3 @@ transizioni \texttt{trigger [guardia] / behavior} e self-loop per le estensioni
     \caption{State diagram (navigazione UI) di UC-04.}
     \label{fig:state}
 \end{figure}
-
-\section{Realizzazione del Buono Promozionale}
-\label{sec:buono}
-
-Il buono è implementato con \textbf{Strategy}: \texttt{ScontoStrategy} con
-strategie concrete (percentuale, importo fisso) e factory
-\texttt{ScontoStrategyFactory}; \texttt{Ordine} funge da Context
-(\texttt{applicaBuono()} + \texttt{ricalcolaTotale()}). La validazione
-(esistenza, scadenza, monouso) è coordinata da \texttt{OrdinaProdottoController}.
