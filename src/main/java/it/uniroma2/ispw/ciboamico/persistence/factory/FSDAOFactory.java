@@ -12,7 +12,7 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSUtenteDAO;
 /**
  * Factory FS: persistenza su file JSON (Gson) — milestone M2, NFR-01.
  */
-public class FSDAOFactory extends DAOFactory {
+public class FSDAOFactory implements DAOFactory {
 
     @Override
     public UtenteDAO getUtenteDAO() { return new FSUtenteDAO(); }

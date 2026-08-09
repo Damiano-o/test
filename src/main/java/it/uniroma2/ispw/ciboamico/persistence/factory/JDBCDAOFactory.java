@@ -12,7 +12,7 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCUtenteDAO;
 /**
  * Factory JDBC: persistenza su MySQL con PreparedStatement (anti SQL-injection).
  */
-public class JDBCDAOFactory extends DAOFactory {
+public class JDBCDAOFactory implements DAOFactory {
 
     @Override
     public UtenteDAO getUtenteDAO() { return new JDBCUtenteDAO(); }

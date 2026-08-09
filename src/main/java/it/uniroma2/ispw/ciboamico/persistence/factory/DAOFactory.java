@@ -7,12 +7,13 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 
 /**
  * Abstract Factory (GoF): famiglia coerente di DAO.
- * Le concrete factory (JDBC/FS/Demo) sono scelte a runtime da ApplicationModeManager.
+ * Il contratto è esposto come interfaccia: le concrete factory (JDBC/FS/Demo)
+ * sono scelte a runtime da {@link it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager}.
  */
-public abstract class DAOFactory {
+public interface DAOFactory {
 
-    public abstract UtenteDAO getUtenteDAO();
-    public abstract ProdottoDAO getProdottoDAO();
-    public abstract OrdineDAO getOrdineDAO();
-    public abstract BuonoDAO getBuonoDAO();
+    UtenteDAO getUtenteDAO();
+    ProdottoDAO getProdottoDAO();
+    OrdineDAO getOrdineDAO();
+    BuonoDAO getBuonoDAO();
 }

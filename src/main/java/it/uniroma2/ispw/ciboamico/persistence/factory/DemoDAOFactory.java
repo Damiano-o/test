@@ -22,7 +22,7 @@ import java.time.LocalDate;
  * della stessa factory (ma isolato tra factory diverse — test indipendenti).
  * Il seed rende l'applicazione utilizzabile in modalità demo senza DB.
  */
-public class DemoDAOFactory extends DAOFactory {
+public class DemoDAOFactory implements DAOFactory {
 
     private final UtenteDAO utenteDAO = new DemoUtenteDAO();
     private final ProdottoDAO prodottoDAO = new DemoProdottoDAO();
