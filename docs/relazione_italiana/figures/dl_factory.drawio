@@ -1,0 +1,368 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Pagina-1" id="EUGNw3P3gxpssgcB4g5-">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-69" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-9" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.998;exitY=0.208;exitDx=0;exitDy=0;entryX=-0.009;entryY=0.226;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;endArrow=classic;endFill=1;startArrow=none;startFill=0;exitPerimeter=0;entryPerimeter=0;" target="oFi-OyWIlPW6b4w77obZ-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-9" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;font style=&quot;&quot;&gt;«singleton»&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;&lt;b style=&quot;&quot;&gt;ApplicationModeManager&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="153" width="280" x="-430" y="533.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-11" parent="oFi-OyWIlPW6b4w77obZ-9" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="-factory : DAOFactory" vertex="1">
+          <mxGeometry height="20" width="280" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-14" parent="oFi-OyWIlPW6b4w77obZ-9" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="280" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-16" parent="oFi-OyWIlPW6b4w77obZ-9" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="&lt;div&gt;+getInstance() : ApplicationModeManager&lt;/div&gt;&lt;div&gt;+getActiveMode() : String&lt;/div&gt;&lt;div&gt;+getDAOFactory() : DAOFactory&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="280" y="83" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-17" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="«interface»&lt;div&gt;&lt;b&gt;DAOFactory&lt;/b&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="210" x="-30" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-22" parent="oFi-OyWIlPW6b4w77obZ-17" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-24" parent="oFi-OyWIlPW6b4w77obZ-17" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="&lt;div&gt;+getUtenteDAO() : UtenteDAO&lt;/div&gt;&lt;div&gt;+getProdottoDAO() : ProdottoDAO&lt;/div&gt;&lt;div&gt;+getOrdineDAO() : OrdineDAO&lt;/div&gt;&lt;div&gt;+getBuonoDAO() : BuonoDAO&lt;/div&gt;" vertex="1">
+          <mxGeometry height="97" width="210" y="63" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-96" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-47">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="342.5" y="670" />
+              <mxPoint x="898.5" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-97" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-43">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="395" y="680" />
+              <mxPoint x="608.5" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-98" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-49">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="447.5" y="720" />
+              <mxPoint x="530" y="720" />
+              <mxPoint x="530" y="810" />
+              <mxPoint x="898.5" y="810" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-99" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-45">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="520" y="780" />
+              <mxPoint x="520" y="830" />
+              <mxPoint x="608.5" y="830" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-25" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;DemoDAOFactory&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="210" x="290" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-26" parent="oFi-OyWIlPW6b4w77obZ-25" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-27" parent="oFi-OyWIlPW6b4w77obZ-25" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="&lt;div&gt;+getUtenteDAO() : UtenteDAO&lt;/div&gt;&lt;div&gt;+getProdottoDAO() : ProdottoDAO&lt;/div&gt;&lt;div&gt;+getOrdineDAO() : OrdineDAO&lt;/div&gt;&lt;div&gt;+getBuonoDAO() : BuonoDAO&lt;/div&gt;" vertex="1">
+          <mxGeometry height="97" width="210" y="63" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-92" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-39">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="394.97" y="420.03" />
+              <mxPoint x="892.48" y="420.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-93" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.619;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;exitPerimeter=0;" target="oFi-OyWIlPW6b4w77obZ-34">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="440.03" />
+              <mxPoint x="602.48" y="440.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-94" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-37">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="447.52" y="460.03" />
+              <mxPoint x="530" y="460.03" />
+              <mxPoint x="530" y="560.03" />
+              <mxPoint x="602.48" y="560.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-28" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;JDBCDAOFactory&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="210" x="290" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-29" parent="oFi-OyWIlPW6b4w77obZ-28" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-30" parent="oFi-OyWIlPW6b4w77obZ-28" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="&lt;div&gt;+getUtenteDAO() : UtenteDAO&lt;/div&gt;&lt;div&gt;+getProdottoDAO() : ProdottoDAO&lt;/div&gt;&lt;div&gt;+getOrdineDAO() : OrdineDAO&lt;/div&gt;&lt;div&gt;+getBuonoDAO() : BuonoDAO&lt;/div&gt;" vertex="1">
+          <mxGeometry height="97" width="210" y="63" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-90" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-53">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="457.52" y="210.03" />
+              <mxPoint x="540" y="210.03" />
+              <mxPoint x="540" y="310.03" />
+              <mxPoint x="602.48" y="310.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-91" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-57">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="530" y="270.03" />
+              <mxPoint x="530" y="300.03" />
+              <mxPoint x="892.48" y="300.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-31" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;FSDAOFactory&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="210" x="300" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-32" parent="oFi-OyWIlPW6b4w77obZ-31" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-33" parent="oFi-OyWIlPW6b4w77obZ-31" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;" value="&lt;div&gt;+getUtenteDAO() : UtenteDAO&lt;/div&gt;&lt;div&gt;+getProdottoDAO() : ProdottoDAO&lt;/div&gt;&lt;div&gt;+getOrdineDAO() : OrdineDAO&lt;/div&gt;&lt;div&gt;+getBuonoDAO() : BuonoDAO&lt;/div&gt;" vertex="1">
+          <mxGeometry height="97" width="210" y="63" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-75" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-34" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-34" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;JDBCUtente&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="550" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-35" parent="oFi-OyWIlPW6b4w77obZ-34" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-78" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-37" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-66">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="655" y="570" />
+              <mxPoint x="1140" y="570" />
+              <mxPoint x="1140" y="720" />
+              <mxPoint x="1232.5" y="720" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-37" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;JDBCProdotto&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="550" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-38" parent="oFi-OyWIlPW6b4w77obZ-37" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-85" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-39" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-59">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="945" y="430" />
+              <mxPoint x="1090" y="430" />
+              <mxPoint x="1090" y="318" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-39" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;JDBCOrdine&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="840" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-40" parent="oFi-OyWIlPW6b4w77obZ-39" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-41" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;JDBCBuono&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="840" y="585" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-42" parent="oFi-OyWIlPW6b4w77obZ-41" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-76" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-43" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-62">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="661" y="720" />
+              <mxPoint x="810" y="720" />
+              <mxPoint x="810" y="458" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-43" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;DemoUtente&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="556" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-44" parent="oFi-OyWIlPW6b4w77obZ-43" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-77" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-45" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-66">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="661" y="820.05" />
+              <mxPoint x="1120.05" y="820.05" />
+              <mxPoint x="1120.05" y="815.24" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-45" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;DemoProdotto&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="556" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-46" parent="oFi-OyWIlPW6b4w77obZ-45" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-86" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-47" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-59">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="951" y="700" />
+              <mxPoint x="1490" y="700" />
+              <mxPoint x="1490" y="302.33" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-47" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;DemoOrdine&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="846" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-48" parent="oFi-OyWIlPW6b4w77obZ-47" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-82" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-49" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-64">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="951" y="830" />
+              <mxPoint x="1090" y="830" />
+              <mxPoint x="1090" y="600" />
+              <mxPoint x="1232.5" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-49" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;DemoBuono&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="846" y="845" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-50" parent="oFi-OyWIlPW6b4w77obZ-49" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-74" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-51" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-62">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-51" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;FSUtenteDAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="550" y="223.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-52" parent="oFi-OyWIlPW6b4w77obZ-51" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-80" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-53" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-66">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="655" y="313.5" />
+              <mxPoint x="1120" y="313.5" />
+              <mxPoint x="1120" y="783.8" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-53" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;FSProdotto&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="550" y="333.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-54" parent="oFi-OyWIlPW6b4w77obZ-53" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-84" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-55" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-59">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="945" y="170" />
+              <mxPoint x="1232.57" y="170" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-55" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;FSOrdine&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="840" y="223.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-56" parent="oFi-OyWIlPW6b4w77obZ-55" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-57" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;br&gt;&lt;div&gt;&lt;b&gt;FSBuono&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="840" y="328.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-58" parent="oFi-OyWIlPW6b4w77obZ-57" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-59" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="«interface»&lt;div&gt;&lt;b&gt;OrdineDAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="1180" y="286.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-60" parent="oFi-OyWIlPW6b4w77obZ-59" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-62" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="«interface»&lt;div&gt;&lt;b&gt;UtenteDAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="1190" y="426.5" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-63" parent="oFi-OyWIlPW6b4w77obZ-62" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-64" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="«interface»&lt;div&gt;&lt;b&gt;BuonoDAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="1180" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-65" parent="oFi-OyWIlPW6b4w77obZ-64" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-66" parent="1" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=55;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;" value="«interface»&lt;div&gt;&lt;b&gt;ProdottoDAO&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="63" width="210" x="1180" y="768" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-67" parent="oFi-OyWIlPW6b4w77obZ-66" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" value="" vertex="1">
+          <mxGeometry height="8" width="210" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-70" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.618;entryY=0.003;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;endArrow=blockThin;endFill=0;startArrow=none;startFill=0;" target="oFi-OyWIlPW6b4w77obZ-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-72" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1.009;entryY=0.143;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-73" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.217;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-81" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-41" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.562;entryY=-0.016;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-64">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="945" y="550" />
+              <mxPoint x="1298" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-83" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-57" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.414;entryY=-0.014;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=blockThin;endFill=0;" target="oFi-OyWIlPW6b4w77obZ-64">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="945.03" y="308.52" />
+              <mxPoint x="1160" y="308.52" />
+              <mxPoint x="1160" y="570.03" />
+              <mxPoint x="1266.9" y="570.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-87" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.524;exitY=0;exitDx=0;exitDy=0;entryX=0.334;entryY=-0.02;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;exitPerimeter=0;" target="oFi-OyWIlPW6b4w77obZ-51">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="410" y="190.03" />
+              <mxPoint x="620.07" y="190.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-89" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.368;entryY=-0.009;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-55">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="404.97" y="140.03" />
+              <mxPoint x="917.31" y="140.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="oFi-OyWIlPW6b4w77obZ-95" edge="1" parent="1" source="oFi-OyWIlPW6b4w77obZ-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpStyle=arc;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.385;entryY=-0.011;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=default;labelBackgroundColor=default;startArrow=none;startFill=0;endArrow=classic;endFill=1;" target="oFi-OyWIlPW6b4w77obZ-41">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="510" y="520.03" />
+              <mxPoint x="510" y="550.03" />
+              <mxPoint x="920.9" y="550.03" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
