@@ -14,41 +14,32 @@ La schermata di accesso permette all'utente di autenticarsi inserendo le proprie
 \end{figure}
 
 \subsection{Home (Cliente)}
-Completata l'autenticazione, il Cliente raggiunge la dashboard principale; nell'ambito dello scope UC-04 la Home offre l'accesso diretto al Marketplace per ordinare un prodotto locale.
+Completata l'autenticazione, il Cliente raggiunge la dashboard principale (Home). Da qui può raggiungere le funzionalità dell'applicazione: Ricette, Inventario, Lista Spesa e Marketplace (UC-04 Ordina un Prodotto).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/schermata-home.png}
-    \caption{Dashboard principale (accesso al Marketplace).}
+    \caption{Dashboard principale: accesso alle funzionalità dell'applicazione.}
     \label{fig:sb_home}
 \end{figure}
 
 \section{Acquisti e Marketplace (UC-04 Ordina un Prodotto)}
 
-\subsection{Marketplace (Ricerca Prodotti)}
-L'area dedicata all'acquisto diretto mostra i prodotti locali dei venditori, con prezzo e disponibilità residua.
+\subsection{Marketplace (Catalogo Prodotti)}
+L'area dedicata all'acquisto diretto mostra il catalogo dei prodotti locali dei venditori. Il pannello laterale consente di selezionare un prodotto da ordinare e, opzionalmente, un buono promozionale.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/schermata-marketplace.png}
-    \caption{Catalogo dei prodotti locali disponibili per l'acquisto.}
+    \caption{Marketplace: catalogo dei prodotti locali e pannello di acquisto.}
     \label{fig:sb_marketplace}
 \end{figure}
 
 \subsection{Ordina un Prodotto}
-Il sistema presenta il riepilogo dell'ordine selezionato e consente di procedere con l'acquisto.
+Selezionato un prodotto dal catalogo e caricata la lista (pulsante \emph{Aggiorna catalogo}), il Cliente sceglie il prodotto nel pannello \emph{Prodotto da ordinare}. Se inserisce un codice buono e preme \emph{Applica buono}, il sistema valida il buono e ricalcola il totale applicando lo sconto (estensione \emph{Ordina un Prodotto}); con \emph{Ordina prodotto} procede.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{figures/schermata-ordine.png}
-    \caption{Schermata dell'ordine e del riepilogo.}
+    \caption{Schermata di acquisto con prodotto selezionato e campo buono promozionale.}
     \label{fig:sb_ordine}
-\end{figure}
-
-\subsection{Ordina un Prodotto con Buono Promozionale}
-L'interfaccia consente di inserire un codice di buono promozionale: il sistema valida il buono e ricalcola il totale applicando lo sconto (estensione del caso d'uso \emph{Ordina un Prodotto}).
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figures/schermata-ordine-buono.png}
-    \caption{Applicazione di un buono promozionale e totale scontato.}
-    \label{fig:sb_buono}
 \end{figure}
 
 \subsection{Pagamento (passo 6)}

@@ -2,25 +2,46 @@
 \chapter{Exceptions}
 \label{cap:exceptions}
 
-Le eccezioni applicative separano gli errori di \emph{validazione del dominio}
-dalla gestione tecnica. La gerarchia è radicata in
-\texttt{BusinessValidationException} (checked), catturata dalle Boundary per
-il messaggio all'utente.
+La logica di errore è una tassonomia (\texttt{exception/}) tutta
+\textbf{checked}, che forza la gestione esplicita (\texttt{throws} /
+\texttt{try/catch}).
 
-\section{BusinessValidationException}
-Radice delle violazioni di business; sollevata quando l'input viola una regola
-applicativa (estensione 3a scorte, 6a pagamento rifiutato, buono non valido,
-campi carta). Le Boundary la catturano e mostrano il messaggio inline nella
-\texttt{Label}.
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Eccezione} & \textbf{Ruolo} \\
+\midrule
+\texttt{CiboAmicoException} (abstract) & Base checked, campi comuni \\
+\texttt{BusinessValidationException} & Regola di business violata \\
+\quad\texttt{AutenticazioneException} & Credenziali errate \\
+\quad\texttt{InvalidStateTransitionException} & Stato illegale (BR-04) \\
+\texttt{DAOException} & Persistenza (file /\ DB) \\
+\bottomrule
+\end{tabular}
+\end{center}
 
-\section{AutenticazioneException}
-\texttt{BusinessValidationException} per errori di autenticazione/
-registrazione (credenziali errate, password non valide); usata da
-\texttt{AutenticazioneController}.
+La base \texttt{CiboAmicoException} estende \texttt{java.lang.Exception}
+(\textbf{checked}) ed espone quattro campi: \texttt{userMessage} (mostrato
+all'utente), \texttt{technicalMessage} (per i log), \texttt{errorCode} e
+\texttt{timestamp}. Le view leggono solo \texttt{getUserMessage()}.
 
-\section{InvalidStateTransitionException}
-\texttt{BusinessValidationException} per transizioni di stato non previste
-(la macchina BR-04 \texttt{Ordine.cambiaStato()} blocca l'operazione illegale).
+\section{Wrapping}
+\label{sec:exc_wrapping}
 
-\textbf{Nota:} gli errori infrastrutturali (es. \texttt{SQLException}) sono
-gestiti dai DAO e non si propagano alle view.
+I DAO incapsulano l'errore di basso livello (\texttt{SQLException},
+\texttt{IOException}) in \texttt{DAOException} con
+\texttt{(message, cause)}: \texttt{getCause()} preserva la causa originale,
+che non si propaga mai alle boundary.
+
+\section{Payment}
+\label{sec:exc_payment}
+
+\texttt{PaymentRejectedException} (\texttt{pattern.payment}) è checked:
+transazione non autorizzata, gestita dall'estensione \texttt{6a} di UC-04.
+
+\section{Messaggi}
+\label{sec:exc_messaggi}
+
+Testi centralizzati in \texttt{ExceptionMessagesEnum} (log) e
+\texttt{UserErrorMessagesEnum} (utente), senza stringhe duplicate nei punti
+di lancio.

@@ -2,38 +2,52 @@
 \chapter{Persistenza}
 \label{cap:persistenza}
 
-La persistenza è intercambiabile a runtime (NFR-01) con tre backend tramite
-il pattern \textbf{Abstract Factory}: \texttt{DAOFactory} +
-concrete factory per modalità.
+La persistenza è intercambiabile a runtime (NFR-01): tre backend mutuamente
+esclusivi sono selezionati tramite il pattern \textbf{Abstract Factory}
+(\texttt{DAOFactory} + una concrete factory per modalità).
 
-\section{Modalità}
+\section{Layer di persistenza DB (MySQL/JDBC)}
+Il livello di persistenza DB utilizza \textbf{MySQL} come DBMS relazionale. La
+gestione dei dati è affidata a classi DAO specifiche (es.
+\texttt{JDBCUserDAO}, \texttt{JDBCOrdineDAO}), che eseguono query SQL per le
+operazioni CRUD sulle entità.
+
+\textbf{Entità principali:}
 \begin{itemize}
-    \item \textbf{DEMO} (default): \texttt{DemoDAOFactory}, dati in-memory,
-    seed idempotente. \texttt{DemoDAOTest}.
-    \item \textbf{FS}: \texttt{FSDAOFactory}, entità su file JSON via
-    \texttt{Gson}. \texttt{FSDaoTest}.
-    \item \textbf{JDBC}: \texttt{JDBCDAOFactory}, database MySQL
-    (\texttt{sql/CiboAmico.sql}). Escluso da JaCoCo (richiede MySQL), test
-    manuale.
+    \item \textbf{Utenti}: registrati, con i ruoli (Cliente e Venditore);
+    \item \textbf{Ordini}: record transazionali con stato, totale e voci;
+    \item \textbf{Prodotti}: articoli del marketplace (catalogo e inventario);
+    \item \textbf{Buoni}: codici sconto (percentuale o importo fisso).
 \end{itemize}
 
-\section{Scelta a runtime}
-\texttt{ApplicationModeManager} (Singleton) seleziona la factory secondo la
-modalità attiva; i controller ottengono i DAO solo via
-\texttt{getDAOFactory()}, mai con \texttt{new} diretto.
+Le transazioni sono atomiche (\texttt{ConnectionManager} usa
+\texttt{setAutoCommit(false)} con \texttt{commit/rollback} per la riduzione
+scorte).
 
-\begin{verbatim}
-factory = switch (activeMode) {
-    case MODE_JDBC -> new JDBCDAOFactory();
-    case MODE_FS   -> new FSDAOFactory();
-    case MODE_DEMO -> new DemoDAOFactory();
-};
-\end{verbatim}
+\textbf{Configurazione}: il sistema è configurato via il file
+\texttt{config.properties} impostando \texttt{persistence\_type = DB} e
+fornendo le credenziali MySQL necessarie.
 
-\section{Connessione e transazioni (JDBC)}
-\begin{itemize}
-    \item \texttt{ConnectionManager}: credenziali da system properties
-    (\texttt{ciboamico.db.url}, \texttt{ciboamico.db.user}, \texttt{ciboamico.db.password}) con fallback locale;
-    \item transazioni atomiche con \texttt{setAutoCommit(false)} e
-    \texttt{commit/rollback} (ordine + riduzione scorte).
-\end{itemize}
+\section{Layer di persistenza FS (File System)}
+Il layer di persistenza FS memorizza i dati in file \textbf{JSON} nella
+cartella \texttt{data/}. Ogni entità è mappata su un file dedicato
+(es. \texttt{utenti.json}, \texttt{ordini.json}, \texttt{prodotti.json},
+\texttt{inventario.json}).
+
+\textbf{Gestione}: la classe \texttt{GsonConfig} fornisce un serializzatore
+JSON coerente (helper per \texttt{LocalDate}/\texttt{LocalDateTime}) usato da
+tutti i DAO FS per garantire la lettura/scrittura corretta dei record.
+
+\textbf{Configurazione}: la modalità è attivata impostando
+\texttt{persistence\_type = FS} nel file di configurazione.
+
+\section{Layer di persistenza DEMO (In-Memory)}
+Il layer di persistenza DEMO mantiene i dati esclusivamente nella memoria
+volatile (RAM), senza storage permanente. Le strutture sono popolate da valori
+predefiniti all'avvio e cancellate al termine dell'esecuzione.
+
+\textbf{Casi d'uso}: è pensato per il testing unitario, lo sviluppo rapido e
+le dimostrazioni che non richiedono configurazione di database.
+
+\textbf{Configurazione}: la modalità è attivata impostando
+\texttt{persistence\_type = DEMO} (default).

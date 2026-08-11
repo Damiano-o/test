@@ -2,54 +2,55 @@
 \chapter{Testing}
 \label{cap:testing}
 
-La verifica del caso d'uso UC-04 è effettuata con una suite di test
-\textbf{JUnit 5} eseguita da \textbf{Maven} (\texttt{mvn verify}) e la copertura
-misurata da \textbf{JaCoCo}. La soglia di copertura \textbf{LINE} $\geq$ 80\% è
-imposta come \emph{quality gate} (la build fallisce se non viene raggiunta).
+La verifica del sistema è condotta con una suite di unit test \textbf{JUnit 5}
+eseguita da Maven e con copertura misurata da JaCoCo (quality gate su copertura
+di riga). Di seguito i comportamenti verificati, descritti per funzionalità.
 
-\section{Organizzazione}
-\label{sec:testing_org}
+\paragraph{Accesso all'area riservata.} Abbiamo testato il controller
+dell'area riservata verificando che un utente autenticato recuperi
+correttamente i dati del proprio checkout e della propria sessione. I test
+garantiscono che le strutture restituite non siano mai \texttt{null} e che
+l'accesso ai dati riservati sia gestito correttamente per gli utenti
+autenticati.
 
-I test risiedono in \texttt{src/test/java}, mirror dell'architettura BCE. LA
-suite copre il layer applicativo (\texttt{OrdinaProdottoController},
-\texttt{AutenticazioneController}), le entity (\texttt{Ordine},
-\texttt{Prodotto}, \texttt{BuonoPromozionale}), i pattern (Strategy, Observer,
-Singleton, factory) e la persistenza (DAO Demo e FS). I DAO JDBC (richiedono un
-MySQL reale) e le boundary JavaFX sono esclusi dalla copertura automatizzata.
+\paragraph{Creazione e sottomissione dell'ordine.} Abbiamo testato il flusso
+di ordinazione verificando che un prodotto venga selezionato e che l'ordine
+venga creato con il venditore corretto. I test garantiscono che un ordine con
+utente o prodotto nullo venga respinto e che la disponibilità di magazzino sia
+ridotta all'acquisto senza scorte negative.
 
-\section{Specifiche dei test}
-\label{sec:testing_specifiche}
+\paragraph{Scontistica del buono (Strategy).} Abbiamo testato la logica di
+scontistica verificando che un buono valido venga applicato al totale
+dell'ordine. I test garantiscono che codici vuoti, scaduti o non validi
+vengano respinti senza eccezioni non gestite e che il calcolo dello sconto non
+produca mai importi incoerenti.
 
-I principali casi di test verificano:
-\begin{itemize}
-    \item \textbf{OrdinaProdottoControllerTest} (7 test): ordine con utente
-    nullo respinto, prodotto non trovato, venditore risolto dal prodotto,
-    riduzione scorte, quantità eccedente (3a), pagamento autorizzato (ordine
-    CREATED) e rifiutato (6a);
-    \item \textbf{AutenticazioneControllerTest}: login/registrazione con
-    credenziali valide e invalide;
-    \item \textbf{OrdineControllerTest} (2 test): transizione di stato BR-04 e
-    notifica Observer;
-    \item \textbf{ProdottoTest}/\textbf{OrdineTest}: riduzione disponibilità e
-    macchina a stati;
-    \item \textbf{BuonoPromozionaleStrategyTest}/\textbf{ScontoStrategyFactoryTest}:
-    scontistica e Simple Factory;
-    \item \textbf{OrdineLazyFactoryTest}/\textbf{PatternTest}: factory e
-    pattern;
-    \item \textbf{DemoDAOTest}/\textbf{FSDaoTest}/\textbf{ApplicationModeManagerTest}:
-    persistenza e modalità.
-\end{itemize}
+\paragraph{Pagamento e autorizzazione.} Abbiamo testato il sottosistema di
+pagamento verificando sia il ramo autorizzato sia quello rifiutato. I test
+garantiscono che un pagamento rifiutato sollevi l'eccezione applicativa
+corretta lasciando invariato l'ordine, e che dati di carta non validi (CVV,
+importo non positivo, ordine assente) vengano bloccati senza
+\texttt{NullPointerException}.
 
-\section{Risultati}
-\label{sec:testing_risultati}
+\paragraph{Autenticazione.} Abbiamo testato il meccanismo di autenticazione
+verificando sia credenziali valide sia non valide. I test garantiscono che un
+login corretto popoli la sessione e che email o password errate vengano
+rifiutate, con la \texttt{logout} che pulisce correttamente la sessione.
 
-L'ultima esecuzione riporta \textbf{69 test passati, 0 falliti, 0 errori}, con
-coperture JaCoCo: LINE 81.5\%, INSTRUCTION 81.2\%, BRANCH 63.3\%, METHOD 85.2\%,
-CLASS 96.2\% (soglia LINE $\geq$ 80\% rispettata). La copertura è concentrata
-su UC-04 e autenticazione.
+\paragraph{Ciclo di vita dell'ordine (macchina a stati BR-04).} Abbiamo testato
+la macchina a stati dell'ordine verificando la sequenza \texttt{CREATED
+$\rightarrow$ CONFIRMED $\rightarrow$ IN\_DELIVERY $\rightarrow$ DELIVERED}.
+I test garantiscono che una transizione illegale venga bloccata
+dall'eccezione di stato invalido.
 
-\section{SonarCloud}
-\label{sec:testing_sonar}
+\paragraph{Notifica Observer.} Abbiamo testato il pattern Observer verificando
+che il publisher notifichi gli observer registrati quando un ordine viene
+confermato. I test garantiscono che l'evento (\texttt{OrdineEvent}) venga
+consegnato agli observer tramite il DTO in sola lettura, mai l'entità di
+dominio.
 
-Il progetto è analizzato con \textbf{SonarCloud} (Quality Gate). \emph{Nota di
-consegna}: includere lo screenshot del Quality Gate PASSED e l'URL pubblico.
+\paragraph{Persistenza (Demo e File System).} Abbiamo testato i livelli di
+persistenza verificando il ciclo crea-leggi-aggiorna di utenti, prodotti e
+ordini. I test garantiscono che la persistenza \emph{Demo} (in-memory) e
+\emph{File System} mantengano i dati in modo coerente, incluso il recupero dei
+prodotti per nome.
