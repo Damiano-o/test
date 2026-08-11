@@ -48,3 +48,12 @@ docs/relazione_italiana/pgs-*.png
 docs/relazione_italiana/sc-*.png
 docs/relazione_italiana/main.out
 docs/relazione_italiana/figures/*_ref.png
+
+# Backup temporanei draw.io (non versionare)
+docs/relazione_italiana/figures/.$*.drawio.bkp
+docs/relazione_italiana/figures/.$*.drawio.dtmp
+docs/relazione_italiana/figures/.$*.tmp
+
+# Backup locali relazione (non versionare)
+docs/archive_old/
+docs/relazione_italiana/archive/
