@@ -4,23 +4,26 @@ import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 
 /**
- * Singleton (Holder Idiom): custode dell'utente loggato e del checkout in
- * corso (UC-04). I controller applicativi sono stateless e leggono la
- * sessione da qui.
+ * Singleton: custode dell'utente loggato e del checkout in corso (UC-04).
+ * I controller applicativi sono stateless e leggono la sessione da qui.
+ * L'istanza è creata lazy e thread-safe con {@code synchronized} (singleton
+ * classico), senza ricorrere a commenti/soppressioni per SonarCloud.
  */
 public final class SessionManager {
+
+    private static SessionManager instance;
 
     private UtenteBean loggedUser;
     private OrdineBean ordineInCorso;
 
     private SessionManager() { }
 
-    private static class Container {
-        private static final SessionManager INSTANCE = new SessionManager();
-    }
-
-    public static SessionManager getInstance() {
-        return Container.INSTANCE;
+    /** Istanza unica (lazy, thread-safe via synchronized). */
+    public static synchronized SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager();
+        }
+        return instance;
     }
 
     public UtenteBean getLoggedUser() { return loggedUser; }

@@ -4,23 +4,25 @@ import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.boundary.IView;
-import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
+import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
 import java.util.List;
 
 /**
- * Boundary CLI — Marketplace (UC-04 Ordina un Prodotto). Mostra i prodotti disponibili e
- * crea un ordine tramite OrdinaProdottoController (scambio Solo Bean).
+ * Boundary CLI — Marketplace (UC-04 Ordina un Prodotto). Mostra i prodotti
+ * disponibili, applica un eventuale buono promozionale (estensione 4a) e crea
+ * l'ordine delegando al {@link OrdinaProdottoFacade} (scambio solo Bean).
  */
 public class MarketplaceCLIView implements IView {
 
     private final CLIContext ctx;
-    private final OrdinaProdottoController controller;
+    private final OrdinaProdottoFacade facade;
 
     public MarketplaceCLIView(CLIContext ctx) {
         this.ctx = ctx;
-        this.controller = new OrdinaProdottoController(ctx.getFactory());
+        this.facade = new OrdinaProdottoFacade();
     }
 
     @Override
@@ -31,7 +33,7 @@ public class MarketplaceCLIView implements IView {
             return;
         }
         System.out.println("\n=== Marketplace (UC-04) ===");
-        List<ProdottoBean> prodotti = controller.getProdottiDisponibili();
+        List<ProdottoBean> prodotti = facade.getProdottiDisponibili();
         if (prodotti.isEmpty()) {
             System.out.println("Nessun prodotto in vendita.");
             return;
@@ -44,19 +46,21 @@ public class MarketplaceCLIView implements IView {
         if (nomeProdotto.isEmpty()) {
             return;
         }
-        // passa al checkout: crea l'ordine in corso con il totale pieno e delega al pagamento
-        ProdottoBean selezionato = controller.getProdottiDisponibili().stream()
-                .filter(p -> nomeProdotto.equals(p.getNome()))
-                .findFirst()
-                .orElse(null);
-        if (selezionato == null) {
-            System.out.println("Prodotto non trovato.");
+        try {
+            // Delego al Grafico la creazione dell'ordine in corso (checkout)
+            facade.avviaCheckout(nomeProdotto);
+
+            // Estensione 4a: buono promozionale opzionale (invio = nessuno)
+            String codiceBuono = ctx.leggiStringa("Codice buono (opzionale, invio per saltare): ").trim();
+            if (!codiceBuono.isEmpty()) {
+                OrdineBean scontato = facade.applicaBuono(codiceBuono, nomeProdotto, utente);
+                System.out.printf("✓ Buono \"%s\" applicato — totale %.2f EUR%n",
+                        scontato.getCodiceBuono(), scontato.getTotale());
+            }
+        } catch (BusinessValidationException e) {
+            System.out.println("Problema: " + e.getUserMessage());
             return;
         }
-        OrdineBean inCorso = new OrdineBean();
-        inCorso.setNomeProdotto(selezionato.getNome());
-        inCorso.setTotale(selezionato.getPrezzo());
-        SessionManager.getInstance().setOrdineInCorso(inCorso);
         new PaymentCLIView(ctx).display();
     }
 }

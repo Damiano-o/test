@@ -1,9 +1,8 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
-import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
+import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.geometry.Insets;
@@ -15,17 +14,19 @@ import javafx.scene.layout.VBox;
 
 /**
  * Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione 6a UC-04).
- * Legge il prodotto in checkout da {@link SessionManager#getOrdineInCorso()},
- * mostra il riepilogo e i dati carta, e su "Paga" invoca
- * {@link OrdinaProdottoController#processaPagamento}. Rispetta la regola
- * bean-only: scambia SOLO {@link PaymentInfoBean} con il controller.
+ *
+ * <p>Legge l'ordine in checkout da {@link SessionManager#getOrdineInCorso()},
+ * raccoglie i dati carta e delega l'autorizzazione al
+ * {@link OrdinaProdottoFacade}. La conversione dei dati carta e l'addebito
+ * sono gestiti dal controller (via Facade); qui risiede solo la UI (metodi
+ * {@code on...}).</p>
  */
 public class PaymentView {
 
-    private final OrdinaProdottoController ordinaController;
+    private final OrdinaProdottoFacade facade;
 
     public PaymentView() {
-        this.ordinaController = new OrdinaProdottoController();
+        this.facade = new OrdinaProdottoFacade();
     }
 
     public Parent build() {
@@ -63,41 +64,12 @@ public class PaymentView {
         esito.getStyleClass().add("page-subtitle");
         esito.setWrapText(true);
 
-        paga.setOnAction(e -> {
-            try {
-                if (ordine == null) {
-                    throw new BusinessValidationException("Nessun ordine in checkout.");
-                }
-                validaCampi(numeroCarta.getText(), intestatario.getText(),
-                        scadenza.getText(), cvv.getText());
-                PaymentInfoBean payment = new PaymentInfoBean();
-                payment.setNumeroCarta(numeroCarta.getText().trim());
-                payment.setIntestatario(intestatario.getText().trim());
-                payment.setScadenza(scadenza.getText().trim());
-                payment.setCvv(cvv.getText().trim());
-                // addebita il totale dell'ordine (scontato se è stato applicato un buono)
-                payment.setImportoInCent(Math.round(ordine.getTotale() * 100));
-
-                OrdineBean risultato = ordinaController.processaPagamento(ordine, utente, payment);
-
-                esito.setText("Pagamento riuscito ✓ — ordine " + risultato.getStato()
-                        + ", totale " + String.format("%.2f EUR", risultato.getTotale()));
-                SessionManager.getInstance().setOrdineInCorso(null);
-                Navigator.getInstance().switchTo("marketplace");
-            } catch (BusinessValidationException ex) {
-                esito.setText(ex.getMessage());
-            } catch (Exception ex) {
-                esito.setText("Problema tecnico: riprovare più tardi.");
-            }
-        });
+        paga.setOnAction(e -> onPaga(utente, ordine, numeroCarta, intestatario, scadenza, cvv, esito));
 
         Button annulla = new Button("Annulla");
         annulla.setId("btn-annulla-pagamento");
         annulla.setMaxWidth(Double.MAX_VALUE);
-        annulla.setOnAction(e -> {
-            SessionManager.getInstance().setOrdineInCorso(null);
-            Navigator.getInstance().switchTo("marketplace");
-        });
+        annulla.setOnAction(e -> onAnnulla());
 
         VBox corpo = new VBox(10,
                 messaggio,
@@ -111,13 +83,31 @@ public class PaymentView {
         return UiKit.pagina("Pagamento", "UC-04 · autorizzazione all'addebito", corpo, "marketplace");
     }
 
-    private void validaCampi(String carta, String intestatario, String scadenza, String cvv)
-            throws BusinessValidationException {
-        if (carta.isBlank() || intestatario.isBlank() || scadenza.isBlank() || cvv.isBlank()) {
-            throw new BusinessValidationException("Tutti i campi del pagamento sono obbligatori.");
+    // -------- Gestori UI (stile on...) --------
+
+    private void onPaga(UtenteBean utente, OrdineBean ordine,
+                        TextField numeroCarta, TextField intestatario,
+                        TextField scadenza, TextField cvv, Label esito) {
+        try {
+            if (ordine == null) {
+                throw new BusinessValidationException("Nessun ordine in checkout.");
+            }
+            OrdineBean risultato = facade.processaPagamento(
+                    ordine, utente,
+                    numeroCarta.getText(), intestatario.getText(),
+                    scadenza.getText(), cvv.getText());
+            esito.setText("Pagamento riuscito ✓ — ordine " + risultato.getStato()
+                    + ", totale " + String.format("%.2f EUR", risultato.getTotale()));
+            Navigator.getInstance().switchTo("marketplace");
+        } catch (BusinessValidationException ex) {
+            esito.setText(ex.getUserMessage());
+        } catch (Exception ex) {
+            esito.setText("Problema tecnico: riprovare più tardi.");
         }
-        if (cvv.trim().length() != 3) {
-            throw new BusinessValidationException("Il CVV deve essere di esattamente 3 cifre.");
-        }
+    }
+
+    private void onAnnulla() {
+        SessionManager.getInstance().setOrdineInCorso(null);
+        Navigator.getInstance().switchTo("marketplace");
     }
 }

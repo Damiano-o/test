@@ -1,12 +1,11 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
-import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
+import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.boundary.Navigator;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -22,104 +21,36 @@ import java.util.stream.Collectors;
 
 /**
  * Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto).
- * Elenca i prodotti pubblicati e crea un ordine (D-03).
- * Scambia SOLO OrdineBean con il controller.
- * UI: catalogo in card + selezione prodotto + pulsante ordina.
+ *
+ * <p>Gestisce l'interazione della UI tramite metodi privati {@code on...}
+ * (coerente con lo stile delle Boundary del pattern di riferimento) e delega
+ * la logica di business al {@link OrdinaProdottoFacade}. Scambia solo
+ * Bean con il Facade.</p>
  */
 public class MarketplaceView {
 
-    private final OrdinaProdottoController ordinaController;
+    private final OrdinaProdottoFacade facade;
+    private final UtenteBean utente;
+
+    // Controlli della vista
+    private Button aggiorna;
+    private Button ordina;
+    private Button applicaBuono;
+    private TextField buonoField;
+    private ComboBox<String> prodSelez;
+    private FlowPane catalogo;
+    private Label messaggio;
 
     public MarketplaceView() {
-        this.ordinaController = new OrdinaProdottoController();
+        this.facade = new OrdinaProdottoFacade();
+        this.utente = SessionManager.getInstance().getLoggedUser();
     }
 
     public Parent build() {
-        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
-
-        Button aggiorna = new Button("Aggiorna catalogo");
-        aggiorna.setId("btn-catalogo");
-        aggiorna.setMaxWidth(Double.MAX_VALUE);
-
-        FlowPane catalogo = new FlowPane(16, 16);
-        catalogo.setPadding(new Insets(4, 0, 20, 0));
-
-        // Selezione prodotto
-        ComboBox<String> prodSelez = new ComboBox<>();
-        prodSelez.setPromptText("Scegli un prodotto");
-        prodSelez.setMaxWidth(Double.MAX_VALUE);
-
-        Button ordina = new Button("Ordina prodotto");
-        ordina.setId("btn-ordina");
-        ordina.setMaxWidth(Double.MAX_VALUE);
-        Label messaggio = new Label("Carica il catalogo e scegli un prodotto.");
-        messaggio.getStyleClass().add("page-subtitle");
-        messaggio.setWrapText(true);
-
-        // Campo buono promozionale (estensione 4a UC-04)
-        TextField buonoField = new TextField();
-        buonoField.setId("buonoField");
-        buonoField.setPromptText("Codice buono (opzionale)");
-        buonoField.setMaxWidth(Double.MAX_VALUE);
-        Button applicaBuono = new Button("Applica buono");
-        applicaBuono.setId("btn-applica-buono");
-        applicaBuono.setMaxWidth(Double.MAX_VALUE);
-
-        aggiorna.setOnAction(e -> {
-            List<ProdottoBean> prodotti = ordinaController.getProdottiDisponibili();
-            catalogo.getChildren().clear();
-            prodotti.forEach(p -> catalogo.getChildren()
-                    .add(UiKit.card(p.getNome(),
-                            String.format("%.2f EUR · %s disponibili",
-                                    p.getPrezzo(), p.getQuantita().intValue()))));
-            prodSelez.getItems().setAll(prodotti.stream()
-                    .map(ProdottoBean::getNome).collect(Collectors.toList()));
-            messaggio.setText(prodotti.size() + " prodotti disponibili nel marketplace locale.");
-        });
-
-        ordina.setOnAction(e -> {
-            String nome = prodSelez.getValue();
-            if (nome == null || nome.isBlank()) {
-                messaggio.setText("Seleziona un prodotto dal catalogo.");
-                return;
-            }
-            ProdottoBean selezionato = ordinaController.getProdottiDisponibili().stream()
-                    .filter(p -> nome.equals(p.getNome()))
-                    .findFirst()
-                    .orElse(null);
-            if (selezionato == null) {
-                messaggio.setText("Prodotto non più disponibile.");
-                return;
-            }
-            // ordine in checkout: totale pieno se non è già stato applicato un buono
-            OrdineBean inCorso = SessionManager.getInstance().getOrdineInCorso();
-            if (inCorso == null || !nome.equals(inCorso.getNomeProdotto())) {
-                inCorso = new OrdineBean();
-                inCorso.setNomeProdotto(nome);
-                inCorso.setTotale(selezionato.getPrezzo());
-            }
-            SessionManager.getInstance().setOrdineInCorso(inCorso);
-            Navigator.getInstance().switchTo("payment");
-        });
-
-        // Estensione 4a: applica il buono promozionale e aggiorna il checkout
-        applicaBuono.setOnAction(ev -> {
-            try {
-                OrdineBean bean = new OrdineBean();
-                bean.setNomeProdotto(prodSelez.getValue());
-                OrdineBean ris = ordinaController.applicaBuonoPromozionale(
-                        buonoField.getText(), bean, utente);
-                // conserva il totale scontato per la PaymentView
-                ris.setIdOrdine(bean.getIdOrdine());
-                SessionManager.getInstance().setOrdineInCorso(ris);
-                messaggio.setText("Buono \"" + ris.getCodiceBuono()
-                        + "\" applicato ✓ — totale " + String.format("%.2f", ris.getTotale()) + " EUR");
-            } catch (BusinessValidationException ex) {
-                messaggio.setText(ex.getMessage());
-            } catch (Exception ex) {
-                messaggio.setText("Problema tecnico: verificare il codice buono.");
-            }
-        });
+        inizializzaControlli();
+        aggiorna.setOnAction(e -> onAggiornaCatalogo());
+        ordina.setOnAction(e -> onOrdinaProdotto());
+        applicaBuono.setOnAction(e -> onApplicaBuono());
 
         BorderPane area = new BorderPane();
         VBox ordinePanel = new VBox(8,
@@ -134,5 +65,78 @@ public class MarketplaceView {
                 new Label("Catalogo prodotti"), area);
         corpo.setPadding(new Insets(16, 0, 0, 0));
         return UiKit.pagina("Marketplace locale", "UC-04 · ordina dalla vendita locale", corpo, "marketplace");
+    }
+
+    private void inizializzaControlli() {
+        aggiorna = new Button("Aggiorna catalogo");
+        aggiorna.setId("btn-catalogo");
+        aggiorna.setMaxWidth(Double.MAX_VALUE);
+
+        catalogo = new FlowPane(16, 16);
+        catalogo.setPadding(new Insets(4, 0, 20, 0));
+
+        prodSelez = new ComboBox<>();
+        prodSelez.setPromptText("Scegli un prodotto");
+        prodSelez.setMaxWidth(Double.MAX_VALUE);
+
+        ordina = new Button("Ordina prodotto");
+        ordina.setId("btn-ordina");
+        ordina.setMaxWidth(Double.MAX_VALUE);
+
+        messaggio = new Label("Carica il catalogo e scegli un prodotto.");
+        messaggio.getStyleClass().add("page-subtitle");
+        messaggio.setWrapText(true);
+
+        buonoField = new TextField();
+        buonoField.setId("buonoField");
+        buonoField.setPromptText("Codice buono (opzionale)");
+        buonoField.setMaxWidth(Double.MAX_VALUE);
+
+        applicaBuono = new Button("Applica buono");
+        applicaBuono.setId("btn-applica-buono");
+        applicaBuono.setMaxWidth(Double.MAX_VALUE);
+    }
+
+    // -------- Gestori UI (stile on...) --------
+
+    private void onAggiornaCatalogo() {
+        List<ProdottoBean> prodotti = facade.getProdottiDisponibili();
+        catalogo.getChildren().clear();
+        prodotti.forEach(p -> catalogo.getChildren()
+                .add(UiKit.card(p.getNome(),
+                        String.format("%.2f EUR · %s disponibili",
+                                p.getPrezzo(), p.getQuantita().intValue()))));
+        prodSelez.getItems().setAll(prodotti.stream()
+                .map(ProdottoBean::getNome).collect(Collectors.toList()));
+        messaggio.setText(prodotti.size() + " prodotti disponibili nel marketplace locale.");
+    }
+
+    private void onOrdinaProdotto() {
+        String nome = prodSelez.getValue();
+        if (nome == null || nome.isBlank()) {
+            messaggio.setText("Seleziona un prodotto dal catalogo.");
+            return;
+        }
+        try {
+            facade.avviaCheckout(nome);
+            Navigator.getInstance().switchTo("payment");
+        } catch (BusinessValidationException ex) {
+            messaggio.setText(ex.getUserMessage());
+        } catch (Exception ex) {
+            messaggio.setText("Problema tecnico: riprovare più tardi.");
+        }
+    }
+
+    private void onApplicaBuono() {
+        try {
+            OrdineBean ris = facade.applicaBuono(
+                    buonoField.getText(), prodSelez.getValue(), utente);
+            messaggio.setText("Buono \"" + ris.getCodiceBuono()
+                    + "\" applicato ✓ — totale " + String.format("%.2f", ris.getTotale()) + " EUR");
+        } catch (BusinessValidationException ex) {
+            messaggio.setText(ex.getUserMessage());
+        } catch (Exception ex) {
+            messaggio.setText("Problema tecnico: verificare il codice buono.");
+        }
     }
 }
