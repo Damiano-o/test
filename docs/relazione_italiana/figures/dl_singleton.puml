@@ -9,16 +9,14 @@ top to bottom direction
 
 ' ============================================================
 ' Design-level — Singleton (sessione utente e modalità applicativa)
-' Stile EventBus/Container: classe client -> Singleton,
-' <<static nested>> Container con INSTANCE, freccia "Holds unique instance".
+' Singleton classico: field static + getInstance() synchronized,
+' inizializzazione lazy (come i progetti di riferimento).
 ' ============================================================
 
 ' ---------- Client / chi usa il Singleton ----------
-class "LoginView" {
-  + build() : Parent
+class "LoginView" <<boundary>> {
 }
-class "MarketplaceView" {
-  + build() : Parent
+class "MarketplaceView" <<boundary>> {
 }
 class "OrdinaProdottoController" <<control>> {
   + usa la sessione
@@ -27,6 +25,7 @@ class "OrdinaProdottoController" <<control>> {
 
 ' ---------- Singleton 1: sessione utente ----------
 class "SessionManager" {
+  - instance : SessionManager
   - loggedUser : UtenteBean
   - ordineInCorso : OrdineBean
   - SessionManager()
@@ -38,14 +37,14 @@ class "SessionManager" {
   + logout() : void
 }
 
-class "Container" as H1 <<static nested>> {
-  {static} + INSTANCE : SessionManager
-}
-SessionManager +-- H1 : "Holds unique\ninstance"
-H1 ..> SessionManager : crea
+note right of SessionManager
+  Lazy init synchronized:
+  if (instance == null) instance = new SessionManager()
+end note
 
 ' ---------- Singleton 2: modalità applicativa ----------
 class "ApplicationModeManager" {
+  - instance : ApplicationModeManager
   - activeMode : String
   - factory : DAOFactory
   - ApplicationModeManager()
@@ -55,11 +54,9 @@ class "ApplicationModeManager" {
   + getDAOFactory() : DAOFactory
 }
 
-class "Container" as H2 <<static nested>> {
-  {static} + INSTANCE : ApplicationModeManager
-}
-ApplicationModeManager +-- H2 : "Holds unique\ninstance"
-H2 ..> ApplicationModeManager : crea
+note right of ApplicationModeManager
+  Stesso idioma: lazy init + synchronized
+end note
 
 ' ---------- usi ----------
 LoginView --> SessionManager : getLoggedUser()

@@ -1,0 +1,54 @@
+@startuml
+skinparam style strictuml
+skinparam classAttributeIconSize 0
+skinparam nodesep 60
+skinparam ranksep 50
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
+top to bottom direction
+
+' ============================================================
+' Design-level — Facade del checkout (UC-04)
+' Stile conciso: Boundary -> Facade (metodi UC-04) che delega
+' al Controller (buono 4a, pagamento 6/6a, submit) senza esporre
+' alla boundary l'ordine di chiamata.
+' ============================================================
+
+' ---------- chi usa la Facade ----------
+class "MarketplaceView" <<boundary>> {
+}
+class "PaymentView" <<boundary>> {
+}
+
+' ---------- Facade ----------
+class "OrdinaProdottoFacade" {
+  - controller : OrdinaProdottoController
+  + OrdinaProdottoFacade()
+  + OrdinaProdottoFacade(DAOFactory)
+  + getProdottiDisponibili() : List<ProdottoBean>
+  + avviaCheckout(String) : OrdineBean
+  + applicaBuono(String, String, UtenteBean) : OrdineBean
+  + processaPagamento(OrdineBean, UtenteBean, String, String, String, String) : OrdineBean
+}
+
+' ---------- subsystem coordinato ----------
+class "OrdinaProdottoController" <<control>> {
+  + getProdottiDisponibili() : List<ProdottoBean>
+  + avviaCheckout(String) : OrdineBean
+  + applicaBuono(String, String, UtenteBean) : OrdineBean
+  + processaPagamento(OrdineBean, UtenteBean, PaymentInfoBean) : OrdineBean
+}
+
+' ---------- tipi coinvolti ----------
+class "OrdineBean" {
+  + getNomeProdotto() : String
+  + setCodiceBuono(String) : void
+}
+
+' ---------- relazioni ----------
+MarketplaceView --> OrdinaProdottoFacade : usa
+PaymentView --> OrdinaProdottoFacade : usa
+OrdinaProdottoFacade o--> OrdinaProdottoController : delega
+OrdinaProdottoController ..> OrdineBean : restituisce
+
+@enduml

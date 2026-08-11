@@ -11,9 +11,13 @@ GoF applicati e modellazione comportamentale (activity, sequence, state).
 Il VOPC è il diagramma delle classi di analisi che partecipano a UC-04, secondo
 il pattern \textbf{Boundary--Control--Entity}: le boundary
 \texttt{MarketplaceView} e \texttt{PaymentView} (con l'attore Cliente), il
-control \texttt{OrdinaProdottoController} (unico per caso d'uso) e le entity
-\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale}, \texttt{Utente}.
-I Bean e i DAO appartengono al design-level e non compaiono qui.
+control unico \texttt{OrdinaProdottoController} e le entity
+\texttt{Ordine}, \texttt{Prodotto}, \texttt{BuonoPromozionale},
+\texttt{Utente}. La notifica a venditore e compratore (pattern Observer) è
+rappresentata dal \texttt{OrdineEventPublisher} (subject singleton), dal DTO
+\texttt{OrdineEvent} e dagli observer \texttt{VenditoreNotifier} e
+\texttt{UtenteNotifier}. I Bean e i DAO appartengono al design-level e non
+compaiono qui.
 
 \begin{figure}[H]
     \centering
@@ -29,53 +33,126 @@ Il design-level introduce interfacce, tipi Java, eccezioni e pattern GoF per
 gestire estensibilità e persistenza dinamica (NFR-01). Gli schemi dei pattern
 utilizzati sono mostrati di seguito.
 
-\subsection{Abstract Factory (persistenza)}
-La persistenza è intercambiabile a runtime: \texttt{DAOFactory} è l'Abstract
-Factory; \texttt{Demo/FS/JDBCDAOFactory} sono le concrete factory che espongono
-i DAO di utente, prodotto, ordine e buono.
+\subsection{Controller}
+Per ogni caso d'uso esiste un \emph{unico controller} che coordina la logica
+di business (DAO, buono, pagamento, submit) e le operazioni di orchestrazione
+esposte alle boundary con scambi su Bean. La boundary (MarketplaceView,
+PaymentView) gestisce l'interazione della UI tramite metodi privati
+\texttt{on...} e delega le operazioni di dominio al controller.
+\begin{itemize}
+    \item \texttt{MarketplaceView} / \texttt{PaymentView}: gestione schermate
+        (eventi UI in metodi \texttt{on...}) e messaggi user-friendly;
+    \item \texttt{OrdinaProdottoController}: unico controller del caso d'uso,
+        con la logica di business (buono 4a, pagamento 6/6a, submit) e le
+        operazioni di checkout (\texttt{avviaCheckout}, \texttt{applicaBuono}).
+\end{itemize}
+Questa struttura rende le boundary intercambiabili (JavaFX o CLI) senza
+toccare la logica di dominio. Il flusso reale è: boundary
+(gestione schermate) $\rightarrow$ controller (business) $\rightarrow$ DAO.
+
+Il diagramma delle classi di progettazione (design-level) mostra tutte le
+classi partecipanti di UC-04 con i pattern GoF applicati: la persistenza
+tramite { }Abstract Factory (\texttt{DAOFactory} e le concrete factory), la
+scontistica del buono tramite \texttt{Strategy}, e la notifica al venditore
+tramite \texttt{Observer}. Boundary blu/azzurro, controller verde, entity
+e interfacce nei toni di supporto.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{figures/dl_factory_hr.png}
-    \caption{Abstract Factory della persistenza.}
-    \label{fig:dl_factory}
+    \includegraphics[width=\textwidth]{figures/class_diagram.png}
+    \caption{Class diagram (design-level) di UC-04: boundary, controller, entity e pattern GoF.}
+    \label{fig:class_diagram}
 \end{figure}
 
-\subsection{Strategy (scontistica del buono)}
-Gli sconti del buono sono calcolati tramite la \texttt{ScontoStrategy}
-(percentuale o importo fisso), usata da \texttt{Ordine} in
-\texttt{ricalcolaTotale()} e costruita da \texttt{ScontoStrategyFactory}.
+\subsection{Validazione input e gestione errori}
+La validazione sintattica dell'input utente avviene nei setter dei Bean
+(Fail Fast, secondo il pattern BCE) e in\texttt{validate()}. I controller
+grafici ricevono le \texttt{String} raw dal form, costruiscono il Bean
+(che valida da solo) e espongono messaggi user-friendly sulla UI.
 
+Le eccezioni di dominio (\texttt{BusinessValidationException} e
+\texttt{AutenticazioneException}) separano il messaggio per l'utente
+(\texttt{getUserMessage()}) dal dettaglio tecnico per il log
+(\texttt{getTechnicalMessage()}) e, quando utile, definiscono un codice
+errore simbolico (\texttt{getErrorCode()}). In questo modo la UI mostra testi
+chiari e il log conserva il contesto, senza esporre dettagli interni
+all'utente finale.
+
+\subsection{Design Patterns (GoF)}
+Il design-level introduce le interfacce, i tipi Java, le eccezioni e i pattern
+GoF per gestire estensibilità e persistenza dinamica (NFR-01). Per ogni pattern
+sono mostrati in ordine lo schema e la breve descrizione dell'applicazione.
+
+\subsubsection*{Abstract Factory Pattern -- Persistence Layer}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/dl_factory_hr.png}
+    \caption{Abstract Factory della persistenza: interfacce DAO, concrete DAO e factory.}
+    \label{fig:dl_factory}
+\end{figure}
+Il livello di persistenza è reso intercambiabile tramite il pattern
+\textbf{Abstract Factory}. L'\texttt{ADOFactory} definisce l'interfaccia per
+creare i vari Data Access Object (\texttt{demo/FS/JDBC}); in base alla
+configurazione \texttt{persistence\_type}, le concrete factory
+(\texttt{DemoDAOFactory}, \texttt{FSDaoFactory}, \texttt{JDBCDaoFactory})
+istanziano lo storage opportuno. Ciò consente di passare da database,
+file-system o memoria senza modificare il codice client (principio
+Open/Closed).
+
+\subsubsection*{Strategy Pattern -- Scontistica del buono}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/dl_strategy_hr.png}
     \caption{Strategy della scontistica del buono.}
     \label{fig:dl_strategy}
 \end{figure}
+Gli sconti del buono sono calcolati tramite la \texttt{ScontoStrategy}
+(percentuale o importo fisso), usata da \texttt{Ordine} in
+\texttt{ricalcolaTotale()} e costruita da \texttt{ScontoStrategyFactory}.
+Aggiungere una nuova politica di sconto richiede solo una nuova classe senza
+modificare le classi esistenti.
 
-\subsection{Observer (notifica al venditore)}
-\texttt{Ordine} delega le notifiche di cambio stato a \texttt{OrdineSubject},
-che notifica gli osservatori \texttt{VenditoreNotifier} e \texttt{UtenteNotifier}
-(interfaccia \texttt{OrdineEventListener}) al cambio stato dell'ordine.
-
+\subsubsection*{Observer Pattern -- Notification System}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.55\textwidth]{figures/dl_observer_hr.png}
-    \caption{Observer della notifica del cambio stato dell'ordine.}
+    \caption{Observer della conferma dell'ordine: publisher singleton e DTO.}
     \label{fig:dl_observer}
 \end{figure}
+Il pattern Observer disaccoppia l'elaborazione dell'ordine dalla logica di
+notifica. La classe \texttt{OrdineEventPublisher} funge da \emph{Subject
+Singleton}, gestendo una lista di \texttt{OrdineEventListener}. Alla
+conferma dell'ordine, il publisher invoca \texttt{onOrdineConfermato()}
+(compratore e venditore) passando il DTO \texttt{OrdineEvent} in sola
+lettura, mai l'entità di dominio: loose coupling e Open/Closed.
 
-\subsection{Singleton (sessione e modalità)}
-\texttt{SessionManager} (sessione utente) e \texttt{ApplicationModeManager}
-(modalità applicativa) garantiscono un'unica istanza tramite \emph{Holder
-idiom}.
-
+\subsubsection*{Singleton Pattern -- Sessions and Mode}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.55\textwidth]{figures/dl_singleton_hr.png}
     \caption{Singleton della sessione e della modalità.}
     \label{fig:dl_singleton}
 \end{figure}
+\texttt{SessionManager} (sessione utente) e \texttt{ApplicationModeManager}
+(modalità applicativa) adottano un singleton classico con \emph{lazy
+initialization} (\texttt{if (instance == null) instance = new X()}) e
+sincronizzazione su \texttt{getInstance()}, in linea coi progetti di
+riferimento: nessun costo percepibile in un client desktop, nessuna
+soppressione di warning per SonarCloud.
+
+\subsubsection*{Facade Pattern -- Checkout UC-04}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/dl_facade_hr.png}
+    \caption{Facade del checkout di UC-04.}
+    \label{fig:dl_facade}
+\end{figure}
+\texttt{OrdinaProdottoFacade} espone alla boundary un'unica interfaccia per il
+checkout (\texttt{getProdottiDisponibili}, \texttt{avviaCheckout},
+\texttt{applicaBuono}, \texttt{processaPagamento}) e delega al controller le
+estensioni dell'use case (buono 4a, pagamento 6/6a, submit). La sottile
+boundary non conosce l'ordine di chiamata ai metodi del controller, che resta
+responsabile della singola regola di business.
 
 \section{Modellazione Comportamentale}
 \label{sec:comportamentale}
@@ -86,8 +163,9 @@ opzionale del buono (4a), pagamento (6/6a) e registrazione dell'ordine.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[height=0.8\textheight]{figures/activity_full.drawio.png}
-    \caption{Activity diagram di UC-04.}
+    \includegraphics[height=0.8\textheight]{figures/activity_uc04.png}
+    \caption{Activity diagram di UC-04: parellelismo di pagamento, notifica
+    compratore/venditore (fork) e timer.}
     \label{fig:activity}
 \end{figure}
 
@@ -95,8 +173,9 @@ opzionale del buono (4a), pagamento (6/6a) e registrazione dell'ordine.
 Il sequence segue la \emph{catena a gradino} (Lezione~32): \texttt{Cliente}
 autenticato crea \texttt{OrdineBean}, valida il buono (4a, frammento
 \texttt{opt}), e paga (\texttt{processaPagamento}) con autorizzazione
-(\texttt{PaymentGateway}), riduzione scorte, salvataggio e notifica asincrona
-\texttt{onStatoCambiato()} al Venditore tramite Observer (6a gestito inline).
+(\texttt{PaymentGateway}), riduzione scorte, salvataggio e notifica a venditore e
+compratore tramite Observer (\texttt{OrdineEventPublisher} + DTO
+\texttt{OrdineEvent}) (6a gestito inline).
 
 \begin{figure}[H]
     \centering
@@ -111,4 +190,18 @@ autenticato crea \texttt{OrdineBean}, valida il buono (4a, frammento
     \includegraphics[width=\textwidth]{figures/state_uc04.png}
     \caption{State diagram (navigazione UI) di UC-04.}
     \label{fig:state}
+\end{figure}
+
+\subsection{State Diagram (ciclo di vita dell'ordine, BR-04)}
+Il lifecycle dell'entit\`a \texttt{Ordine} \`e una macchina a stati validata da
+\texttt{Ordine.cambiaStato(nuovoStato)}: \texttt{CREATED $\rightarrow$
+CONFIRMED $\rightarrow$ IN\_DELIVERY $\rightarrow$ DELIVERED}, con
+\texttt{ANNULLED} ammesso solo da \texttt{CREATED} e \texttt{CONFIRMED}.
+Ogni transizione illegale \`e bloccata da \texttt{InvalidStateTransitionException}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/dl_state.png}
+    \caption{State diagram del lifecycle dell'ordine (BR-04).}
+    \label{fig:dl_state}
 \end{figure}
