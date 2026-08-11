@@ -3,6 +3,8 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventPublisher;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import org.junit.jupiter.api.Test;
 
@@ -35,14 +37,26 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testObserverNotificaCambioStato() throws Exception {
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        final boolean[] notificato = {false};
-        ordine.subscribe(o -> notificato[0] = true);
+    void testObserverNotificaConferma() throws Exception {
+        // Il publisher notifica i listener registrati quando viene confermato un ordine,
+        // passando il DTO OrdineEvent (mai l'entità Ordine).
+        OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
+        publisher.clearListeners();
+        try {
+            final boolean[] notificato = {false};
+            final OrdineEvent[] ricevuto = {null};
+            publisher.addListener(e -> { notificato[0] = true; ricevuto[0] = e; });
 
-        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+            publisher.notifyOrdineConfermato(new OrdineEvent(1L, "mario@cibo.it", 12.5));
 
-        assertTrue(notificato[0]);
+            assertTrue(notificato[0]);
+            assertNotNull(ricevuto[0]);
+            assertEquals(1L, ricevuto[0].getNumeroOrdine());
+            assertEquals("mario@cibo.it", ricevuto[0].getClienteId());
+            assertEquals(12.5, ricevuto[0].getTotale(), 1e-9);
+        } finally {
+            publisher.clearListeners();
+        }
     }
 
 

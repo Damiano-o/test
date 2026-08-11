@@ -2,6 +2,8 @@ package it.uniroma2.ispw.ciboamico.pattern;
 
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventPublisher;
 import it.uniroma2.ispw.ciboamico.pattern.observer.UtenteNotifier;
 import it.uniroma2.ispw.ciboamico.pattern.observer.VenditoreNotifier;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
@@ -29,19 +31,30 @@ class PatternTest {
     }
 
     @Test
-    void testVenditoreNotifier() throws Exception {
-        Ordine ordine = new Ordine(1L, compratore(), venditore());
-        ordine.subscribe(new VenditoreNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED); // non deve lanciare
-        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
+    void testVenditoreNotifier() {
+        OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
+        publisher.clearListeners();
+        try {
+            publisher.addListener(new VenditoreNotifier());
+            // non deve lanciare: il DTO viene consegnato al notifier
+            publisher.notifyOrdineConfermato(new OrdineEvent(1L, "mario@cibo.it", 10.0));
+            assertEquals(1, publisher.getListenerCount());
+        } finally {
+            publisher.clearListeners();
+        }
     }
 
     @Test
-    void testUtenteNotifier() throws Exception {
-        Ordine ordine = new Ordine(1L, compratore(), venditore());
-        ordine.subscribe(new UtenteNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
-        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
+    void testUtenteNotifier() {
+        OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
+        publisher.clearListeners();
+        try {
+            publisher.addListener(new UtenteNotifier());
+            publisher.notifyOrdineConfermato(new OrdineEvent(2L, "marco@cibo.it", 5.5));
+            assertEquals(1, publisher.getListenerCount());
+        } finally {
+            publisher.clearListeners();
+        }
     }
 
     @Test

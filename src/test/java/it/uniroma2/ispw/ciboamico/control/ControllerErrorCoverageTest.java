@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
@@ -20,21 +21,21 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Test dei rami di errore del controller per alzare la coverage LINE su UC-04. */
+/** Test dei rami di errore del controller applicativo per alzare la coverage LINE su UC-04. */
 class ControllerErrorCoverageTest {
 
     private DemoDAOFactory factory;
     private OrdinaProdottoController controller;
 
     @BeforeEach
-    void setup() {
+    void setup() throws Exception {
         factory = new DemoDAOFactory();
         factory.seedDemoData();
         OrdineLazyFactory.configure(factory);
         controller = new OrdinaProdottoController(factory);
     }
 
-    private UtenteBean utente() {
+    private UtenteBean utente() throws Exception {
         UtenteBean u = new UtenteBean();
         u.setUsername("mario");
         u.setEmail("mario@cibo.it");
@@ -43,7 +44,7 @@ class ControllerErrorCoverageTest {
     }
 
     @Test
-    void getProdottiDisponibiliNonVuoto() {
+    void getProdottiDisponibiliNonVuoto() throws Exception {
         List<ProdottoBean> p = controller.getProdottiDisponibili();
         assertFalse(p.isEmpty());
     }
@@ -55,7 +56,7 @@ class ControllerErrorCoverageTest {
     }
 
     @Test
-    void buonoNonValido() {
+    void buonoNonValido() throws Exception {
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
         assertThrows(BusinessValidationException.class,

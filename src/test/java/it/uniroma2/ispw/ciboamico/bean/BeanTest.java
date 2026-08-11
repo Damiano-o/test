@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.bean;
 
+import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -16,27 +18,30 @@ class BeanTest {
     @Test
     void testProdottoBeanValidazione() throws Exception {
         ProdottoBean bean = new ProdottoBean();
-        assertFalse(bean.datiObbligatoriPresenti());
+        assertThrows(Exception.class, bean::validate);
 
         bean.setNome("Latte");
         bean.setQuantita(2.0);
+        bean.setPrezzo(1.2);
         bean.setScadenza(LocalDate.now().plusDays(10));
         bean.setPosizione("Frigo");
         bean.setUnitaMisura("LITRI");
 
-        assertTrue(bean.datiObbligatoriPresenti());
+        bean.validate(); // non lancia ora
         assertEquals("Latte", bean.getNome());
-        assertEquals(2.0, bean.getQuantita());}
+        assertEquals(2.0, bean.getQuantita());
+    }
 
     @Test
     void testProdottoBeanNomeVuoto() throws Exception {
         ProdottoBean bean = new ProdottoBean();
         bean.setNome("   ");
         bean.setQuantita(2.0);
+        bean.setPrezzo(1.0);
         bean.setScadenza(LocalDate.now().plusDays(10));
         bean.setPosizione("Frigo");
         bean.setUnitaMisura("LITRI");
-        assertFalse(bean.datiObbligatoriPresenti());
+        assertThrows(Exception.class, bean::validate);
     }
 
 
@@ -55,4 +60,46 @@ class BeanTest {
         assertEquals("CREATED", bean.getStato());
         assertEquals("c1", bean.getCompratoreId());
         assertEquals("v1", bean.getVenditoreId());}
+
+    // Validazione nei setter (criterio bean: Fail Fast)
+
+    @Test
+    void emailVuotaONonValidaLancia() {
+        AutenticazioneBean bean = new AutenticazioneBean();
+        assertThrows(AutenticazioneException.class, () -> bean.setEmail("user@.it"));
+        assertThrows(AutenticazioneException.class, () -> bean.setEmail(null));
+    }
+
+    @Test
+    void passwordVuotaLancia() {
+        AutenticazioneBean bean = new AutenticazioneBean();
+        assertThrows(AutenticazioneException.class, () -> bean.setPassword(""));
+    }
+
+    @Test
+    void cvvNonValidoLancia() {
+        PaymentInfoBean bean = new PaymentInfoBean();
+        assertThrows(BusinessValidationException.class, () -> bean.setCvv("12"));
+        assertThrows(BusinessValidationException.class, () -> bean.setCvv("1234"));
+    }
+
+    @Test
+    void importoNonPositivoLancia() {
+        PaymentInfoBean bean = new PaymentInfoBean();
+        assertThrows(BusinessValidationException.class, () -> bean.setImportoInCent(0L));
+        assertThrows(BusinessValidationException.class, () -> bean.setImportoInCent(-5L));
+    }
+
+    @Test
+    void prodottoVuotoONullLancia() {
+        OrdineBean bean = new OrdineBean();
+        assertThrows(BusinessValidationException.class, () -> bean.setNomeProdotto("   "));
+        assertThrows(BusinessValidationException.class, () -> bean.setNomeProdotto(null));
+    }
+
+    @Test
+    void emailUtenteNonValidaLancia() {
+        assertThrows(AutenticazioneException.class,
+                () -> new UtenteBean().setEmail("non-valida"));
+    }
 }

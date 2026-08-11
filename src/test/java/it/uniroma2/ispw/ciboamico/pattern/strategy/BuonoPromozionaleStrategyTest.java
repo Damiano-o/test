@@ -66,7 +66,7 @@ class BuonoPromozionaleStrategyTest {
         return new Prodotto(nome, prezzo, 20, LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv);
     }
 
-    private UtenteBean utenteBean(String email) {
+    private UtenteBean utenteBean(String email) throws Exception {
         UtenteBean b = new UtenteBean();
         b.setUsername("Mario");
         b.setEmail(email);

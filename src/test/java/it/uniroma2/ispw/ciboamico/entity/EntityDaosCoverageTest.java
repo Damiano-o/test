@@ -3,6 +3,9 @@ package it.uniroma2.ispw.ciboamico.entity;
 import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventListener;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventPublisher;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoImportoFissoStrategy;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoBuonoDAO;
@@ -69,15 +72,26 @@ class EntityDaosCoverageTest {
     }
 
     @Test
-    void ordineSubjectUnsubscribe() {
-        OrdineSubject os = new OrdineSubject();
-        // listener che incrementa
+    void ordineEventPublisherAddRemove() {
+        OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
+        publisher.clearListeners();  // preset: svuota listener e coda pendenti (singleton globale)
+        // listener che incrementa un contatore alla notifica DTO
         final int[] count = {0};
-        OrdineEventListener l = ordine -> count[0]++;
-        os.subscribe(l);
-        // c'è solo un listener mock: usiamo unsubscribe su un altro -> no crash
-        os.unsubscribe(new VenditoreNotifierStub());
-        assertEquals(0, count[0]);
+        final OrdineEventListener l = e -> count[0]++;
+
+            // registrato: riceve la notifica
+            publisher.addListener(l);
+            publisher.notifyOrdineConfermato(new OrdineEvent(7L, "c@cibo.it", 3.0));
+            assertEquals(1, count[0]);
+
+            // rimosso: non riceve piu' (removeListener funziona)
+            publisher.removeListener(l);
+            publisher.notifyOrdineConfermato(new OrdineEvent(8L, "c@cibo.it", 4.0));
+            assertEquals(1, count[0]);
+
+        // removeListener idempotente: rimuovere un non-registrato non lancia
+        publisher.removeListener(l);
+        assertDoesNotThrow(() -> publisher.removeListener(e -> { }));
     }
 
     @Test
@@ -98,7 +112,7 @@ class EntityDaosCoverageTest {
     }
 
     @Test
-    void beanPagamentoGetters() {
+    void beanPagamentoGetters() throws Exception {
         PaymentInfoBean b = new PaymentInfoBean();
         b.setNumeroCarta("1234");
         b.setIntestatario("M");
@@ -155,9 +169,14 @@ class EntityDaosCoverageTest {
         assertNotNull(dao.findById((long) p.getNome().hashCode()));
     }
 
-    /** Listener stub per il test di unsubscribe (non fa nulla). */
-    private static class VenditoreNotifierStub implements OrdineEventListener {
-        @Override
-        public void onStatoCambiato(Ordine ordine) { /* no op */ }
+    @Test
+    void ordineEventValidate() {
+        // Il DTO OrdineneEvent valida gli ingressi (numeroOrdine non null, clienteId non vuoto).
+        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(null, "c@cibo.it", 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(1L, " ", 1.0));
+        OrdineEvent ok = new OrdineEvent(5L, "c@cibo.it", 4.5);
+        assertNotNull(ok.getTimestamp());
+        assertEquals(5L, ok.getNumeroOrdine());
+        assertEquals(4.5, ok.getTotale(), 1e-9);
     }
 }

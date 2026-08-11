@@ -66,7 +66,7 @@ class DemoDAOTest {
     }
 
     @Test
-    void testSeedIdempotenteNonDuplica() {
+    void testSeedIdempotenteNonDuplica() throws Exception {
         DemoDAOFactory factory = new DemoDAOFactory();
         factory.seedDemoData();
         int prodotti = factory.getProdottoDAO().findAll().size();
