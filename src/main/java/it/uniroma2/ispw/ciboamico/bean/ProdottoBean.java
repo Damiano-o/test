@@ -1,10 +1,13 @@
 package it.uniroma2.ispw.ciboamico.bean;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+
 import java.time.LocalDate;
 
 /**
  * Bean/DTO: unico canale Boundary→Control per i dati di inventario.
- * Puro trasporto dati + validazione sintattica; zero logica di business.
+ * Segue il pattern BCE: incapsula la validazione sintattica dei dati
+ * obbligatori in {@code validate()} (e la presenza del prodotto).
  */
 public class ProdottoBean {
 
@@ -14,14 +17,6 @@ public class ProdottoBean {
     private LocalDate scadenza;
     private String posizione;
     private String unitaMisura;
-
-    public boolean datiObbligatoriPresenti() {
-        return nome != null && !nome.isBlank()
-                && quantita != null
-                && scadenza != null
-                && posizione != null
-                && unitaMisura != null;
-    }
 
     public Double getPrezzo() { return prezzo; }
     public void setPrezzo(Double prezzo) { this.prezzo = prezzo; }
@@ -36,4 +31,19 @@ public class ProdottoBean {
     public void setPosizione(String posizione) { this.posizione = posizione; }
     public String getUnitaMisura() { return unitaMisura; }
     public void setUnitaMisura(String unitaMisura) { this.unitaMisura = unitaMisura; }
+
+    /** Valida che tutti i dati obbligatori del prodotto siano presenti. */
+    public void validate() throws BusinessValidationException {
+        if (nome == null || nome.isBlank()
+                || quantita == null
+                || prezzo == null
+                || scadenza == null
+                || posizione == null
+                || unitaMisura == null) {
+            throw new BusinessValidationException(
+                    "Tutti i dati del prodotto sono obbligatori.",
+                    "ProdottoBean con dati incompleti.",
+                    "ERR-PRODOTTO-DATI");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import it.uniroma2.ispw.ciboamico.config.AppConfig;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,9 +15,6 @@ import java.util.List;
  * verifica autonomamente le credenziali.
  */
 public class Utente {
-
-    /** Salt fisso applicato all'hash SHA-256 (NFR-03). */
-    private static final String SALT = "ciboamico-salt";
 
     private String nome;
     private String email;
@@ -35,7 +33,8 @@ public class Utente {
     public static String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest((SALT + password).getBytes(StandardCharsets.UTF_8));
+            String salt = AppConfig.getInstance().getSalt();
+            byte[] digest = md.digest((salt + password).getBytes(StandardCharsets.UTF_8));
             return java.util.HexFormat.of().formatHex(digest);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);

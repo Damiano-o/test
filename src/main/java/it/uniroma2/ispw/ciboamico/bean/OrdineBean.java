@@ -1,7 +1,12 @@
 package it.uniroma2.ispw.ciboamico.bean;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+
 /**
- * Bean/DTO per l'ordine — scambiato tra MarketplaceView e OrdinaProdottoController.
+ * Bean/DTO per l'ordine, scambiato tra la boundary e il controller
+ * applicativo (UC-04). Segue il pattern BCE: incapsula la validazione
+ * sintattica nei setter (Fail Fast) e una validazione di coerenza in
+ * {@code validate()}.
  */
 public class OrdineBean {
 
@@ -16,9 +21,25 @@ public class OrdineBean {
 
     public Long getIdOrdine() { return idOrdine; }
     public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }
+
     /** Prodotto selezionato dalla boundary (chiave di lookup per UC-04). */
     public String getNomeProdotto() { return nomeProdotto; }
-    public void setNomeProdotto(String nomeProdotto) { this.nomeProdotto = nomeProdotto; }
+
+    /**
+     * Imposta il prodotto selezionato (obbligatorio, non vuoto).
+     *
+     * @throws BusinessValidationException se il prodotto non è selezionato
+     */
+    public void setNomeProdotto(String nomeProdotto) throws BusinessValidationException {
+        if (nomeProdotto == null || nomeProdotto.isBlank()) {
+            throw new BusinessValidationException(
+                    "Seleziona un prodotto dal catalogo prima di procedere.",
+                    "OrdineBean senza prodotto selezionato.",
+                    "ERR-PRODOTTO-MANCANTE");
+        }
+        this.nomeProdotto = nomeProdotto.trim();
+    }
+
     public Double getTotale() { return totale; }
     public void setTotale(Double totale) { this.totale = totale; }
     public String getStato() { return stato; }
@@ -28,5 +49,21 @@ public class OrdineBean {
     public String getVenditoreId() { return venditoreId; }
     public void setVenditoreId(String venditoreId) { this.venditoreId = venditoreId; }
     public String getCodiceBuono() { return codiceBuono; }
+
+    /** Imposta il codice del buono promozionale (opzionale). */
     public void setCodiceBuono(String codiceBuono) { this.codiceBuono = codiceBuono; }
+
+    /**
+     * Valida che l'ordine abbia i dati minimi per procedere.
+     *
+     * @throws BusinessValidationException se il prodotto non è selezionato
+     */
+    public void validate() throws BusinessValidationException {
+        if (nomeProdotto == null || nomeProdotto.isBlank()) {
+            throw new BusinessValidationException(
+                    "Seleziona un prodotto dal catalogo prima di procedere.",
+                    "OrdineBean senza prodotto selezionato.",
+                    "ERR-PRODOTTO-MANCANTE");
+        }
+    }
 }

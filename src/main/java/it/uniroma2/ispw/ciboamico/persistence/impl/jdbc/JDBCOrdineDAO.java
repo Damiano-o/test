@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.StatoOrdineEnum;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
@@ -19,7 +20,7 @@ public class JDBCOrdineDAO implements OrdineDAO {
     private static final String COL_VENDITORE = "venditore_email";
 
     @Override
-    public long getNextId() {
+    public long getNextId() throws DAOException {
         String sql = "SELECT COALESCE(MAX(id), 0) + 1 FROM ordini";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -31,7 +32,7 @@ public class JDBCOrdineDAO implements OrdineDAO {
     }
 
     @Override
-    public Ordine save(Ordine ordine) {
+    public Ordine save(Ordine ordine) throws DAOException {
         String sql = "INSERT INTO ordini (id, compratore_email, venditore_email, stato, totale) "
                 + "VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE stato = VALUES(stato), totale = VALUES(totale)";
         try (Connection conn = ConnectionManager.getConnection();
@@ -58,7 +59,7 @@ public class JDBCOrdineDAO implements OrdineDAO {
     }
 
     @Override
-    public Ordine findById(Long id) {
+    public Ordine findById(Long id) throws DAOException {
         String sql = "SELECT id, compratore_email, venditore_email, stato, totale FROM ordini WHERE id = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,7 +79,7 @@ public class JDBCOrdineDAO implements OrdineDAO {
     }
 
     @Override
-    public List<Ordine> findByVenditore(String venditoreEmail) {
+    public List<Ordine> findByVenditore(String venditoreEmail) throws DAOException {
         String sql = "SELECT id, compratore_email, venditore_email, stato, totale "
                 + "FROM ordini WHERE venditore_email = ?";
         List<Ordine> risultati = new ArrayList<>();
@@ -100,7 +101,7 @@ public class JDBCOrdineDAO implements OrdineDAO {
     }
 
     @Override
-    public List<Ordine> findByCompratore(String compratoreEmail) {
+    public List<Ordine> findByCompratore(String compratoreEmail) throws DAOException {
         String sql = "SELECT id, compratore_email, venditore_email, stato, totale "
                 + "FROM ordini WHERE compratore_email = ?";
         List<Ordine> risultati = new ArrayList<>();
@@ -121,7 +122,8 @@ public class JDBCOrdineDAO implements OrdineDAO {
         }
     }
 
-    private Ordine mappaOrdine(Long id, String compratoreEmail, String venditoreEmail, String stato) {
+    private Ordine mappaOrdine(Long id, String compratoreEmail, String venditoreEmail, String stato)
+            throws DAOException {
         try {
             Ordine o = new Ordine(id,
                     new Utente("c", compratoreEmail, ""),

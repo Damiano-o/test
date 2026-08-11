@@ -47,6 +47,8 @@ public class PaymentCLIView implements IView {
                     risultato.getStato(), risultato.getTotale());
         } catch (BusinessValidationException e) {
             System.out.println("Pagamento negato: " + e.getUserMessage());
+        } catch (Exception e) {
+            System.out.println("Errore di sistema durante il pagamento: riprovare.");
         }
     }
 }

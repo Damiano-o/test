@@ -333,3 +333,28 @@
 .prodotto-card:hover { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3); }
 .prodotto-nome { -fx-font-size: 15px; -fx-font-weight: 600; -fx-text-fill: #1F2933; }
 .prodotto-dett { -fx-font-size: 12px; -fx-text-fill: #6B7280; }
+/* ---------- Dashboard: avatar, KPI, card funzionalità ---------- */
+.avatar {
+    -fx-background-color: #2F9E74;
+    -fx-background-radius: 100;
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
+    -fx-alignment: center;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(47,158,116,0.3), 12, 0, 0, 0);
+}
+
+.kpi-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2F9E74;
+}
+
+.card-arrow {
+    -fx-font-size: 18px;
+    -fx-text-fill: #9CA3AF;
+}

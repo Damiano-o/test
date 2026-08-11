@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.persistence.dao;
 
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ import java.util.List;
 public interface BuonoDAO {
 
     /** Recupera il buono tramite il codice (lookup usato dall'estensione 4a). */
-    BuonoPromozionale findByCodice(String codice);
+    BuonoPromozionale findByCodice(String codice) throws DAOException;
 
     /** Restituisce i buoni emessi da un dato venditore (per la gestione). */
-    List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail);
+    List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail) throws DAOException;
 
     /** Salva un buono (creazione). */
-    BuonoPromozionale save(BuonoPromozionale buono);
+    BuonoPromozionale save(BuonoPromozionale buono) throws DAOException;
 }

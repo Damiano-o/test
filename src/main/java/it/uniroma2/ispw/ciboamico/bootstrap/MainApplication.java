@@ -29,7 +29,7 @@ public final class MainApplication extends Application {
         // Le Boundary costruiscono i propri controller tramite il registro applicativo,
         // senza ricevere la DAOFactory: la View non conosce la persistenza.
         navigator.register("login", new LoginView()::build);
-        navigator.register("home", new HomeView()::build);
+        navigator.register("home", new DashboardView()::build);
         navigator.register("marketplace", new MarketplaceView()::build);
         navigator.register("payment", new PaymentView()::build);
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
@@ -47,7 +47,11 @@ public final class MainApplication extends Application {
         ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
         if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
                 && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
-            demo.seedDemoData();
+            try {
+                demo.seedDemoData();
+            } catch (it.uniroma2.ispw.ciboamico.exception.DAOException e) {
+                System.err.println("Seed DEMO fallito: " + e.getTechnicalMessage());
+            }
         }
     }
 }

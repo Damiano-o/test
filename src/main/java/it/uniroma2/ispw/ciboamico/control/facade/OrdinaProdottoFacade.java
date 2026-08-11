@@ -42,18 +42,19 @@ public final class OrdinaProdottoFacade {
     }
 
     /** Catalogo dei prodotti disponibili (UC-04, precondizione). */
-    public List<ProdottoBean> getProdottiDisponibili() {
+    public List<ProdottoBean> getProdottiDisponibili() throws it.uniroma2.ispw.ciboamico.exception.DAOException {
         return controller.getProdottiDisponibili();
     }
 
     /** Avvia il checkout per il prodotto selezionato (passo 2 UC-04). */
-    public OrdineBean avviaCheckout(String nomeProdotto) throws BusinessValidationException {
+    public OrdineBean avviaCheckout(String nomeProdotto)
+            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
         return controller.avviaCheckout(nomeProdotto);
     }
 
     /** Estensione 4a: applica il buono promozionale se presente. */
     public OrdineBean applicaBuono(String codiceBuono, String nomeProdotto, UtenteBean utente)
-            throws BusinessValidationException {
+            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
         return controller.applicaBuono(codiceBuono, nomeProdotto, utente);
     }
 
@@ -61,7 +62,7 @@ public final class OrdinaProdottoFacade {
     public OrdineBean processaPagamento(OrdineBean ordine, UtenteBean utente,
                                         String numeroCarta, String intestatario,
                                         String scadenza, String cvv)
-            throws BusinessValidationException {
+            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
         return controller.processaPagamento(ordine, utente, numeroCarta, intestatario, scadenza, cvv);
     }
 }

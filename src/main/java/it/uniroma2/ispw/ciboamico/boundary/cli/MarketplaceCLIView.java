@@ -33,7 +33,13 @@ public class MarketplaceCLIView implements IView {
             return;
         }
         System.out.println("\n=== Marketplace (UC-04) ===");
-        List<ProdottoBean> prodotti = facade.getProdottiDisponibili();
+        List<ProdottoBean> prodotti;
+        try {
+            prodotti = facade.getProdottiDisponibili();
+        } catch (Exception e) {
+            System.out.println("Problema di accesso al catalogo: riprovare più tardi.");
+            return;
+        }
         if (prodotti.isEmpty()) {
             System.out.println("Nessun prodotto in vendita.");
             return;
@@ -59,6 +65,9 @@ public class MarketplaceCLIView implements IView {
             }
         } catch (BusinessValidationException e) {
             System.out.println("Problema: " + e.getUserMessage());
+            return;
+        } catch (Exception e) {
+            System.out.println("Errore di sistema: riprovare più tardi.");
             return;
         }
         new PaymentCLIView(ctx).display();

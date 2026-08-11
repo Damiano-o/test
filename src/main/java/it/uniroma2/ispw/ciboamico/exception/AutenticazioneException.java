@@ -11,4 +11,9 @@ public class AutenticazioneException extends BusinessValidationException {
     public AutenticazioneException(String message) {
         super(message);
     }
+
+    /** Costruttore che separa messaggio utente e dettaglio tecnico. */
+    public AutenticazioneException(String userMessage, String technicalMessage, String errorCode) {
+        super(userMessage, technicalMessage, errorCode);
+    }
 }

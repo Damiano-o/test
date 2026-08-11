@@ -73,6 +73,9 @@ public final class UiKit {
 
         s.getChildren().add(nav("Dashboard", "home", attiva));
         s.getChildren().add(nav("Marketplace", "marketplace", attiva));
+        s.getChildren().add(nav("Ricette", "ricette", attiva));
+        s.getChildren().add(nav("Inventario", "inventario", attiva));
+        s.getChildren().add(nav("Lista Spesa", "listaspesa", attiva));
         Button esci = new Button("Esci");
         esci.getStyleClass().add("button-outline");
         esci.setMaxWidth(Double.MAX_VALUE);

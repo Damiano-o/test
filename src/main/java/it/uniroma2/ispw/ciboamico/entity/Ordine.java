@@ -11,7 +11,10 @@ import java.util.List;
  * Ordine singolo diretto (D-03): un compratore, un venditore, più voci.
  * Referenzia due Utente (compratore e venditore) — Venditore è un Ruolo,
  * non una classe autonoma (whole-part).
- * Implementa la macchina a stati BR-04 e il pattern Observer (OrdineSubject).
+ * Implementa la sola macchina a stati BR-04: la notifica di conferma è
+esternalizzata (il controller pubblica un {@code OrdineEvent} tramite
+{@code OrdineEventPublisher}, cosicché l'entity resta svincolata dai layer
+di presentazione).
  */
 public class Ordine {
 
@@ -23,7 +26,6 @@ public class Ordine {
     private double totale;
     private BuonoPromozionale buonoApplicato;
     private final List<VoceOrdine> voci = new ArrayList<>();
-    private final OrdineSubject subject = new OrdineSubject();
 
     public Ordine(Long idOrdine, Utente compratore, Utente venditore)
             throws BusinessValidationException {
@@ -99,22 +101,6 @@ public class Ordine {
                     "Transizione non valida da " + stato + " a " + nuovoStato + " (BR-04)");
         }
         this.stato = nuovoStato;
-        subject.notifyObservers(this);
-    }
-
-    public void subscribe(OrdineEventListener listener) { subject.subscribe(listener); }
-
-    /**
-     * Emette la notifica di avvenuta sottomissione dell'ordine (Pattern Observer).
-     * Chiamato dal controller dopo {@code ordineDAO.save(ordine)}: l'ordine resta nello
-     * stato iniziale CREATED (nessuna transizione BR-04), ma il consolidamento sul
-     * database rappresenta la chiusura del checkout e attiva i listener registrati
-     * (es. {@code VenditoreNotifier}). Non cambia lo stato: il Subject osserva la
-     * pubblicazione dell'evento di dominio, non una transizione della macchina a stati.
-     * Notifica solo a persistenza avvenuta, evitando notifiche per ordini non salvati.
-     */
-    public void notificaSottomissione() {
-        subject.notifyObservers(this);
     }
 
     /**

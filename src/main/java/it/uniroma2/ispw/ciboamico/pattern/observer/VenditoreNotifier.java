@@ -1,27 +1,30 @@
 package it.uniroma2.ispw.ciboamico.pattern.observer;
 
-import it.uniroma2.ispw.ciboamico.entity.Ordine;
-import it.uniroma2.ispw.ciboamico.entity.OrdineEventListener;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Observer concreto: notifica il venditore al cambio stato dell'ordine.
- * In produzione delegherebbe a Jakarta Mail; qui logica funzionale pura.
+ * Observer concreto: notifica il venditore quando un ordine viene confermato.
+ *
+ * <p>Riceve il DTO {@link OrdineEvent} (sola lettura) dal
+ * {@link OrdineEventPublisher} — mai l'entità di dominio — rispettando così
+ * l'isolamento dei layer. In produzione delegherebbe a un servizio di
+ * notifica/email; qui logica funzionale pura.</p>
+ *
+ * @author Michele Damiano
  */
 public class VenditoreNotifier implements OrdineEventListener {
 
     private static final Logger LOG = Logger.getLogger(VenditoreNotifier.class.getName());
 
     @Override
-    public void onStatoCambiato(Ordine ordine) {
-        // Funzionale: il venditore riceve una notifica di vendita.
-        // (Implementazione reale: invio email via Jakarta Mail al recapito del venditore)
+    public void onOrdineConfermato(OrdineEvent event) {
+        // Funzionale: il venditore riceve la notifica di vendita confermata.
+        // (Implementazione reale: invio email/notifica al recapito del venditore)
         if (LOG.isLoggable(Level.INFO)) {
-            LOG.info("[NOTIFICA] Ordine " + ordine.getIdOrdine()
-                    + " del venditore " + ordine.getVenditore().getEmail()
-                    + " -> stato " + ordine.getStato());
+            LOG.info("[NOTIFICA VENDITORE] Ordine #" + event.getNumeroOrdine()
+                    + " confermato dal cliente " + event.getClienteId()
+                    + " - totale " + event.getTotale());
         }
     }
 }

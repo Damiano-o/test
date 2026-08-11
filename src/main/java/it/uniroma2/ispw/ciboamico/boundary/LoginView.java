@@ -1,7 +1,7 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
+import it.uniroma2.ispw.ciboamico.control.facade.AutenticazioneFacade;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -13,18 +13,20 @@ import javafx.scene.layout.VBox;
 
 /**
  * Boundary JavaFX — Login (UC-11).
- * La view NON conosce le Entity: scambia solo String/Bean con il controller.
- * Dopo il login naviga alla Home via Navigator (Bean-only).
+ * La view NON conosce le Entity: scambia solo String/Bean con il
+ * {@link AutenticazioneFacade}. Dopo il login naviga alla Home via
+ * {@link it.uniroma2.ispw.ciboamico.boundary.Navigator}.
+ * Navigator (Bean-only).
  *
  * UI minimalista: card centrata sul fondo della scena, campo email/password,
  * bottone primario pieno, messaggio errore rosso tenue. Stile da styles.css.
  */
 public class LoginView {
 
-    private final AutenticazioneController controller;
+    private final AutenticazioneFacade facade;
 
     public LoginView() {
-        this.controller = new AutenticazioneController();
+        this.facade = new AutenticazioneFacade();
     }
 
     public Parent build() {
@@ -57,17 +59,7 @@ public class LoginView {
         login.setId("btn-login");
         login.setMaxWidth(Double.MAX_VALUE);
 
-        login.setOnAction(e -> {
-            try {
-                UtenteBean utente = controller.login(email.getText(), password.getText());
-                messaggio.setText("Benvenuto, " + utente.getUsername() + "!");
-                Navigator.getInstance().switchTo("home");
-            } catch (AutenticazioneException ex) {
-                messaggio.setText("Email o password non validi.");
-                messaggio.setVisible(true);
-                messaggio.setManaged(true);
-            }
-        });
+        login.setOnAction(e -> onLogin(email, password, messaggio));
 
         card.getChildren().addAll(brandBlock, email, password, login, messaggio);
 
@@ -77,5 +69,23 @@ public class LoginView {
         root.getChildren().add(card);
         root.setPrefSize(900, 640);
         return root;
+    }
+
+    // -------- Gestore UI (stile on...) --------
+
+    private void onLogin(TextField email, PasswordField password, Label messaggio) {
+        try {
+            UtenteBean utente = facade.login(email.getText(), password.getText());
+            messaggio.setText("Benvenuto, " + utente.getUsername() + "!");
+            Navigator.getInstance().switchTo("home");
+        } catch (AutenticazioneException ex) {
+            messaggio.setText("Email o password non validi.");
+            messaggio.setVisible(true);
+            messaggio.setManaged(true);
+        } catch (Exception ex) {
+            messaggio.setText("Errore di sistema: riprovare più tardi.");
+            messaggio.setVisible(true);
+            messaggio.setManaged(true);
+        }
     }
 }

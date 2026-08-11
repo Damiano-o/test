@@ -1,0 +1,109 @@
+package it.uniroma2.ispw.ciboamico.boundary;
+
+import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+
+/**
+ * Boundary JavaFX — Dashboard (home). Vetrina dell'applicazione: header di
+ * benvenuto con avatar, KPI riassuntivi e le quattro funzionalità come card
+ * navigabili. Solo interfaccia; la logica delle funzionalità è futura
+ * (progetto dimostrativo).
+ */
+public class DashboardView {
+
+    public Parent build() {
+        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
+        String nome = utente != null ? utente.getUsername() : "ospite";
+        String ruolo = utente != null && utente.getRuoloAttivo() != null
+                ? utente.getRuoloAttivo() : "—";
+
+        // Avatar circolare con iniziale
+        Label avatar = new Label(nome.isEmpty() ? "?" : nome.substring(0, 1).toUpperCase());
+        avatar.getStyleClass().add("avatar");
+        Label benvenuto = new Label("Benvenuto, " + nome);
+        benvenuto.getStyleClass().add("screen-title");
+        Label ruoloLabel = new Label("Ruolo attivo: " + ruolo);
+        ruoloLabel.getStyleClass().add("page-subtitle");
+
+        HBox header = new HBox(14, avatar,
+                new VBox(2, benvenuto, ruoloLabel));
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        // Riga KPI dimostrativi
+        HBox kpiRow = new HBox(14,
+                kpi("🍅 Spreco evitato", "12,4 kg"),
+                kpi("⏳ In scadenza", "3 prodotti"),
+                kpi("🛒 Spesa al mese", "236 €"));
+        kpiRow.setPadding(new Insets(14, 0, 6, 0));
+
+        // Funzionalità come card
+        VBox menu = new VBox(12,
+                card("🍽️", "Trova ricette", "Ricette compatibili con la dispensa", "ricette"),
+                card("📦", "Inventario", "Gestisci i prodotti e le scadenze", "inventario"),
+                card("🛍️", "Lista spesa", "Crea la lista dagli ingredienti", "listaspesa"),
+                card("🏪", "Marketplace", "Ordina dalla vendita locale", "marketplace"));
+
+        Button esci = new Button("Esci");
+        esci.getStyleClass().add("button-outline");
+        esci.setMaxWidth(Double.MAX_VALUE);
+        esci.setOnAction(e -> {
+            SessionManager.getInstance().logout();
+            Navigator.getInstance().switchTo("login");
+        });
+
+        VBox corpo = new VBox(12, header, kpiRow, menu, esci);
+        corpo.setPadding(new Insets(20, 24, 20, 24));
+
+        return UiKit.pagina("Dashboard", "Cosa vuoi fare?", corpo, "home");
+    }
+
+    /** KPI riassuntivo (valore + etichetta). */
+    private VBox kpi(String testo, String valore) {
+        Label v = new Label(valore);
+        v.getStyleClass().add("kpi-value");
+        Label t = new Label(testo);
+        t.getStyleClass().add("card-subtitle");
+        VBox box = new VBox(4, v, t);
+        box.getStyleClass().add("card");
+        box.setPrefWidth(180);
+        box.setAlignment(Pos.CENTER);
+        return box;
+    }
+
+    /** Card cliccabile di una funzionalità. */
+    private Button card(String icona, String titolo, String sottotitolo, String vista) {
+        Label ic = new Label(icona);
+        ic.getStyleClass().add("icon");
+        Label ti = new Label(titolo);
+        ti.getStyleClass().add("card-title");
+        Label su = new Label(sottotitolo);
+        su.getStyleClass().add("card-subtitle");
+        Region spazio = new Region();
+        HBox.setHgrow(spazio, Priority.ALWAYS);
+        Label freccia = new Label("→");
+        freccia.getStyleClass().add("card-arrow");
+
+        HBox testo = new HBox(12, new VBox(2, ti, su), spazio, freccia);
+        testo.setAlignment(Pos.CENTER_LEFT);
+
+        HBox content = new HBox(14, ic, testo);
+        content.setAlignment(Pos.CENTER_LEFT);
+        content.setMaxWidth(Double.MAX_VALUE);
+
+        Button b = new Button();
+        b.setGraphic(content);
+        b.setMaxWidth(Double.MAX_VALUE);
+        b.getStyleClass().add("card");
+        b.setOnAction(e -> Navigator.getInstance().switchTo(vista));
+        return b;
+    }
+}

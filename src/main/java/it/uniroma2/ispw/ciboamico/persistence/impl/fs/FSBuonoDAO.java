@@ -6,6 +6,7 @@ import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoStrategy;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoStrategyFactory;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
@@ -44,7 +45,7 @@ public class FSBuonoDAO implements BuonoDAO {
         double valoreSconto;
     }
 
-    private List<BuonoJsonDTO> carica() {
+    private List<BuonoJsonDTO> carica() throws DAOException {
         try {
             if (!Files.exists(FILE)) {
                 return new ArrayList<>();
@@ -52,42 +53,42 @@ public class FSBuonoDAO implements BuonoDAO {
             return GSON.fromJson(Files.readString(FILE),
                     new TypeToken<List<BuonoJsonDTO>>() { }.getType());
         } catch (IOException e) {
-            throw new RuntimeException("Errore lettura buoni.json", e);
+            throw new DAOException("Errore lettura buoni.json", e);
         }
     }
 
-    private void salva(List<BuonoJsonDTO> buoni) {
+    private void salva(List<BuonoJsonDTO> buoni) throws DAOException {
         try {
             Files.createDirectories(FILE.getParent());
             Files.writeString(FILE, GSON.toJson(buoni));
         } catch (IOException e) {
-            throw new RuntimeException("Errore scrittura buoni.json", e);
+            throw new DAOException("Errore scrittura buoni.json", e);
         }
     }
 
-    private Utente findByEmail(String email) {
+    private Utente findByEmail(String email) throws DAOException {
         Utente u = utenteDAO.findByEmail(email);
         if (u == null) {
-            throw new IllegalStateException("Venditore non trovato: " + email);
+            throw new DAOException("Venditore non trovato: " + email);
         }
         return u;
     }
 
-    private RuoloVenditore venditoreDa(String email) {
+    private RuoloVenditore venditoreDa(String email) throws DAOException {
         RuoloVenditore rv = findByEmail(email).getRuolo(RuoloVenditore.class);
         if (rv == null) {
-            throw new IllegalStateException("L'utente " + email + " non è un venditore");
+            throw new DAOException("L'utente " + email + " non è un venditore");
         }
         return rv;
     }
 
-    private BuonoPromozionale aEntita(BuonoJsonDTO dto) {
+    private BuonoPromozionale aEntita(BuonoJsonDTO dto) throws DAOException {
         ScontoStrategy strategy = ScontoStrategyFactory.createStrategy(dto.tipoSconto, dto.valoreSconto);
         try {
             return new BuonoPromozionale(dto.codice, venditoreDa(dto.venditoreEmail),
                     LocalDate.parse(dto.dataInizio), LocalDate.parse(dto.dataScadenza), strategy);
         } catch (BusinessValidationException e) {
-            throw new IllegalStateException("Buono persistito non valido: " + dto.codice, e);
+            throw new DAOException("Buono persistito non valido: " + dto.codice, e);
         }
     }
 
@@ -105,24 +106,29 @@ public class FSBuonoDAO implements BuonoDAO {
     }
 
     @Override
-    public BuonoPromozionale findByCodice(String codice) {
-        return carica().stream()
-                .filter(dto -> dto.codice.equals(codice))
-                .findFirst()
-                .map(this::aEntita)
-                .orElse(null);
+    public BuonoPromozionale findByCodice(String codice) throws DAOException {
+        for (BuonoJsonDTO dto : carica()) {
+            if (dto.codice.equals(codice)) {
+                return aEntita(dto);
+            }
+        }
+        return null;
     }
 
     @Override
-    public List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail) {
-        return carica().stream()
-                .filter(dto -> dto.venditoreEmail.equals(venditoreEmail))
-                .map(this::aEntita)
-                .toList();
+    public List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail) throws DAOException {
+        List<BuonoJsonDTO> tutti = carica();
+        List<BuonoPromozionale> result = new ArrayList<>();
+        for (BuonoJsonDTO dto : tutti) {
+            if (dto.venditoreEmail.equals(venditoreEmail)) {
+                result.add(aEntita(dto));
+            }
+        }
+        return result;
     }
 
     @Override
-    public BuonoPromozionale save(BuonoPromozionale buono) {
+    public BuonoPromozionale save(BuonoPromozionale buono) throws DAOException {
         List<BuonoJsonDTO> buoni = carica();
         buoni.removeIf(dto -> dto.codice.equals(buono.getCodice()));
         buoni.add(aDto(buono));

@@ -4,6 +4,7 @@ import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoStrategy;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoStrategyFactory;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
@@ -29,19 +30,19 @@ public class JDBCBuonoDAO implements BuonoDAO {
         this.utenteDAO = utenteDAO;
     }
 
-    private RuoloVenditore venditoreDa(String email) {
+    private RuoloVenditore venditoreDa(String email) throws DAOException {
         Utente u = utenteDAO.findByEmail(email);
         if (u == null) {
-            throw new IllegalStateException("Venditore non trovato: " + email);
+            throw new DAOException("Venditore non trovato: " + email);
         }
         RuoloVenditore rv = u.getRuolo(RuoloVenditore.class);
         if (rv == null) {
-            throw new IllegalStateException("L'utente " + email + " non è un venditore");
+            throw new DAOException("L'utente " + email + " non è un venditore");
         }
         return rv;
     }
 
-    private BuonoPromozionale aEntita(ResultSet rs) throws SQLException {
+    private BuonoPromozionale aEntita(ResultSet rs) throws SQLException, DAOException {
         ScontoStrategy strategy = ScontoStrategyFactory.createStrategy(
                 rs.getString("tipo_sconto"), rs.getDouble("valore_sconto"));
         try {
@@ -57,7 +58,7 @@ public class JDBCBuonoDAO implements BuonoDAO {
     }
 
     @Override
-    public BuonoPromozionale findByCodice(String codice) {
+    public BuonoPromozionale findByCodice(String codice) throws DAOException {
         String sql = "SELECT codice, venditore_email, data_inizio, data_scadenza, "
                 + "tipo_sconto, valore_sconto FROM buoni_promozionali WHERE codice = ?";
         try (Connection conn = ConnectionManager.getConnection();
@@ -72,7 +73,7 @@ public class JDBCBuonoDAO implements BuonoDAO {
     }
 
     @Override
-    public List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail) {
+    public List<BuonoPromozionale> findByVenditoreEmail(String venditoreEmail) throws DAOException {
         String sql = "SELECT codice, venditore_email, data_inizio, data_scadenza, "
                 + "tipo_sconto, valore_sconto FROM buoni_promozionali WHERE venditore_email = ?";
         List<BuonoPromozionale> result = new ArrayList<>();
@@ -91,7 +92,7 @@ public class JDBCBuonoDAO implements BuonoDAO {
     }
 
     @Override
-    public BuonoPromozionale save(BuonoPromozionale buono) {
+    public BuonoPromozionale save(BuonoPromozionale buono) throws DAOException {
         String venditoreEmail = buono.getVenditore().getUtente() != null
                 ? buono.getVenditore().getUtente().getEmail()
                 : buono.getVenditore().getRecapito();

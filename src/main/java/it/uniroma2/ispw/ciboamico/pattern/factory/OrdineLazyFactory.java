@@ -52,7 +52,7 @@ public final class OrdineLazyFactory {
      * L'ordine viene aggiunto alla cache in RAM (non ancora persistito).
      */
     public Ordine newOrdine(Utente compratore, Utente venditore)
-            throws BusinessValidationException {
+            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
         long id = ordineDAO.getNextId();
         Ordine ordine = new Ordine(id, compratore, venditore);
         cacheOrdini.add(ordine);

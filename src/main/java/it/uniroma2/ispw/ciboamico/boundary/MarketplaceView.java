@@ -3,7 +3,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
+import it.uniroma2.ispw.ciboamico.control.graphic.MarketplaceGraphicController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.geometry.Insets;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 /**
  * Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto).
  *
- * <p>Gestisce l'interazione della UI tramite metodi privati {@code on...}
- * (coerente con lo stile delle Boundary del pattern di riferimento) e delega
- * la logica di business al {@link OrdinaProdottoFacade}. Scambia solo
- * Bean con il Facade.</p>
+ * <p>È un puro layout: delega ogni operazione al
+ * {@link MarketplaceGraphicController} (controller grafico disaccoppiato),
+ * che orchestra la logica di presentazione e invoca il controller applicativo
+ * via Facade. La view scambia solo Bean e applica i risultati ai widget.</p>
  */
 public class MarketplaceView {
 
-    private final OrdinaProdottoFacade facade;
+    private final MarketplaceGraphicController controller;
     private final UtenteBean utente;
 
     // Controlli della vista
@@ -42,8 +42,8 @@ public class MarketplaceView {
     private Label messaggio;
 
     public MarketplaceView() {
-        this.facade = new OrdinaProdottoFacade();
         this.utente = SessionManager.getInstance().getLoggedUser();
+        this.controller = new MarketplaceGraphicController(utente);
     }
 
     public Parent build() {
@@ -97,28 +97,27 @@ public class MarketplaceView {
         applicaBuono.setMaxWidth(Double.MAX_VALUE);
     }
 
-    // -------- Gestori UI (stile on...) --------
+    // -------- Listener: rinvio al controller grafico --------
 
     private void onAggiornaCatalogo() {
-        List<ProdottoBean> prodotti = facade.getProdottiDisponibili();
-        catalogo.getChildren().clear();
-        prodotti.forEach(p -> catalogo.getChildren()
-                .add(UiKit.card(p.getNome(),
-                        String.format("%.2f EUR · %s disponibili",
-                                p.getPrezzo(), p.getQuantita().intValue()))));
-        prodSelez.getItems().setAll(prodotti.stream()
-                .map(ProdottoBean::getNome).collect(Collectors.toList()));
-        messaggio.setText(prodotti.size() + " prodotti disponibili nel marketplace locale.");
+        try {
+            List<ProdottoBean> prodotti = controller.catalogoProdotti();
+            catalogo.getChildren().clear();
+            prodotti.forEach(p -> catalogo.getChildren()
+                    .add(UiKit.card(p.getNome(),
+                            String.format("%.2f EUR · %s disponibili",
+                                    p.getPrezzo(), p.getQuantita().intValue()))));
+            prodSelez.getItems().setAll(prodotti.stream()
+                    .map(ProdottoBean::getNome).collect(Collectors.toList()));
+            messaggio.setText(controller.aggiornaCatalogo());
+        } catch (Exception ex) {
+            messaggio.setText("Problema di accesso ai dati: riprovare più tardi.");
+        }
     }
 
     private void onOrdinaProdotto() {
-        String nome = prodSelez.getValue();
-        if (nome == null || nome.isBlank()) {
-            messaggio.setText("Seleziona un prodotto dal catalogo.");
-            return;
-        }
         try {
-            facade.avviaCheckout(nome);
+            controller.ordinaProdotto(prodSelez.getValue());
             Navigator.getInstance().switchTo("payment");
         } catch (BusinessValidationException ex) {
             messaggio.setText(ex.getUserMessage());
@@ -129,10 +128,9 @@ public class MarketplaceView {
 
     private void onApplicaBuono() {
         try {
-            OrdineBean ris = facade.applicaBuono(
-                    buonoField.getText(), prodSelez.getValue(), utente);
-            messaggio.setText("Buono \"" + ris.getCodiceBuono()
-                    + "\" applicato ✓ — totale " + String.format("%.2f", ris.getTotale()) + " EUR");
+            OrdineBean ris = controller.applicaBuono(
+                    buonoField.getText(), prodSelez.getValue());
+            messaggio.setText(MarketplaceGraphicController.formattaEsitoBuono(ris));
         } catch (BusinessValidationException ex) {
             messaggio.setText(ex.getUserMessage());
         } catch (Exception ex) {

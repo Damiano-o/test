@@ -2,6 +2,7 @@ package it.uniroma2.ispw.ciboamico.persistence.factory;
 
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
@@ -12,8 +13,6 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.demo.DemoUtenteDAO;
 import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.LocalDate;
 
 /**
@@ -38,7 +37,7 @@ public class DemoDAOFactory implements DAOFactory {
      * Idempotente: una sola esecuzione anche se invocata più volte
      * (riavvio della scena, doppio start, test), così i dati non duplicano.
      */
-    public synchronized void seedDemoData() {
+    public synchronized void seedDemoData() throws DAOException {
         if (seeded) {
             return;
         }
@@ -51,14 +50,14 @@ public class DemoDAOFactory implements DAOFactory {
     }
 
     /** Carica dati demo dello scope UC-04: 2 utenti (Cliente, Venditore), prodotti, buono. */
-    private void seed() throws BusinessValidationException {
+    private void seed() throws BusinessValidationException, DAOException {
         // Cliente che ordina
-        Utente mario = new Utente("Mario", "mario@cibo.it", hash("password123"));
+        Utente mario = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("password123"));
         mario.aggiungiRuolo(new RuoloCliente());
         utenteDAO.save(mario);
 
         // Venditore approvato (dal marketplace locale)
-        Utente marco = new Utente("Marco", "marco@cibo.it", hash("password123"));
+        Utente marco = new Utente("Marco", "marco@cibo.it", Utente.hashPassword("password123"));
         RuoloVenditore rv = new RuoloVenditore("RM", "marco@cibo.it");
         rv.setStato(StatoVenditoreEnum.APPROVATO);
         marco.aggiungiRuolo(rv);
@@ -78,16 +77,9 @@ public class DemoDAOFactory implements DAOFactory {
                 new ScontoPercentualeStrategy(0.20)));
     }
 
-    /** Hash SHA-256 con salt fisso — identico ad AutenticazioneController. */
-    private String hash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(("ciboamico-salt" + password)
-                    .getBytes(StandardCharsets.UTF_8));
-            return java.util.HexFormat.of().formatHex(digest);
-        } catch (java.security.NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
+    /** Hash SHA-256 con salt da config — riuso di {@code Utente.hashPassword} (DRY). */
+    private static String hash(String password) {
+        return Utente.hashPassword(password);
     }
 
     @Override

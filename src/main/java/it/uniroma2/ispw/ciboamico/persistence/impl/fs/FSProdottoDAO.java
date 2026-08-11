@@ -3,6 +3,7 @@ package it.uniroma2.ispw.ciboamico.persistence.impl.fs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class FSProdottoDAO implements ProdottoDAO {
     private static final Path FILE_INVENTARIO = Path.of("data", "inventario.json");
     private static final Gson GSON = GsonConfig.gson();
 
-    private List<Prodotto> caricaCatalogo() {
+    private List<Prodotto> caricaCatalogo() throws DAOException {
         try {
             if (!Files.exists(FILE_CATALOGO)) {
                 return new ArrayList<>();
@@ -28,40 +29,38 @@ public class FSProdottoDAO implements ProdottoDAO {
             return GSON.fromJson(Files.readString(FILE_CATALOGO),
                     new TypeToken<List<Prodotto>>() { }.getType());
         } catch (IOException e) {
-            throw new RuntimeException("Errore lettura prodotti.json", e);
+            throw new DAOException("Errore lettura prodotti.json", e);
         }
     }
 
-    private void salvaCatalogo(List<Prodotto> prodotti) {
+    private void salvaCatalogo(List<Prodotto> prodotti) throws DAOException {
         try {
             Files.createDirectories(FILE_CATALOGO.getParent());
             Files.writeString(FILE_CATALOGO, GSON.toJson(prodotti));
         } catch (IOException e) {
-            throw new RuntimeException("Errore scrittura prodotti.json", e);
+            throw new DAOException("Errore scrittura prodotti.json", e);
         }
     }
 
-
+    @Override
+    public List<Prodotto> findAll() throws DAOException { return caricaCatalogo(); }
 
     @Override
-    public List<Prodotto> findAll() { return caricaCatalogo(); }
-
-    @Override
-    public Prodotto findById(Long id) {
+    public Prodotto findById(Long id) throws DAOException {
         return caricaCatalogo().stream()
                 .filter(p -> p.getNome().hashCode() == id)
                 .findFirst().orElse(null);
     }
 
     @Override
-    public Prodotto findByNome(String nome) {
+    public Prodotto findByNome(String nome) throws DAOException {
         return caricaCatalogo().stream()
                 .filter(p -> p.getNome().equalsIgnoreCase(nome))
                 .findFirst().orElse(null);
     }
 
     @Override
-    public Prodotto save(Prodotto prodotto) {
+    public Prodotto save(Prodotto prodotto) throws DAOException {
         List<Prodotto> prodotti = caricaCatalogo();
         prodotti.add(prodotto);
         salvaCatalogo(prodotti);
@@ -69,7 +68,7 @@ public class FSProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto update(Prodotto prodotto) {
+    public Prodotto update(Prodotto prodotto) throws DAOException {
         List<Prodotto> prodotti = caricaCatalogo();
         String nome = prodotto.getNome();
         for (int i = 0; i < prodotti.size(); i++) {
@@ -79,6 +78,6 @@ public class FSProdottoDAO implements ProdottoDAO {
                 return prodotto;
             }
         }
-        throw new RuntimeException("Prodotto non trovato in catalogo per update");
+        throw new DAOException("Prodotto non trovato in catalogo per update");
     }
 }

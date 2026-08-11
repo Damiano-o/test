@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
 import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
@@ -17,7 +18,7 @@ import java.util.List;
 public class JDBCProdottoDAO implements ProdottoDAO {
 
     @Override
-    public List<Prodotto> findAll() {
+    public List<Prodotto> findAll() throws DAOException {
         String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito FROM prodotti "
                 + "WHERE scadenza >= CURDATE()"; // BR-01
@@ -35,7 +36,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto findById(Long id) {
+    public Prodotto findById(Long id) throws DAOException {
         String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito FROM prodotti WHERE id = ?";
         try (Connection conn = ConnectionManager.getConnection();
@@ -53,7 +54,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto findByNome(String nome) {
+    public Prodotto findByNome(String nome) throws DAOException {
         String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito FROM prodotti WHERE nome = ?";
         try (Connection conn = ConnectionManager.getConnection();
@@ -71,7 +72,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto save(Prodotto prodotto) {
+    public Prodotto save(Prodotto prodotto) throws DAOException {
         String sql = "INSERT INTO prodotti (nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConnectionManager.getConnection();
@@ -100,7 +101,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto update(Prodotto prodotto) {
+    public Prodotto update(Prodotto prodotto) throws DAOException {
         String sql = "UPDATE prodotti SET prezzo = ?, quantita_disponibile = ?, "
                 + "venditore_zona = ?, venditore_recapito = ? WHERE nome = ?";
         try (Connection conn = ConnectionManager.getConnection();
@@ -118,7 +119,7 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     
-    private Prodotto mappa(ResultSet rs) throws SQLException {
+    private Prodotto mappa(ResultSet rs) throws SQLException, DAOException {
         RuoloVenditore venditore = new RuoloVenditore(
                 rs.getString("venditore_zona"), rs.getString("venditore_recapito"));
         try {

@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
+import it.uniroma2.ispw.ciboamico.control.graphic.PaymentGraphicController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.geometry.Insets;
@@ -15,18 +15,18 @@ import javafx.scene.layout.VBox;
 /**
  * Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione 6a UC-04).
  *
- * <p>Legge l'ordine in checkout da {@link SessionManager#getOrdineInCorso()},
- * raccoglie i dati carta e delega l'autorizzazione al
- * {@link OrdinaProdottoFacade}. La conversione dei dati carta e l'addebito
- * sono gestiti dal controller (via Facade); qui risiede solo la UI (metodi
- * {@code on...}).</p>
+ * <p>È un puro layout: legge l'ordine in checkout dalla sessione, raccoglie i
+ * dati carta e delega l'autorizzazione al
+ * {@link PaymentGraphicController} (controller grafico disaccoppiato), che
+ * invoca il controller applicativo via Facade. La view scambia solo Bean ed
+ * applica l'esito ai widget.</p>
  */
 public class PaymentView {
 
-    private final OrdinaProdottoFacade facade;
+    private final PaymentGraphicController controller;
 
     public PaymentView() {
-        this.facade = new OrdinaProdottoFacade();
+        this.controller = new PaymentGraphicController();
     }
 
     public Parent build() {
@@ -83,21 +83,17 @@ public class PaymentView {
         return UiKit.pagina("Pagamento", "UC-04 · autorizzazione all'addebito", corpo, "marketplace");
     }
 
-    // -------- Gestori UI (stile on...) --------
+    // -------- Listener: rinvio al controller grafico --------
 
     private void onPaga(UtenteBean utente, OrdineBean ordine,
                         TextField numeroCarta, TextField intestatario,
                         TextField scadenza, TextField cvv, Label esito) {
         try {
-            if (ordine == null) {
-                throw new BusinessValidationException("Nessun ordine in checkout.");
-            }
-            OrdineBean risultato = facade.processaPagamento(
+            OrdineBean risultato = controller.paga(
                     ordine, utente,
                     numeroCarta.getText(), intestatario.getText(),
                     scadenza.getText(), cvv.getText());
-            esito.setText("Pagamento riuscito ✓ — ordine " + risultato.getStato()
-                    + ", totale " + String.format("%.2f EUR", risultato.getTotale()));
+            esito.setText(PaymentGraphicController.formattaEsitoPagamento(risultato));
             Navigator.getInstance().switchTo("marketplace");
         } catch (BusinessValidationException ex) {
             esito.setText(ex.getUserMessage());

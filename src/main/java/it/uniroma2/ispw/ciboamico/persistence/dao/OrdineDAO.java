@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.persistence.dao;
 
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 
 import java.util.List;
 
@@ -9,12 +10,12 @@ import java.util.List;
  */
 public interface OrdineDAO {
 
-    Ordine save(Ordine ordine);
-    Ordine findById(Long id);
-    List<Ordine> findByVenditore(String venditoreEmail);
-    List<Ordine> findByCompratore(String compratoreEmail);
+    Ordine save(Ordine ordine) throws DAOException;
+    Ordine findById(Long id) throws DAOException;
+    List<Ordine> findByVenditore(String venditoreEmail) throws DAOException;
+    List<Ordine> findByCompratore(String compratoreEmail) throws DAOException;
 
     /** Prossimo id disponibile per un nuovo ordine (Information Expert: il DAO
      *  possiede i dati di persistenza e genera gli identificativi). */
-    long getNextId();
+    long getNextId() throws DAOException;
 }
