@@ -6,3 +6,69 @@ data/
 *.log
 .DS_Store
 temp/
+out/
+docs/relazione/out/
+docs/relazione/main.aux
+docs/relazione/main.log
+docs/relazione/main.toc
+docs/relazione/main.lof
+docs/relazione/main.lot
+docs/relazione/main.out
+docs/relazione/main.fdb_latexmk
+docs/relazione/main.fls
+
+cp.txt
+docs/relazione_italiana/backup-*/
+docs/relazione_italiana/*.aux
+docs/relazione_italiana/*.log
+docs/relazione_italiana/*.toc
+docs/relazione_italiana/*.fdb_latexmk
+docs/relazione_italiana/*.fls
+docs/relazione_italiana/out/
+docs/relazione_italiana/chapters/*.v7reset.tex
+docs/relazione_italiana/chapters/*.tail.tex
+docs/relazione_italiana/figures/*.drawio.svg
+docs/relazione_italiana/chk-*.png
+docs/relazione_italiana/figchk-*.png
+docs/relazione_italiana/pgs-*.png
+docs/relazione_italiana/pg1*.png
+docs/relazione_italiana/page1*.png
+docs/relazione_italiana/sc-*.png
+docs/relazione_italiana/verify-*.png
+# Relazione: si tiene solo la versione ITALIANA
+docs/relazione/
+# Artefatti build/debug relazione (non versionare)
+docs/relazione_italiana/main.*.png
+docs/relazione_italiana/p0-0*.png
+docs/relazione_italiana/pg*.png
+docs/relazione_italiana/vopc_page-*.png
+docs/relazione_italiana/fix_state3.py
+docs/relazione_italiana/*_bak*.txt
+docs/relazione_italiana/pgs-*.png
+docs/relazione_italiana/sc-*.png
+docs/relazione_italiana/main.out
+docs/relazione_italiana/figures/*_ref.png
+
+# Backup temporanei draw.io (non versionare)
+docs/relazione_italiana/figures/.$*.drawio.bkp
+docs/relazione_italiana/figures/.$*.drawio.dtmp
+docs/relazione_italiana/figures/.$*.tmp
+
+# Backup locali relazione (non versionare)
+docs/archive_old/
+docs/relazione_italiana/archive/
+
+# Relazione INGLESE (consegnata): artefatti build/debug (non versionare)
+docs/relazione_inglese/*.aux
+docs/relazione_inglese/*.log
+docs/relazione_inglese/*.toc
+docs/relazione_inglese/*.lof
+docs/relazione_inglese/*.lot
+docs/relazione_inglese/*.out
+docs/relazione_inglese/*.fdb_latexmk
+docs/relazione_inglese/*.fls
+
+# Backup temporanei draw.io (non versionare)
+docs/relazione_inglese/figures/.$*.drawio.bkp
+docs/relazione_inglese/figures/.$*.drawio.dtmp
+docs/relazione_inglese/figures/.$*.tmp

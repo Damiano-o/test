@@ -1,32 +1,42 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
+import it.uniroma2.ispw.ciboamico.config.AppConfig;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.FSDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.JDBCDAOFactory;
 
-/**
- * Singleton (Holder Idiom): seleziona la modalità applicativa a runtime
- * (JDBC | FS | DEMO) e fornisce la DAOFactory corretta — switch senza
- * modificare la logica di business (NFR-01, milestone M1/M2).
- */
+// Singleton: seleziona la modalità applicativa a runtime 
+
 public final class ApplicationModeManager {
 
-    public static final String MODE_JDBC = "JDBC";
-    public static final String MODE_FS = "FS";
-    public static final String MODE_DEMO = "DEMO";
+    private static ApplicationModeManager instance;
+
+    public static final String MODE_JDBC = AppConfig.MODE_JDBC;
+    public static final String MODE_FS = AppConfig.MODE_FS;
+    public static final String MODE_DEMO = AppConfig.MODE_DEMO;
 
     private String activeMode = MODE_DEMO; // default: demo in-memory (milestone M1)
     private DAOFactory factory;            // cache: stessa istanza per tutte le view
 
-    private ApplicationModeManager() { }
-
-    private static class Container {
-        private static final ApplicationModeManager INSTANCE = new ApplicationModeManager();
+    private ApplicationModeManager() {
+        // NFR-01: legge la modalità di persistenza da AppConfig (unico
+        // d'accesso a config.properties), senza ricompilare; fallback a
+        String mode = AppConfig.getInstance().getPersistenceType();
+        try {
+            setActiveMode(mode);
+        } catch (IllegalArgumentException e) {
+            // configurazione non valida: non bloccare l'avvio, resta DEMO
+            this.activeMode = MODE_DEMO;
+            this.factory = null;
+        }
     }
 
-    public static ApplicationModeManager getInstance() {
-        return Container.INSTANCE;
+    public static synchronized ApplicationModeManager getInstance() {
+        if (instance == null) {
+            instance = new ApplicationModeManager();
+        }
+        return instance;
     }
 
     public String getActiveMode() { return activeMode; }
@@ -39,7 +49,6 @@ public final class ApplicationModeManager {
         this.factory = null; // invalidate cache on mode switch
     }
 
-    /** Factory della modalità attiva (Abstract Factory) — cache condivisa. */
     public DAOFactory getDAOFactory() {
         if (factory == null) {
             factory = switch (activeMode) {

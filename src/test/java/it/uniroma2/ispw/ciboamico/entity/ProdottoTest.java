@@ -1,14 +1,14 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità (BR-03).
- */
+// T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità
+
 class ProdottoTest {
 
     private RuoloVenditore venditoreApprovato() {
@@ -18,35 +18,42 @@ class ProdottoTest {
     }
 
     @Test
-    void testValidaPrezzo() {
+    void testValidaPrezzo() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", -1.50, 10, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
-    void testValidaQuantita() {
+    void testValidaQuantita() throws Exception {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         RuoloVenditore venditore = venditoreApprovato();
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", 2.0, -5, scadenza, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
-    void testValidaScadenzaPassata() {
+    void testValidaScadenzaPassata() throws Exception {
         RuoloVenditore venditore = venditoreApprovato();
         LocalDate scaduta = LocalDate.now().minusDays(1);
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(BusinessValidationException.class,
                 () -> new Prodotto("Pane", 2.0, 5, scaduta, UnitaEnum.PEZZI, venditore));
     }
 
     @Test
-    void testRiduciDisponibilita() {
+    void testRiduciDisponibilita() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditoreApprovato());
-        assertTrue(p.riduciDisponibilita(3));
+        p.riduciDisponibilita(3);
         assertEquals(2, p.getQuantitaDisponibile());
-        assertFalse(p.riduciDisponibilita(10));
     }
+
+    @Test
+    void testRiduciDisponibilitaQuantitaEccessiva() throws Exception {
+        Prodotto p = new Prodotto("Pane", 2.0, 5, LocalDate.now().plusDays(5),
+                UnitaEnum.PEZZI, venditoreApprovato());
+        assertThrows(BusinessValidationException.class,
+                () -> p.riduciDisponibilita(10));
+        assertEquals(5, p.getQuantitaDisponibile());}
 }

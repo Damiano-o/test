@@ -1,0 +1,53 @@
+% CAPITOLO 6 — PERSISTENCY
+\chapter{Persistenza}
+\label{cap:persistenza}
+
+La persistenza è intercambiabile a runtime (NFR-01): tre backend mutuamente
+esclusivi sono selezionati tramite il pattern \textbf{Abstract Factory}
+(\texttt{DAOFactory} + una concrete factory per modalità).
+
+\section{Layer di persistenza DB (MySQL/JDBC)}
+Il livello di persistenza DB utilizza \textbf{MySQL} come DBMS relazionale. La
+gestione dei dati è affidata a classi DAO specifiche (es.
+\texttt{JDBCUserDAO}, \texttt{JDBCOrdineDAO}), che eseguono query SQL per le
+operazioni CRUD sulle entità.
+
+\textbf{Entità principali:}
+\begin{itemize}
+    \item \textbf{Utenti}: registrati, con i ruoli (Cliente e Venditore);
+    \item \textbf{Ordini}: record transazionali con stato, totale e voci;
+    \item \textbf{Prodotti}: articoli del marketplace (catalogo e inventario);
+    \item \textbf{Buoni}: codici sconto (percentuale o importo fisso).
+\end{itemize}
+
+Le transazioni sono atomiche (\texttt{ConnectionManager} usa
+\texttt{setAutoCommit(false)} con \texttt{commit/rollback} per la riduzione
+scorte).
+
+\textbf{Configurazione}: il sistema è configurato via il file
+\texttt{config.properties} impostando \texttt{persistence\_type = DB} e
+fornendo le credenziali MySQL necessarie.
+
+\section{Layer di persistenza FS (File System)}
+Il layer di persistenza FS memorizza i dati in file \textbf{JSON} nella
+cartella \texttt{data/}. Ogni entità è mappata su un file dedicato
+(es. \texttt{utenti.json}, \texttt{ordini.json}, \texttt{prodotti.json},
+\texttt{inventario.json}).
+
+\textbf{Gestione}: la classe \texttt{GsonConfig} fornisce un serializzatore
+JSON coerente (helper per \texttt{LocalDate}/\texttt{LocalDateTime}) usato da
+tutti i DAO FS per garantire la lettura/scrittura corretta dei record.
+
+\textbf{Configurazione}: la modalità è attivata impostando
+\texttt{persistence\_type = FS} nel file di configurazione.
+
+\section{Layer di persistenza DEMO (In-Memory)}
+Il layer di persistenza DEMO mantiene i dati esclusivamente nella memoria
+volatile (RAM), senza storage permanente. Le strutture sono popolate da valori
+predefiniti all'avvio e cancellate al termine dell'esecuzione.
+
+\textbf{Casi d'uso}: è pensato per il testing unitario, lo sviluppo rapido e
+le dimostrazioni che non richiedono configurazione di database.
+
+\textbf{Configurazione}: la modalità è attivata impostando
+\texttt{persistence\_type = DEMO} (default).

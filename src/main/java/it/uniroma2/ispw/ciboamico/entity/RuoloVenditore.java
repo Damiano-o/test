@@ -1,16 +1,13 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
-/**
- * Ruolo Venditore (contadino/fornitore locale).
- * Solo con stato APPROVATO può pubblicare prodotti (BR-02).
- * Mantiene il back-reference all'Utente proprietario (whole-part bidirezionale).
- */
+// Ruolo Venditore (contadino/fornitore locale)
+
 public class RuoloVenditore extends Ruolo {
 
     private final String zona;
     private final String recapito;
     private StatoVenditoreEnum stato;
-    private Utente utente;
+    private transient Utente utente;
 
     public RuoloVenditore(String zona, String recapito) {
         this.zona = zona;
@@ -25,9 +22,18 @@ public class RuoloVenditore extends Ruolo {
     @Override
     public String getNomeRuolo() { return "VENDITORE"; }
 
-    /** Utente proprietario di questo ruolo (set quando il ruolo è aggiunto all'Utente). */
     public Utente getUtente() { return utente; }
     void setUtente(Utente utente) { this.utente = utente; }
+
+    // Approvazione del venditore (BR-02): transizione IN_ATTESA →
+
+    public void approva() {
+        if (stato == StatoVenditoreEnum.IN_ATTESA) {
+            this.stato = StatoVenditoreEnum.APPROVATO;
+        }
+    }
+
+    // Imposta lo stato senza validazione di transizione
 
     public void setStato(StatoVenditoreEnum stato) { this.stato = stato; }
 }

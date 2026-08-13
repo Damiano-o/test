@@ -1,0 +1,14 @@
+Michele Damiano — ISPW A.A. 2025/2026
+User Stories (3 individual)
+
+US-1: As a client, I want to order a product directly from a local vendor,
+So that I receive fresh food from my territory.
+(realized by UC-04 Order a Product)
+
+US-2: As a client, I want to know the total price of my order before
+confirming it, So that I can decide whether to proceed.
+(realized by UC-04 Order a Product, MSS step 3)
+
+US-3: As a vendor, I want to be notified when a client orders one of my
+products, So that I can prepare the delivery in time.
+(realized by UC-04 Order a Product, Observer pattern — VenditoreNotifier)

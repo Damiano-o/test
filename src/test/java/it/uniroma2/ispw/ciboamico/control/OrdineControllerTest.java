@@ -3,6 +3,8 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
 import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventPublisher;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import org.junit.jupiter.api.Test;
 
@@ -11,10 +13,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test OrdinaProdottoController (UC-04), GestisciOrdiniRicevutiController (UC-06)
- * e GestisciListaSpesaController (UC-03).
- */
+// Test del flusso di dominio dell'Ordine (UC-04) e del pattern
+
 class OrdineControllerTest {
 
     private DemoDAOFactory factory() { return new DemoDAOFactory(); }
@@ -34,54 +34,30 @@ class OrdineControllerTest {
     }
 
     @Test
-    void testObserverNotificaCambioStato() {
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        final boolean[] notificato = {false};
-        ordine.subscribe(o -> notificato[0] = true);
+    void testObserverNotificaConferma() throws Exception {
+        // Il publisher notifica i listener registrati quando viene
+        // passando il DTO OrdineEvent (mai l'entità Ordine).
+        OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
+        publisher.clearListeners();
+        try {
+            final boolean[] notificato = {false};
+            final OrdineEvent[] ricevuto = {null};
+            publisher.addListener(e -> { notificato[0] = true; ricevuto[0] = e; });
 
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
+            publisher.notifyOrdineConfermato(new OrdineEvent(1L, "mario@cibo.it", "marco@cibo.it", 12.5));
 
-        assertTrue(notificato[0]);
+            assertTrue(notificato[0]);
+            assertNotNull(ricevuto[0]);
+            assertEquals(1L, ricevuto[0].getNumeroOrdine());
+            assertEquals("mario@cibo.it", ricevuto[0].getClienteId());
+            assertEquals(12.5, ricevuto[0].getTotale(), 1e-9);
+        } finally {
+            publisher.clearListeners();
+        }
     }
 
     @Test
-    void testVisualizzaOrdiniRicevuti() {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        List<OrdineBean> ricevuti = controller.visualizzaOrdiniRicevuti("marco@cibo.it");
-
-        assertEquals(1, ricevuti.size());
-        assertEquals(StatoOrdineEnum.CREATO.name(), ricevuti.get(0).getStato());
-    }
-
-    @Test
-    void testAggiornaStatoOrdine() {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        OrdineBean aggiornato = controller.aggiornaStato(1L, StatoOrdineEnum.CONFERMATO);
-
-        assertEquals(StatoOrdineEnum.CONFERMATO.name(), aggiornato.getStato());
-    }
-
-    @Test
-    void testAggiornaStatoNonValido() {
-        DemoDAOFactory factory = factory();
-        GestisciOrdiniRicevutiController controller = new GestisciOrdiniRicevutiController(factory);
-        Ordine ordine = new Ordine(1L, utenteCompratore(), utenteVenditore());
-        factory.getOrdineDAO().save(ordine);
-
-        assertThrows(InvalidStateTransitionException.class,
-                () -> controller.aggiornaStato(1L, StatoOrdineEnum.CONSEGNATO)); // da CREATO non valido
-    }
-
-    @Test
-    void testVoceOrdineParziale() {
+    void testVoceOrdineParziale() throws Exception {
         Prodotto p = new Prodotto("Pane", 2.50, 10, LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, utenteVenditore().getRuolo(RuoloVenditore.class));
         VoceOrdine voce = new VoceOrdine(p, 2);

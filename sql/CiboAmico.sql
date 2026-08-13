@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS ordini (
     id              BIGINT PRIMARY KEY,
     compratore_email VARCHAR(120) NOT NULL,
     venditore_email  VARCHAR(120) NOT NULL,
-    stato           VARCHAR(20) NOT NULL CONSTRAINT chk_stato CHECK (stato IN ('CREATO','CONFERMATO','IN_CONSEGNA','CONSEGNATO','ANNULLATO')),  -- BR-04
+    stato           VARCHAR(20) NOT NULL CONSTRAINT chk_stato CHECK (stato IN ('CREATED','CONFIRMED','IN_DELIVERY','DELIVERED','ANNULLED')),  -- BR-04
     totale          DECIMAL(10,2) NOT NULL DEFAULT 0,
     FOREIGN KEY (compratore_email) REFERENCES utenti(email),
     FOREIGN KEY (venditore_email)  REFERENCES utenti(email)

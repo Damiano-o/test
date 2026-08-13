@@ -1,64 +1,49 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
-import it.uniroma2.ispw.ciboamico.bean.RicettaBean;
-import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.TrovaRicetteController;
-import it.uniroma2.ispw.ciboamico.pattern.facade.RicettaMatchingFacade;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
+// Boundary JavaFX — Ricette (demo)
 
-/**
- * Boundary JavaFX — Trova Ricette Compatibili (UC-02).
- * Scambia SOLO RicettaBean con il controller (Facade + Strategy interna).
- */
 public class RicetteView {
 
-    private final TrovaRicetteController controller;
-
-    public RicetteView() {
-        this.controller = new TrovaRicetteController(
-                ApplicationModeManager.getInstance().getDAOFactory(),
-                RicettaMatchingFacade.conSostituzione());
-    }
-
-    public RicetteView(DAOFactory factory) {
-        this.controller = new TrovaRicetteController(factory,
-                RicettaMatchingFacade.conSostituzione());
-    }
-
     public Parent build() {
-        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
-        Label titolo = new Label("Ricette compatibili (UC-02)");
-        ListView<String> elenco = new ListView<>();
-        Label messaggio = new Label();
+        // Card ricette demo (UI pura, nessuna logica)
+        FlowPane card = new FlowPane(16, 16);
+        card.setPadding(new Insets(8, 0, 0, 0));
+        card.getChildren().addAll(
+                cardRicetta("Uova strapazzate al latte",
+                        "Ingredienti: uova, latte. ~8 min.",
+                        "100% ingredienti in dispensa"),
+                cardRicetta("Frittata al pomodoro",
+                        "Ingredienti: uova, pomodori. ~15 min.",
+                        "100% ingredienti in dispensa"),
+                cardRicetta("Pomodori al forno con miele",
+                        "Ingredienti: pomodori, miele locale. ~20 min.",
+                        "100% ingredienti in dispensa"),
+                cardRicetta("Latte e miele caldo",
+                        "Ingredienti: latte, miele locale. ~5 min.",
+                        "100% ingredienti in dispensa"));
 
-        Button trova = new Button("Trova ricette");
-        trova.setId("btn-trova");
-        trova.setOnAction(e -> {
-            List<RicettaBean> ricette = controller.findCompatible(utente.getEmail());
-            if (ricette.isEmpty()) {
-                messaggio.setText("Nessuna ricetta compatibile con l'inventario.");
-            } else {
-                messaggio.setText(ricette.size() + " ricette compatibili trovate:");
-            }
-            elenco.getItems().setAll(ricette.stream()
-                    .map(r -> r.getNome() + " — " + String.join(", ", r.getIngredientiNomi()))
-                    .toList());
-        });
+        VBox corpo = new VBox(10, card);
+        return UiKit.pagina("Ricette", "Piatti compatibili con la tua dispensa (demo)",
+                corpo, "ricette");
+    }
 
-        Button indietro = new Button("← Home");
-        indietro.setOnAction(e -> Navigator.getInstance().switchTo("home"));
-
-        VBox root = new VBox(10, titolo, trova, messaggio, elenco, indietro);
-        root.setPrefSize(900, 640);
-        return root;
+    private VBox cardRicetta(String titolo, String dettaglio, String badge) {
+        Label n = new Label(titolo);
+        n.getStyleClass().add("prodotto-nome");
+        Label b = new Label(badge);
+        b.getStyleClass().addAll("badge", "badge-ok");
+        Label d = new Label(dettaglio);
+        d.getStyleClass().add("prodotto-dett");
+        d.setWrapText(true);
+        VBox v = new VBox(6, n, b, d);
+        v.getStyleClass().add("prodotto-card");
+        v.setPrefWidth(400);
+        return v;
     }
 }

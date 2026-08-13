@@ -14,10 +14,17 @@
 
 ```bash
 mvn compile          # compila
-mvn test             # esegue i test (82 test)
+mvn test             # esegue i test (92 test)
 mvn jacoco:report    # report coverage (target/site/jacoco)
 mvn verify           # test + quality gate JaCoCo ≥ 80%
-mvn javafx:run       # avvia l'app JavaFX (modalità DEMO con dati seed)
+mvn javafx:run       # avvia l'app GUI JavaFX (modalità DEMO con dati seed)
+```
+
+Doppia interfaccia (Abstract Factory `ViewFactory`):
+
+```bash
+mvn javafx:run              # GUI (default)
+mvn exec:java -Dexec.mainClass="it.uniroma2.ispw.ciboamico.bootstrap.MainCLI"   # CLI
 ```
 
 Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
@@ -27,17 +34,17 @@ Credenziali demo (modalità DEMO): `mario@cibo.it`, `marco@cibo.it`,
 
 - **BCE** (Boundary-Control-Entity): 10 Boundary JavaFX ↔ 9 Controller (1:1 con UC) ↔ Entity
 - **Bean/DTO**: unico canale Boundary→Control (mai Entity verso la GUI)
-- **Pattern GoF**: Abstract Factory (DAO), Singleton (SessionManager, ApplicationModeManager), Strategy (matching ricette), Facade (motore ricette), Observer (notifiche ordine), Adapter (OpenFoodFacts)
+- **Pattern GoF**: Abstract Factory (DAO), Singleton (SessionManager, ApplicationModeManager), Lazy Initialization + caching (OrdineLazyFactory), Strategy (matching ricette), Facade (motore ricette), Observer (notifiche ordine), Adapter (OpenFoodFacts)
 - **Persistenza doppia**: JDBC (MySQL) ↔ FS (JSON) ↔ Demo — switch via `ApplicationModeManager` (NFR-01)
 - **Whole-Part**: `Utente` aggrega `Ruolo` (metamorfosi dinamica dei ruoli)
 
 ## 🧪 Test
 
-**66 test JUnit 5 + Mockito — tutti verdi ✅**
+**92 test JUnit 5 + Mockito — tutti verdi ✅**
 
 ```bash
-mvn test          # 66 test
-mvn verify        # test + quality gate JaCoCo ≥ 80% (attuale: 82.1%)
+mvn test          # 92 test
+mvn verify        # test + quality gate JaCoCo ≥ 80% (attuale: 81.4%)
 mvn jacoco:report # report HTML in target/site/jacoco
 ```
 

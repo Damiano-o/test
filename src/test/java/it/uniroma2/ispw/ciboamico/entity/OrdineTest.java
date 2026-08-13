@@ -7,9 +7,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * T05/T06/T07 — Ordine: totale e transizioni di stato (BR-04).
- */
+// T05/T06/T07 — Ordine: totale e transizioni di stato (BR-04)
+
 class OrdineTest {
 
     private Utente compratore() {
@@ -27,7 +26,7 @@ class OrdineTest {
     }
 
     @Test
-    void testCalcolaTotale() {
+    void testCalcolaTotale() throws Exception {
         Prodotto pane = new Prodotto("Pane", 2.50, 10, java.time.LocalDate.now().plusDays(5),
                 UnitaEnum.PEZZI, venditore().getRuolo(RuoloVenditore.class));
         Prodotto uovo = new Prodotto("Uovo", 0.50, 10, java.time.LocalDate.now().plusDays(20),
@@ -41,25 +40,25 @@ class OrdineTest {
     }
 
     @Test
-    void testSetStatoValid() {
+    void testSetStatoValid() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
-    void testSetStatoInvalid() {
+    void testSetStatoInvalid() throws Exception {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
-        // Sequenza valida fino a IN_CONSEGNA (BR-04)
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
-        ordine.cambiaStato(StatoOrdineEnum.IN_CONSEGNA);
-        // IN_CONSEGNA → ANNULLATO non è previsto (solo CONSEGNATO)
+        // Sequenza valida fino a IN_DELIVERY (BR-04)
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+        ordine.cambiaStato(StatoOrdineEnum.IN_DELIVERY);
+        // IN_DELIVERY → ANNULLED non è previsto (solo DELIVERED)
         assertThrows(InvalidStateTransitionException.class,
-                () -> ordine.cambiaStato(StatoOrdineEnum.ANNULLATO));
+                () -> ordine.cambiaStato(StatoOrdineEnum.ANNULLED));
     }
 
     @Test
-    void testAutoAcquistoVietato() {
+    void testAutoAcquistoVietato() throws Exception {
         Utente stesso = compratore(); // stesso utente compra il proprio prodotto
         assertThrows(BusinessValidationException.class,
                 () -> new Ordine(1L, stesso, stesso));

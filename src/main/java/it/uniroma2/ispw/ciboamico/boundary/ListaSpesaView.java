@@ -1,66 +1,52 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
-import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
-import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.GestisciListaSpesaController;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
-import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.util.List;
+// Boundary JavaFX — Lista Spesa (demo)
 
-/**
- * Boundary JavaFX — Lista della Spesa (UC-03).
- * Calcola gli ingredienti mancanti per una ricetta (FR-05).
- * Scambia SOLO ProdottoBean con il controller (Bean-only).
- */
 public class ListaSpesaView {
 
-    private final GestisciListaSpesaController controller;
-
-    public ListaSpesaView() {
-        this.controller = new GestisciListaSpesaController(
-                ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    public ListaSpesaView(DAOFactory factory) {
-        this.controller = new GestisciListaSpesaController(factory);
-    }
-
     public Parent build() {
-        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
-        Label titolo = new Label("Lista della spesa (UC-03)");
-        TextField nomeRicetta = new TextField();
-        nomeRicetta.setPromptText("Nome ricetta");
-        ListView<String> elenco = new ListView<>();
-        Label messaggio = new Label();
+        VBox lista = new VBox(8);
+        lista.setPadding(new Insets(8, 0, 0, 0));
 
-        Button calcola = new Button("Calcola ingredienti mancanti");
-        calcola.setId("btn-calcola");
-        calcola.setOnAction(e -> {
-            List<ProdottoBean> mancanti =
-                    controller.calcolaMancanze(utente.getEmail(), nomeRicetta.getText());
-            if (mancanti.isEmpty()) {
-                messaggio.setText("Tutto disponibile: nessun acquisto necessario ✓");
-            } else {
-                messaggio.setText("Mancano " + mancanti.size() + " ingredienti:");
-            }
-            elenco.getItems().setAll(mancanti.stream()
-                    .map(p -> p.getNome() + " — " + p.getQuantita() + " " + p.getUnitaMisura())
-                    .toList());
-        });
+        voceSpesa(lista, "Miele locale", "1 vasetto");
+        voceSpesa(lista, "Pomodori", "500 g");
+        voceSpesa(lista, "Latte", "1 l");
+        voceSpesa(lista, "Uova", "6 pezzi");
 
-        Button indietro = new Button("← Home");
-        indietro.setOnAction(e -> Navigator.getInstance().switchTo("home"));
+        Label nota = new Label("Demo — dati di esempio. Spunta gli acquisti fatti.");
+        nota.getStyleClass().add("page-subtitle");
+        nota.setWrapText(true);
 
-        VBox root = new VBox(10, titolo, nomeRicetta, calcola, messaggio, elenco, indietro);
-        root.setPrefSize(900, 640);
-        return root;
+        VBox corpo = new VBox(10, nota, lista);
+        return UiKit.pagina("Lista Spesa", "Cosa acquistare al mercato", corpo, "listaspesa");
+    }
+
+    private void voceSpesa(VBox lista, String nome, String dettaglio) {
+        CheckBox cb = new CheckBox();
+        cb.setId("cb-" + nome.toLowerCase().replace(" ", "-"));
+
+        Label n = new Label(nome);
+        n.getStyleClass().add("prodotto-nome");
+        Label d = new Label(dettaglio);
+        d.getStyleClass().add("prodotto-dett");
+        Region spazio = new Region();
+        HBox.setHgrow(spazio, Priority.ALWAYS);
+        HBox testo = new HBox(8, n, spazio, d);
+        testo.setMaxWidth(Double.MAX_VALUE);
+
+        HBox riga = new HBox(10, cb, testo);
+        riga.getStyleClass().add("prodotto-card");
+        riga.setPadding(new Insets(10, 12, 10, 12));
+        riga.setMaxWidth(Double.MAX_VALUE);
+        lista.getChildren().add(riga);
     }
 }

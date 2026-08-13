@@ -1,14 +1,18 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
-import it.uniroma2.ispw.ciboamico.boundary.*;
+import it.uniroma2.ispw.ciboamico.boundary.DashboardView;
+import it.uniroma2.ispw.ciboamico.boundary.InventarioView;
+import it.uniroma2.ispw.ciboamico.boundary.ListaSpesaView;
+import it.uniroma2.ispw.ciboamico.boundary.LoginView;
+import it.uniroma2.ispw.ciboamico.boundary.MarketplaceView;
+import it.uniroma2.ispw.ciboamico.boundary.Navigator;
+import it.uniroma2.ispw.ciboamico.boundary.PaymentView;
+import it.uniroma2.ispw.ciboamico.boundary.RicetteView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Entry point JavaFX dell'applicazione.
- * Registra tutte le Boundary nel Navigator e avvia la Login.
- * Flusso: Main → ApplicationModeManager → DAOFactory → Navigator → Login.
- */
+// Entry point JavaFX dell'applicazione
+
 public final class MainApplication extends Application {
 
     private final ApplicationModeManager modeManager;
@@ -19,45 +23,40 @@ public final class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        // In modalità DEMO carica i dati seed (utenti, prodotti, ricette).
-        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
-                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
-            demo.seedDemoData();
-        }
-
         Navigator navigator = Navigator.getInstance();
         navigator.init(stage);
 
-        // Registrazione view (nomi simbolici, factory programmatiche)
-        navigator.register("login", new LoginView(modeManager.getDAOFactory())::build);
-        navigator.register("home", new HomeView()::build);
-        navigator.register("inventario", new InventarioView(modeManager.getDAOFactory())::build);
-        navigator.register("ricette", new RicetteView(modeManager.getDAOFactory())::build);
-        navigator.register("lista-spesa", new ListaSpesaView(modeManager.getDAOFactory())::build);
-        navigator.register("marketplace", new MarketplaceView(modeManager.getDAOFactory())::build);
-        navigator.register("catalogo", new CatalogoVenditoreView(modeManager.getDAOFactory())::build);
-        navigator.register("ordini", new OrdiniRicevutiView(modeManager.getDAOFactory())::build);
-        navigator.register("crea-ricetta", new RicetteNutrizionistaView(modeManager.getDAOFactory())::build);
-        navigator.register("admin", new AdminView(modeManager.getDAOFactory())::build);
+        // Registrazione view (nomi simbolici, factory programmatiche).
+        // Le Boundary costruiscono i propri controller tramite il registro
+        // applicativo, senza ricevere la DAOFactory: la View non conosce
+        // persistenza.
+        navigator.register("login", new LoginView()::build);
+        navigator.register("home", new DashboardView()::build);
+        navigator.register("marketplace", new MarketplaceView()::build);
+        navigator.register("payment", new PaymentView()::build);
+        navigator.register("ricette", new RicetteView()::build);
+        navigator.register("inventario", new InventarioView()::build);
+        navigator.register("listaspesa", new ListaSpesaView()::build);
 
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");
-
-        // Modalità demo: genera snapshot PNG (flag ciboamico.demo) oppure
-        // naviga con pause per la registrazione dello schermo (flag ciboamico.demorun).
-        if (System.getProperty("ciboamico.demo") != null
-                || System.getProperty("ciboamico.demorun") != null) {
-            new Thread(() -> {
-                // attende che la scena sia visibile e la cattura schermo sia partita
-                try { Thread.sleep(4000); } catch (InterruptedException ignored) { }
-                DemoDriver.run();
-            }).start();
-        }
     }
 
     public static void main(String[] args) {
+        ApplicationModeBean bean = new ApplicationModeBean();
+        bean.setInterfaccia("gui");
+        bean.setPersistenza(ApplicationModeManager.getInstance().getActiveMode());
+        Runner.avvia(bean, args, MainApplication::avviaViaRunner);
+
+        // In DEMO il seed è già a carico di Runner
+        // composizione; qui si riporta solo la modalità per informazione.
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
-        launch(args);
+    }
+
+    // Innesco della GUI dopo la composizione di Runner
+
+    public static void avviaViaRunner() {
+        launch(new String[0]);
     }
 }

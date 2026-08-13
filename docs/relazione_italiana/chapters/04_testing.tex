@@ -1,0 +1,56 @@
+% CAPITOLO 4 — TESTING
+\chapter{Testing}
+\label{cap:testing}
+
+La verifica del sistema è condotta con una suite di unit test \textbf{JUnit 5}
+eseguita da Maven e con copertura misurata da JaCoCo (quality gate su copertura
+di riga). Di seguito i comportamenti verificati, descritti per funzionalità.
+
+\paragraph{Accesso all'area riservata.} Abbiamo testato il controller
+dell'area riservata verificando che un utente autenticato recuperi
+correttamente i dati del proprio checkout e della propria sessione. I test
+garantiscono che le strutture restituite non siano mai \texttt{null} e che
+l'accesso ai dati riservati sia gestito correttamente per gli utenti
+autenticati.
+
+\paragraph{Creazione e sottomissione dell'ordine.} Abbiamo testato il flusso
+di ordinazione verificando che un prodotto venga selezionato e che l'ordine
+venga creato con il venditore corretto. I test garantiscono che un ordine con
+utente o prodotto nullo venga respinto e che la disponibilità di magazzino sia
+ridotta all'acquisto senza scorte negative.
+
+\paragraph{Scontistica del buono (Strategy).} Abbiamo testato la logica di
+scontistica verificando che un buono valido venga applicato al totale
+dell'ordine. I test garantiscono che codici vuoti, scaduti o non validi
+vengano respinti senza eccezioni non gestite e che il calcolo dello sconto non
+produca mai importi incoerenti.
+
+\paragraph{Pagamento e autorizzazione.} Abbiamo testato il sottosistema di
+pagamento verificando sia il ramo autorizzato sia quello rifiutato. I test
+garantiscono che un pagamento rifiutato sollevi l'eccezione applicativa
+corretta lasciando invariato l'ordine, e che dati di carta non validi (CVV,
+importo non positivo, ordine assente) vengano bloccati senza
+\texttt{NullPointerException}.
+
+\paragraph{Autenticazione.} Abbiamo testato il meccanismo di autenticazione
+verificando sia credenziali valide sia non valide. I test garantiscono che un
+login corretto popoli la sessione e che email o password errate vengano
+rifiutate, con la \texttt{logout} che pulisce correttamente la sessione.
+
+\paragraph{Ciclo di vita dell'ordine (macchina a stati BR-04).} Abbiamo testato
+la macchina a stati dell'ordine verificando la sequenza \texttt{CREATED
+$\rightarrow$ CONFIRMED $\rightarrow$ IN\_DELIVERY $\rightarrow$ DELIVERED}.
+I test garantiscono che una transizione illegale venga bloccata
+dall'eccezione di stato invalido.
+
+\paragraph{Notifica Observer.} Abbiamo testato il pattern Observer verificando
+che il publisher notifichi gli observer registrati quando un ordine viene
+confermato. I test garantiscono che l'evento (\texttt{OrdineEvent}) venga
+consegnato agli observer tramite il DTO in sola lettura, mai l'entità di
+dominio.
+
+\paragraph{Persistenza (Demo e File System).} Abbiamo testato i livelli di
+persistenza verificando il ciclo crea-leggi-aggiorna di utenti, prodotti e
+ordini. I test garantiscono che la persistenza \emph{Demo} (in-memory) e
+\emph{File System} mantengano i dati in modo coerente, incluso il recupero dei
+prodotti per nome.

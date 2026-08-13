@@ -1,0 +1,132 @@
+\chapter{Design}
+\label{cap:design}
+
+\section{Class Diagram}
+\label{sec:class_diagram}
+
+\subsection{VOPC (Analysis)}
+\label{subsec:vopc}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/vopc_uc04.png}
+    \caption{VOPC di UC-04: Boundary (View), controller grafico, Facade, controller applicativi ed Entity.}
+    \label{fig:vopc}
+\end{figure}
+
+\subsection{Design Patterns}
+\label{subsec:design_patterns}
+Il design-level introduce le interfacce, i tipi Java, le eccezioni e i pattern
+GoF per gestire estensibilità e persistenza dinamica (NFR-01). Per ogni pattern
+sono mostrati in ordine lo schema e la breve descrizione dell'applicazione.
+
+\subsubsection*{Abstract Factory Pattern -- Persistence Layer}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/dl_factory_hr.png}
+    \caption{Abstract Factory della persistenza: interfacce DAO, concrete DAO e factory.}
+    \label{fig:dl_factory}
+\end{figure}
+Il livello di persistenza è gestito tramite il pattern \textbf{Abstract Factory}
+al fine di garantire flessibilità di configurazione dell'ambiente di esecuzione.
+L'interfaccia \texttt{DAOFactory} definisce il contratto per la creazione dei vari
+Data Access Object, come \texttt{getOrdineDAO()} e \texttt{getProdottoDAO()}.
+In base alla proprietà \texttt{persistence\_type}, le factory concrete
+(\texttt{JDBCDAOFactory}, \texttt{FSDAOFactory}, \texttt{DemoDAOFactory})
+istanziano l'opportuna implementazione dello storage. Ciò consente al sistema
+di passare senza problemi tra una persistenza basata su database, file-system
+o memoria in-memory senza richiedere alcuna modifica al codice client.
+
+\subsubsection*{Observer Pattern -- Notification System}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/dl_observer_hr.png}
+    \caption{Observer della conferma dell'ordine: publisher singleton e DTO.}
+    \label{fig:dl_observer}
+\end{figure}
+Il pattern \textbf{Observer} è stato implementato con lo scopo di disaccoppiare
+l'elaborazione dell'ordine dalla logica di gestione delle notifiche. La classe
+\texttt{OrdineEventPublisher} funge da \emph{Subject} implementato tramite il
+pattern \textbf{Singleton}, gestendo una lista (\texttt{List}) di osservatori
+di tipo \texttt{OrdineEventListener}. Al momento del corretto invio e della
+conferma dell'ordine, il publisher attiva il metodo \texttt{onOrdineConfermato()}
+su tutti i listener registrati (compratore e venditore), passando il DTO
+\texttt{OrdineEvent} in sola lettura, mai l'entità di dominio. Questa
+architettura garantisce un accoppiamento debole tra la logica di business
+principale e i relativi effetti collaterali, rispettando rigorosamente
+l'\emph{Open/Closed Principle}.
+
+La notifica \`e emessa dal sottosistema applicativo (il control che conferma
+l'ordine) tramite il publisher, e non dall'entity \texttt{Ordine}: cos\`{}\ l'entit\`a
+di dominio resta \emph{svincolata} dal layer di presentazione e dal meccanismo
+di notifica (separazione tra interfaccia grafica e struttura dati indicata in
+teoria). La variante \`e quella \emph{publish-subscribe}/event-driven
+dell'Observer: l'accopiamento tra \texttt{OrdineEventPublisher} (Subject) e gli
+observer \`e astratto (solo \texttt{OrdineEventListener}), la notifica \`e un
+broadcast a tutti i listener registrati e il dato scambiato \`e il DTO
+\texttt{OrdineEvent} in sola lettura, mai l'entit\`a.
+
+\subsubsection*{Singleton Pattern -- Sessions and Mode}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/dl_singleton_hr.png}
+    \caption{Singleton della sessione e della modalità.}
+    \label{fig:dl_singleton}
+\end{figure}
+\texttt{SessionManager} (sessione utente) e \texttt{ApplicationModeManager}
+(modalità applicativa) adottano un singleton classico con \emph{lazy
+initialization} (\texttt{if (instance == null) instance = new X()}) e
+sincronizzazione su \texttt{getInstance()}, in linea coi progetti di
+riferimento: nessun costo percepibile in un client desktop, nessuna
+soppressione di warning per SonarCloud.
+
+\subsubsection*{Facade Pattern -- Checkout UC-04}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/dl_facade_hr.png}
+    \caption{Facade del checkout di UC-04.}
+    \label{fig:dl_facade}
+\end{figure}
+\texttt{OrdinaProdottoFacade} espone al controller grafico un'unica interfaccia
+per il checkout (\texttt{getProdottiDisponibili},
+\texttt{avviaCheckout}, \texttt{applicaBuono}, \texttt{processaPagamento})
+e nasconde il sottosistema di business, formato dal controller base e dai
+controller delle estensioni (buono 4a e pagamento 6/6a). Il client (boundary
+o controller grafico) non conosce l'ordine di chiamata ai metodi dei
+controller applicativi. Le operazioni delle estensioni (
+\texttt{applicaBuono}, \texttt{processaPagamento}) vivono solo nei rispettivi
+sottocontroller: la Facade li invoca direttamente e il controller base non le
+ri-espone (assenza di pass-through / indirection inutile).
+
+\section{Activity Diagram}
+\label{sec:comportamentale}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.8\textheight]{figures/activity_uc04.png}
+    \caption{Activity diagram di UC-04: verifica disponibilità, applicazione
+    del buono, autorizzazione del pagamento e notifica sequenziale a
+    compratore e venditore.}
+    \label{fig:activity}
+\end{figure}
+
+\section{Sequence Diagram}
+\label{sec:sequence}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/seq_uc04_clean.png}
+    \caption{Sequence diagram di UC-04.}
+    \label{fig:sequence}
+\end{figure}
+
+\section{State Diagram}
+\label{sec:state}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/state_uc04.png}
+    \caption{State diagram di UC-04 Ordina un Prodotto: navigazione e flussi alternativi \texttt{3a}, \texttt{4a} e \texttt{6a}.}
+    \label{fig:state}
+\end{figure}
+

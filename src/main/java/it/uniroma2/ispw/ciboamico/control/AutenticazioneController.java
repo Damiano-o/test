@@ -1,21 +1,19 @@
 package it.uniroma2.ispw.ciboamico.control;
 
+import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
+import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
+import it.uniroma2.ispw.ciboamico.enums.ExceptionMessagesEnum;
+import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+// Controller di UC-11 Autenticazione (incluso dagli altri UC)
 
-/**
- * Control di UC-11 Autenticazione (incluso dagli altri UC).
- * Validazione email, hash password, sessione in SessionManager.
- */
 public class AutenticazioneController {
 
     private final UtenteDAO utenteDAO;
@@ -24,42 +22,60 @@ public class AutenticazioneController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    public UtenteBean login(AutenticazioneBean bean) {
-        if (bean == null || bean.getEmail() == null || !bean.isEmailValida()) {
-            throw new AutenticazioneException("Email non valida");
-        }
-        return login(bean.getEmail(), bean.getPassword());
+    public AutenticazioneController() {
+        this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    public UtenteBean login(String email, String password) {
-        if (email == null || !email.matches("^[\\w.+-]+@[\\w-]+\\.[\\w.]+$")) {
-            throw new AutenticazioneException("Email non valida");
-        }
-        Utente utente = utenteDAO.findByEmail(email);
-        if (utente == null || !utente.getPasswordHash().equals(hash(password))) {
-            throw new AutenticazioneException("Credenziali non valide");
+    // Tenta l'accesso: verifica esistenza account e password (Request
+
+    public UtenteBean login(AutenticazioneBean credenziali)
+            throws AutenticazioneException, DAOException {
+        return autentica(credenziali);
+    }
+
+    private UtenteBean autentica(AutenticazioneBean credenziali)
+            throws AutenticazioneException, DAOException {
+        Utente utente = utenteDAO.findByEmail(credenziali.getEmail());
+        if (utente == null || !utente.checkPassword(credenziali.getPassword())) {
+            throw new AutenticazioneException(
+                    UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message,
+                    ExceptionMessagesEnum.WRONG_PASSWORD.message + " (" + mask(credenziali.getEmail()) + ")",
+                    "ERR-CREDENZIALI");
         }
 
+        // Bean di output
+        // costruzione dell'UtenteBean risultante è ammessa nel controller
+        // (formato interno→esterno); la sessione la gestisce il Facade.
+        // Il ruolo attivo è espresso in forma SEMANTICA
+        // NON come nome della classe di implementazione: l'entity è
+        // Expert del proprio ruolo
         UtenteBean bean = new UtenteBean();
         bean.setUsername(utente.getNome());
         bean.setEmail(utente.getEmail());
-        bean.setRuoloAttivo(utente.getRuoli().isEmpty() ? "CLIENTE" : utente.getRuoli().get(0).getClass().getSimpleName());
-        SessionManager.getInstance().setLoggedUser(bean);
+        bean.setRuoloAttivo(ruoloAttivoDi(utente));
         return bean;
     }
 
-    public void logout() {
-        SessionManager.getInstance().logout();
+    // Traduce i ruoli dell'utente in una etichetta semantica stabile
+
+    private String ruoloAttivoDi(Utente utente) {
+        if (utente.isVenditoreApprovato()) {
+            return "VENDITORE";
+        }
+        if (utente.haRuolo(RuoloVenditore.class)) {
+            return "VENDITORE";
+        }
+        return "CLIENTE";
     }
 
-    /** Hash SHA-256 con salt fisso (NFR-03). */
-    private String hash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(("ciboamico-salt" + password).getBytes(StandardCharsets.UTF_8));
-            return java.util.HexFormat.of().formatHex(digest);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
+    private String mask(String email) {
+        if (email == null) {
+            return "null";
         }
+        int at = email.indexOf('@');
+        if (at <= 1) {
+            return "***@" + (at >= 0 ? email.substring(at + 1) : "?");
+        }
+        return email.substring(0, 2) + "***@" + email.substring(at + 1);
     }
 }

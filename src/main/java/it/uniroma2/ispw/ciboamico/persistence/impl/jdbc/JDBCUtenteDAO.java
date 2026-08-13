@@ -1,23 +1,24 @@
 package it.uniroma2.ispw.ciboamico.persistence.impl.jdbc;
 
 import it.uniroma2.ispw.ciboamico.entity.Utente;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 
 import java.sql.*;
 
-/**
- * DAO JDBC per Utente — PreparedStatement anti SQL-injection (NFR-02).
- * Le eccezioni SQL sono incapsulate in DAOException (NFR-06).
- */
+// DAO JDBC per Utente — PreparedStatement anti SQL-injection
+
 public class JDBCUtenteDAO implements UtenteDAO {
 
     private Connection getConnection() throws SQLException {
-        // Configurazione reale in application.properties
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/ciboamico", "root", "root");
+        // Connessione centralizzata (config da config.properties via
+        // fallback locale) — le credenziali NON sono hardcoded qui
+        // (vedi ConnectionManager).
+        return ConnectionManager.getConnection();
     }
 
     @Override
-    public Utente findByEmail(String email) {
+    public Utente findByEmail(String email) throws DAOException {
         String sql = "SELECT nome, email, password_hash FROM utenti WHERE email = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -35,7 +36,7 @@ public class JDBCUtenteDAO implements UtenteDAO {
     }
 
     @Override
-    public Utente save(Utente utente) {
+    public Utente save(Utente utente) throws DAOException {
         String sql = "INSERT INTO utenti (nome, email, password_hash) VALUES (?, ?, ?) "
                 + "ON DUPLICATE KEY UPDATE nome = VALUES(nome)";
         try (Connection conn = getConnection();

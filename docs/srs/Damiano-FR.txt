@@ -1,0 +1,15 @@
+Michele Damiano — ISPW A.A. 2025/2026
+Functional Requirements (3 individual)
+
+FR-1: The system shall create a single direct order for one buyer and one
+vendor, tracking the order state transitions defined by the business rules.
+(realized by UC-04 Order a Product, BR-04)
+
+FR-2: The system shall verify the availability of a marketplace product
+before recording an order, reducing the available quantity and rejecting
+the order if the requested quantity exceeds the residual stock.
+(realized by UC-04 Order a Product, BR-03/BR-07)
+
+FR-3: The system shall notify the vendor asynchronously when a new order
+for one of their products is created.
+(realized by UC-04 Order a Product, Observer pattern — VenditoreNotifier)

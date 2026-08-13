@@ -1,0 +1,47 @@
+% CAPITOLO 5 — EXCEPTIONS
+\chapter{Exceptions}
+\label{cap:exceptions}
+
+La logica di errore è una tassonomia (\texttt{exception/}) tutta
+\textbf{checked}, che forza la gestione esplicita (\texttt{throws} /
+\texttt{try/catch}).
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Eccezione} & \textbf{Ruolo} \\
+\midrule
+\texttt{CiboAmicoException} (abstract) & Base checked, campi comuni \\
+\texttt{BusinessValidationException} & Regola di business violata \\
+\quad\texttt{AutenticazioneException} & Credenziali errate \\
+\quad\texttt{InvalidStateTransitionException} & Stato illegale (BR-04) \\
+\texttt{DAOException} & Persistenza (file /\ DB) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La base \texttt{CiboAmicoException} estende \texttt{java.lang.Exception}
+(\textbf{checked}) ed espone quattro campi: \texttt{userMessage} (mostrato
+all'utente), \texttt{technicalMessage} (per i log), \texttt{errorCode} e
+\texttt{timestamp}. Le view leggono solo \texttt{getUserMessage()}.
+
+\section{Wrapping}
+\label{sec:exc_wrapping}
+
+I DAO incapsulano l'errore di basso livello (\texttt{SQLException},
+\texttt{IOException}) in \texttt{DAOException} con
+\texttt{(message, cause)}: \texttt{getCause()} preserva la causa originale,
+che non si propaga mai alle boundary.
+
+\section{Payment}
+\label{sec:exc_payment}
+
+\texttt{PaymentRejectedException} (\texttt{pattern.payment}) è checked:
+transazione non autorizzata, gestita dall'estensione \texttt{6a} di UC-04.
+
+\section{Messaggi}
+\label{sec:exc_messaggi}
+
+Testi centralizzati in \texttt{ExceptionMessagesEnum} (log) e
+\texttt{UserErrorMessagesEnum} (utente), senza stringhe duplicate nei punti
+di lancio.

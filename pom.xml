@@ -14,7 +14,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- SonarCloud: esclusioni componenti grafiche per non falsare le metriche
-             (le Boundary JavaFX richiedono display; viste minimali non testate) -->
+             (le Boundary JavaFX richiedono display; viste minimali non testate).
+             NOTA (verifica NotebookLM): il layer di persistenza (DAO/JDBC) è codice
+             applicativo valutato → NON escluso, deve avere zero code smell. -->
         <sonar.projectKey>ciboamico</sonar.projectKey>
         <sonar.organization>ciboamico-ispw</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -23,13 +25,9 @@
         <sonar.exclusions>
             **/boundary/**,
             **/bootstrap/**,
-            **/impl/jdbc/**,
             **/*.fxml,
             **/*.css
         </sonar.exclusions>
-        <sonar.coverage.exclusions>
-            **/impl/jdbc/**
-        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -65,6 +63,13 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- JavaParser: reverse-engineering del codice per generare diagrammi UML consistenti (tool ausiliario) -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>3.25.10</version>
             <scope>test</scope>
         </dependency>
         <dependency>

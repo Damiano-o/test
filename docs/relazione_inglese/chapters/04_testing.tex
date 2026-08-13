@@ -1,0 +1,53 @@
+% CHAPTER 4 — TESTING
+\chapter{Testing}
+\label{cap:testing}
+
+The verification of the system is carried out with a \textbf{JUnit 5} unit
+test suite run by Maven, with coverage measured by JaCoCo (quality gate on
+line coverage). The verified behaviors are described below, grouped by feature.
+
+\paragraph{Access to the restricted area.} We tested the controller of the
+restricted area by verifying that an authenticated user correctly retrieves
+the data of their checkout and their session. The tests guarantee that the
+returned structures are never \texttt{null} and that the access to the
+restricted data is handled correctly for authenticated users.
+
+\paragraph{Order creation and submission.} We tested the ordering flow by
+verifying that a product is selected and that the order is created with the
+correct vendor. The tests guarantee that an order with a null user or product
+is rejected and that the stock availability is reduced at purchase time
+without negative stock.
+
+\paragraph{Voucher discount (Strategy).} We tested the discount logic by
+verifying that a valid voucher is applied to the order total. The tests
+guarantee that empty, expired or invalid codes are rejected without
+unhandled exceptions and that the discount calculation never produces
+inconsistent amounts.
+
+\paragraph{Payment and authorization.} We tested the payment subsystem by
+verifying both the authorized and the rejected branch. The tests guarantee
+that a rejected payment raises the correct application exception leaving the
+order unchanged, and that invalid card data (CVV, non-positive amount,
+missing order) are blocked without \texttt{NullPointerException}.
+
+\paragraph{Authentication.} We tested the authentication mechanism by
+verifying both valid and invalid credentials. The tests guarantee that a
+correct login populates the session and that wrong email or password are
+rejected, with the \texttt{logout} correctly clearing the session.
+
+\paragraph{Order lifecycle (BR-04 state machine).} We tested the order state
+machine by verifying the sequence \texttt{CREATED
+$\rightarrow$ CONFIRMED $\rightarrow$ IN\_DELIVERY $\rightarrow$ DELIVERED}.
+The tests guarantee that an illegal transition is blocked by the invalid state
+exception.
+
+\paragraph{Observer notification.} We tested the Observer pattern by verifying
+that the publisher notifies the registered observers when an order is
+confirmed. The tests guarantee that the event (\texttt{OrdineEvent}) is
+delivered to the observers through the read-only DTO, never the domain entity.
+
+\paragraph{Persistence (Demo and File System).} We tested the persistence
+layers by verifying the create-read-update cycle of users, products and
+orders. The tests guarantee that the \emph{Demo} (in-memory) and
+\emph{File System} persistence keep the data consistently, including the
+retrieval of products by name.

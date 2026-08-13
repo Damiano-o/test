@@ -1,0 +1,156 @@
+% ============================================================
+% CAPITOLO 1 — SPECIFICHE DEI REQUISITI SOFTWARE (SRS)
+% ============================================================
+\chapter{Specifiche dei Requisiti Software}
+\label{cap:srs}
+
+% ------------------------------------------------------------
+\section{Introduzione}
+\label{sec:intro}
+
+\subsection{Scopo del documento}
+\label{subsec:scopo}
+
+Questo documento definisce i requisiti software di \textbf{CiboAmico}, il progetto finale del corso ISPW (Università di Roma ``Tor Vergata'', A.A.\ 2025/2026, Prof. Davide Falessi, Prof. Guglielmo De Angelis).
+
+Lo scopo è fissare cosa il sistema deve fare in modo chiaro e verificabile, lasciando campo alla progettazione e ai test. Il documento serve sia a chi sviluppa, per tenere fede all'architettura Boundary-Control-Entity (BCE), sia a chi valuta il prodotto, per confrontare i flussi funzionali con le richieste iniziali.
+
+\subsection{Panoramica del sistema}
+\label{subsec:panoramica}
+
+CiboAmico è un'applicazione desktop JavaFX che aiuta a gestire il cibo in casa, evitare sprechi e ottimizzare la spesa, collegando l'utente ai commercianti di prossimità. Il sistema segue il pattern Boundary-Control-Entity (BCE) e coinvolge quattro attori: Cliente, Venditore, Nutrizionista e Amministratore. Due sistemi esterni sono raggiunti tramite Adapter: OpenFoodFacts (lettura dei dati nutrizionali dal codice a barre) e JakartaMail (invio di notifiche). La persistenza è intercambiabile a runtime tra una modalità \textit{Demo} (in-memory) e una \textit{Full} (MySQL via JDBC).
+
+Il sistema ha tre aree funzionali:
+\begin{itemize}
+    \item \textbf{Dispensa}: il Cliente traccia i prodotti in casa, vede le scadenze e viene avvisato prima che il cibo si deteriori;
+    \item \textbf{Ricette}: il sistema propone ricette compatibili con gli ingredienti disponibili, sostituendo quelli mancanti;
+    \item \textbf{Marketplace}: i Venditori pubblicano i prodotti, i Clienti fanno ordini diretti (un compratore, un venditore) e l'Amministratore approva venditori e ricette.
+\end{itemize}
+
+\subsection{Requisiti hardware e software}
+\label{subsec:requisiti_hw_sw}
+
+L'applicazione è cross-platform grazie alla JVM.
+
+\textbf{Requisiti software:}
+\begin{itemize}
+    \item Java 17+
+    \item JavaFX 17+ (per l'interfaccia desktop)
+    \item Maven 3.9+ (build tool)
+    \item MySQL Server 8.0+ (modalità \textit{Full}, via JDBC)
+    \item Draw.io (per la creazione dei diagrammi UML)
+    \item IDE: IntelliJ IDEA (con EclEmma per la coverage) o Eclipse
+\end{itemize}
+
+\textbf{Requisiti hardware:}
+\begin{itemize}
+    \item CPU: Dual-Core 2.0~GHz a 64-bit
+    \item RAM: 2~GB (4~GB consigliati in modalità \textit{Full} con server MySQL locale)
+    \item Spazio su disco: 1~GB
+    \item Schermo: $1024\times768$
+    \item Sistema operativo: Windows, macOS, Linux (compatibile con Java 17+)
+\end{itemize}
+
+\subsection{Sistemi correlati}
+\label{subsec:relazionati}
+
+Di seguito due sistemi esistenti che coprono solo in parte quello che fa CiboAmico.
+
+\textbf{System 1: Too Good To Go}
+
+\textbf{Pro:}
+\begin{itemize}
+    \item Rete capillare di partner con offerte geolocalizzate in tempo reale.
+    \item Riduce attivamente lo spreco commerciale offrendo cibo a prezzi ridotti.
+\end{itemize}
+
+\textbf{Contro:}
+\begin{itemize}
+    \item Non traccia la dispensa di casa: dopo l'acquisto non aiuta a gestire le scadenze.
+    \item L'acquisto è una \emph{Magic Box} a sorpresa: non si scelgono i singoli prodotti né si pianificano ricette o diete.
+\end{itemize}
+
+\textbf{System 2: SuperCook}
+
+\textbf{Pro:}
+\begin{itemize}
+    \item Matching potente: trova subito molte ricette a partire dagli ingredienti inseriti.
+    \item Ampio database con filtri per tipo di piatto e intolleranze.
+\end{itemize}
+
+\textbf{Contro:}
+\begin{itemize}
+    \item Non ha un canale di acquisto integrato: per gli ingredienti mancanti bisogna provvedere da soli.
+    \item Non sostituisce automaticamente gli ingredienti, escludendo ricette realizzabili con piccole variazioni.
+\end{itemize}
+
+CiboAmico punta a combinare tracciamento della dispensa, generazione di ricette con sostituzioni e acquisto diretto dai produttori locali in un'unica piattaforma, offrendo funzionalità dedicate a clienti, venditori, nutrizionisti e amministratori, mantenendo un'architettura modulare ed estensibile.
+
+% ------------------------------------------------------------
+\section{User Stories}
+\label{sec:user_stories}
+
+\begin{enumerate}
+    \item \textbf{US-1}: Come Cliente, voglio ricevere notifiche preventive sulle date di scadenza dei prodotti presenti nella mia dispensa, in modo che possa consumare gli alimenti in tempo ed evitare lo spreco di cibo.
+    \item \textbf{US-2}: Come Cliente, voglio visualizzare le ricette compatibili con gli ingredienti disponibili in dispensa, in modo che possa cucinare senza dover effettuare nuovi acquisti.
+    \item \textbf{US-3}: Come Cliente, voglio ordinare un prodotto direttamente da un venditore locale, in modo che possa ricevere cibo fresco proveniente dal mio territorio.
+\end{enumerate}
+
+% ------------------------------------------------------------
+\section{Requisiti Funzionali}
+\label{sec:requisiti_funzionali}
+
+\begin{enumerate}
+    \item \textbf{RF-1}: Il sistema deve confrontare quotidianamente le date di scadenza degli alimenti nella dispensa con la data corrente, inviando un avviso al cliente per ogni prodotto la cui scadenza sia entro tre giorni.
+    \item \textbf{RF-2}: Il sistema deve suggerire al cliente un elenco di ricette in cui gli ingredienti richiesti siano un sottoinsieme degli ingredienti non scaduti presenti nella dispensa.
+    \item \textbf{RF-3}: Il sistema deve registrare una nuova transazione di acquisto associando il cliente al venditore e decrementando la scorta del prodotto in misura pari alla quantità ordinata.
+\end{enumerate}
+
+\subsection{Glossario dei Termini di Dominio}
+\begin{description}
+    \item[\textbf{Dispensa}]: rappresentazione digitale degli alimenti presenti nell'inventario domestico dell'utente, con quantità e date di scadenza.
+    \item[\textbf{Ricetta compatibile}]: ricetta i cui ingredienti richiesti sono presenti, oppure sostituibili in modo equivalente, nella dispensa dell'utente.
+    \item[\textbf{Ordine diretto}]: transazione che associa un singolo cliente acquirente a un unico venditore, senza passare da un carrello condiviso o intermediari.
+    \item[\textbf{Disponibilità del prodotto}]: quantità di un prodotto attualmente vendibile, che non può mai essere negativa e viene aggiornata dopo ogni acquisto.
+\end{description}
+
+% ------------------------------------------------------------
+\section{Use Cases}
+\label{sec:use_cases}
+
+\subsection{Diagramma dei casi d'uso}
+\label{subsec:uc_diagramma}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/usecase_diagram_hr.png}
+    \label{fig:usecase_diagram}
+\end{figure}
+
+\subsection{Internal Steps}
+\label{subsec:uc_internal_steps}
+\clearpage
+
+\subsubsection{Ordina un Prodotto}
+\label{u:uc04}
+
+\textbf{Main Flow:}
+\begin{enumerate}
+    \item The customer accesses the marketplace via Login.
+    \item The system displays the available products with price and remaining stock.
+    \item The customer selects a product from the catalog and starts the checkout.
+    \item The system loads the selected product into the current order and computes the total amount.
+    \item The customer confirms the purchase.
+    \item The system requests the authorization for the debit of the computed amount from the Payment Service.
+    \item The system registers the order in the “CREATED” state, decreases the remaining stock of the product and notifies the vendor.
+\end{enumerate}
+
+\textbf{Preconditions:} the customer is authenticated; at least one product is available in the catalog.
+
+\textbf{Alternative Flow (Extensions):}
+\begin{itemize}
+    \item \textbf{3a. Product No Longer Available:} the selected product is not present in the catalog anymore; the system displays an error message.
+    \item \textbf{4a. Promotional Voucher Request:} the customer requests to apply a promotional voucher to the current order; the system validates the temporal validity of the voucher and its association with the vendor of the selected product, recalculates the total amount applying the discount and resumes from step 5.
+    \item \textbf{6a. Payment Rejected:} the Payment Service returns a negative outcome; the system cancels the current order and displays a failure message, returning the flow to step 4.
+\end{itemize}
+

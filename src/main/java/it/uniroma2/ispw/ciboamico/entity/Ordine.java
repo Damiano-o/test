@@ -7,12 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Ordine singolo diretto (D-03): un compratore, un venditore, più voci.
- * Referenzia due Utente (compratore e venditore) — Venditore è un Ruolo,
- * non una classe autonoma (whole-part).
- * Implementa la macchina a stati BR-04 e il pattern Observer (OrdineSubject).
- */
+// Ordine singolo diretto (D-03)
+
 public class Ordine {
 
     private final Long idOrdine;
@@ -21,10 +17,11 @@ public class Ordine {
     private final LocalDateTime data;
     private StatoOrdineEnum stato;
     private double totale;
+    private BuonoPromozionale buonoApplicato;
     private final List<VoceOrdine> voci = new ArrayList<>();
-    private final OrdineSubject subject = new OrdineSubject();
 
-    public Ordine(Long idOrdine, Utente compratore, Utente venditore) {
+    public Ordine(Long idOrdine, Utente compratore, Utente venditore)
+            throws BusinessValidationException {
         if (compratore == null || venditore == null) {
             throw new BusinessValidationException("Compratore e venditore sono obbligatori");
         }
@@ -35,7 +32,7 @@ public class Ordine {
         this.compratore = compratore;
         this.venditore = venditore;
         this.data = LocalDateTime.now(ZoneId.systemDefault());
-        this.stato = StatoOrdineEnum.CREATO;
+        this.stato = StatoOrdineEnum.CREATED;
     }
 
     public void aggiungiVoce(VoceOrdine voce) {
@@ -43,23 +40,42 @@ public class Ordine {
         ricalcolaTotale();
     }
 
+    // Ricalcola il totale
+
     public void ricalcolaTotale() {
-        totale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
+        double subtotale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
+        totale = buonoApplicato != null ? buonoApplicato.applicaSconto(subtotale) : subtotale;
     }
 
-    /**
-     * BR-04: transizioni valide.
-     * CREATO → CONFERMATO | ANNULLATO
-     * CONFERMATO → IN_CONSEGNA | ANNULLATO
-     * IN_CONSEGNA → CONSEGNATO
-     */
-    public void cambiaStato(StatoOrdineEnum nuovoStato) {
+    // Applica un buono promozionale all'ordine
+
+    public void applicaBuono(BuonoPromozionale buono) throws BusinessValidationException {
+        if (buono == null) {
+            throw new BusinessValidationException("Il buono promozionale non può essere nullo");
+        }
+        BuonoPromozionale applicabile = buono.getVenditore() != null
+                && buono.getVenditore().getUtente() != null
+                && buono.getVenditore().getUtente().getEmail().equals(venditore.getEmail())
+                ? buono
+                : null;
+        if (applicabile == null) {
+            throw new BusinessValidationException(
+                    "Il buono promozionale non è associato al venditore di questo ordine");
+        }
+        this.buonoApplicato = applicabile;
+        ricalcolaTotale();
+    }
+
+    // BR-04: transizioni valide
+
+    public void cambiaStato(StatoOrdineEnum nuovoStato)
+            throws InvalidStateTransitionException {
         boolean valida = switch (stato) {
-            case CREATO -> nuovoStato == StatoOrdineEnum.CONFERMATO
-                    || nuovoStato == StatoOrdineEnum.ANNULLATO;
-            case CONFERMATO -> nuovoStato == StatoOrdineEnum.IN_CONSEGNA
-                    || nuovoStato == StatoOrdineEnum.ANNULLATO;
-            case IN_CONSEGNA -> nuovoStato == StatoOrdineEnum.CONSEGNATO;
+            case CREATED -> nuovoStato == StatoOrdineEnum.CONFIRMED
+                    || nuovoStato == StatoOrdineEnum.ANNULLED;
+            case CONFIRMED -> nuovoStato == StatoOrdineEnum.IN_DELIVERY
+                    || nuovoStato == StatoOrdineEnum.ANNULLED;
+            case IN_DELIVERY -> nuovoStato == StatoOrdineEnum.DELIVERED;
             default -> false;
         };
         if (!valida) {
@@ -67,15 +83,10 @@ public class Ordine {
                     "Transizione non valida da " + stato + " a " + nuovoStato + " (BR-04)");
         }
         this.stato = nuovoStato;
-        subject.notifyObservers(this);
     }
 
-    public void subscribe(OrdineEventListener listener) { subject.subscribe(listener); }
+    // Ripristina lo stato senza validazione (solo DAO)
 
-    /**
-     * Ripristina lo stato senza validazione — usato SOLO dai DAO per il caricamento
-     * da persistenza (lo stato salvato è già stato validato al momento della transizione).
-     */
     public void ripristinaStato(StatoOrdineEnum stato) {
         this.stato = stato;
     }
@@ -86,5 +97,9 @@ public class Ordine {
     public LocalDateTime getData() { return data; }
     public StatoOrdineEnum getStato() { return stato; }
     public double getTotale() { return totale; }
-    public List<VoceOrdine> getVoci() { return voci; }
+    public BuonoPromozionale getBuonoApplicato() { return buonoApplicato; }
+    public List<VoceOrdine> getVoci() {
+        // Defensive copy: i chiamanti non devono poter mutare le voci
+        return new ArrayList<>(voci);
+    }
 }

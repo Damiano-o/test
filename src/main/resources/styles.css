@@ -1,0 +1,360 @@
+/*
+ * CiboAmico — Design System UI minimalista
+ * ========================================
+ * Token (palette chiara, accento verde). Applicato una sola volta nel
+ * Navigator. Nessun FXML: styling via CSS JavaFX (sintassi -fx-).
+ * Verificato con NotebookLM (notebook 'ispw'): nessuna violazione BCE,
+ * nessun impatto su coverage/SonarCloud (CSS escluso da sonar.exclusions).
+ *
+ * Palette (design tokens del mockup HTML approvato):
+ *   sfondo          #FAFAF7
+ *   superficie      #FFFFFF
+ *   testo primario  #1F2933
+ *   testo secondario #6B7280
+ *   accento verde   #2F9E74   (hover #26855F)
+ *   bordo           #E5E7EB
+ *   errore          #DC2626  (su sfondo #FEE2E2)
+ */
+
+/* ---------- Base ---------- */
+.root {
+    -fx-font-family: "Segoe UI", system-ui, sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #FAFAF7;
+}
+
+.label {
+    -fx-text-fill: #1F2933;
+}
+
+/* ---------- Titoli ---------- */
+.screen-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1F2933;
+}
+
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1F2933;
+}
+
+.page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6B7280;
+}
+
+.brand-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1F2933;
+}
+
+/* ---------- Login card ---------- */
+.login-screen {
+    -fx-background-color: #FAFAF7;
+    -fx-alignment: center;
+    -fx-padding: 48 0 48 0;
+}
+
+.login-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 24, 0, 0, 8);
+    -fx-padding: 36 32 36 32;
+    -fx-spacing: 14;
+    -fx-pref-width: 380;
+    -fx-max-width: 380;
+}
+
+.login-brand {
+    -fx-alignment: center;
+    -fx-spacing: 4;
+    -fx-padding: 0 0 12 0;
+}
+
+/* ---------- Form fields ---------- */
+.text-field, .password-field {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 12 14 12 14;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #9CA3AF;
+    -fx-text-fill: #1F2933;
+    -fx-highlight-fill: rgba(47,158,116,0.2);
+}
+
+.text-field:focused, .password-field:focused {
+    -fx-focus-color: #2F9E74;
+    -fx-faint-focus-color: rgba(47,158,116,0.2);
+    -fx-border-color: #2F9E74;
+}
+
+/* ---------- Buttons ---------- */
+.button {
+    -fx-background-color: #2F9E74;
+    -fx-background-radius: 10;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 20 12 20;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: #26855F;
+}
+
+.button:pressed {
+    -fx-background-color: #1E6B4D;
+}
+
+/* Bottoni secondari (outline) */
+.button-outline {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-text-fill: #1F2933;
+    -fx-background-insets: 0;
+}
+
+.button-outline:hover {
+    -fx-background-color: #FAFAF7;
+    -fx-border-color: #2F9E74;
+}
+
+/* ---------- Layout Home: sidebar + main ---------- */
+.home-root {
+    -fx-background-color: #FAFAF7;
+}
+
+.sidebar {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: transparent #E5E7EB transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 20 14 20 14;
+    -fx-pref-width: 200;
+    -fx-min-width: 200;
+    -fx-spacing: 2;
+}
+
+.sidebar .brand-title {
+    -fx-font-size: 16px;
+    -fx-padding: 0 12 18 12;
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 10 12;
+    -fx-text-fill: #1F2933;
+    -fx-font-size: 14px;
+}
+
+.nav-item:hover {
+    -fx-background-color: #FAFAF7;
+}
+
+.nav-item.active {
+    -fx-background-color: rgba(47,158,116,0.14);
+    -fx-text-fill: #2F9E74;
+    -fx-font-weight: 600;
+}
+
+.home-main {
+    -fx-padding: 24;
+    -fx-spacing: 4;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 0);
+}
+
+.card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 24, 0, 0, 6);
+}
+
+.card-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #1F2933;
+}
+
+.card-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+}
+
+/* ---------- Principio ---------- */
+/* ---------- Icone ---------- */
+.icon {
+    -fx-font-size: 22px;
+    -fx-text-fill: #2F9E74;
+}
+
+/* ---------- ComboBox ---------- */
+.combo-box {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-font-size: 14px;
+}
+.combo-box .list-cell {
+    -fx-text-fill: #1F2933;
+}
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+.combo-box .arrow {
+    -fx-background-color: #6B7280;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+}
+.combo-box-popup .list-cell {
+    -fx-padding: 8;
+    -fx-background-color: #FFFFFF;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #FAFAF7;
+}
+.combo-box-popup .list-cell:focused {
+    -fx-background-color: rgba(47,158,116,0.14);
+    -fx-text-fill: #1F2933;
+}
+
+/* ---------- DatePicker ---------- */
+.date-picker {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+}
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* ---------- TextArea ---------- */
+.text-area {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 1;
+    -fx-font-size: 14px;
+}
+.text-area .content {
+    -fx-background-color: #FFFFFF;
+}
+
+/* ---------- Messaggio errore ---------- */
+.error-msg {
+.error-msg {
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 12px;
+    -fx-background-color: #FEE2E2;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12 8 12;
+}
+
+/* ---------- Stat chip (contatori header) ---------- */
+.stat-chip {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+    -fx-padding: 10 18 10 18;
+    -fx-spacing: 10;
+    -fx-min-width: 130;
+}
+.stat-chip .stat-value { -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1F2933; }
+.stat-chip .stat-label { -fx-font-size: 12px; -fx-text-fill: #6B7280; -fx-wrap-text: false; }
+.stat-chip.attention .stat-value { -fx-text-fill: #DC2626; }
+.stat-chip.warn .stat-value { -fx-text-fill: #B45309; }
+.stat-chip.ok .stat-value { -fx-text-fill: #2F9E74; }
+
+/* ---------- Badge di scadenza ---------- */
+.badge {
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 3 10 3 10;
+}
+.badge-scaduto   { -fx-background-color: #FEE2E2; -fx-text-fill: #B91C1C; }
+.badge-urgente   { -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; }
+.badge-ok        { -fx-background-color: #D1FAE5; -fx-text-fill: #065F46; }
+
+/* ---------- Form aggiunta prodotto ---------- */
+.form-panel {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 18;
+    -fx-spacing: 12;
+    -fx-pref-width: 320;
+}
+.field-label { -fx-font-size: 12px; -fx-text-fill: #6B7280; -fx-font-weight: 600; }
+
+/* ---------- Produzione (card) ---------- */
+.prodotto-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 14 16 14 16;
+    -fx-spacing: 6;
+}
+.prodotto-card:hover { -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 3); }
+.prodotto-nome { -fx-font-size: 15px; -fx-font-weight: 600; -fx-text-fill: #1F2933; }
+.prodotto-dett { -fx-font-size: 12px; -fx-text-fill: #6B7280; }
+/* ---------- Dashboard: avatar, KPI, card funzionalità ---------- */
+.avatar {
+    -fx-background-color: #2F9E74;
+    -fx-background-radius: 100;
+    -fx-min-width: 56;
+    -fx-min-height: 56;
+    -fx-max-width: 56;
+    -fx-max-height: 56;
+    -fx-alignment: center;
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(47,158,116,0.3), 12, 0, 0, 0);
+}
+
+.kpi-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #2F9E74;
+}
+
+.card-arrow {
+    -fx-font-size: 18px;
+    -fx-text-fill: #9CA3AF;
+}
