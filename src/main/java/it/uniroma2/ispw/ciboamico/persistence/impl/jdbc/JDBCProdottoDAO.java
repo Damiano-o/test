@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// DAO JDBC per Prodotto — PreparedStatement anti SQL-injection (NFR-02)
+// DAO JDBC per Prodotto — PreparedStatement anti SQL-injection
 
 public class JDBCProdottoDAO implements ProdottoDAO {
 

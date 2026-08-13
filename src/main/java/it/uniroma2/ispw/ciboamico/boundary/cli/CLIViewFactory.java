@@ -4,7 +4,7 @@ import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-// Abstract Factory concreta — famiglia CLI delle Boundary (scope UC-04)
+// Abstract Factory concreta — famiglia CLI delle Boundary (scope
 
 public class CLIViewFactory extends ViewFactory {
 

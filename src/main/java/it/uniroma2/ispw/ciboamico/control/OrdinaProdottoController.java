@@ -13,7 +13,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 import java.util.List;
 
-// Controller di UC-04 Ordina un Prodotto (stile a un livello di controllo)
+// Controller di UC-04 Ordina un Prodotto
 
 public class OrdinaProdottoController {
 
@@ -46,14 +46,14 @@ public class OrdinaProdottoController {
                 .toList();
     }
 
-    // Avvia il checkout per il prodotto selezionato: verifica disponibilità (BR-03) e valoriz...
+    // Avvia il checkout per il prodotto selezionato: verifica
 
     public OrdineBean avviaCheckout(OrdineBean inCorso)
             throws BusinessValidationException, DAOException {
         inCorso.validate();
         String nomeProdotto = inCorso.getNomeProdotto();
-        // Lookup mirato (no findAll + filtro): l'entità è l'Information Expert
-        // per la sua disponibilità (BR-03). Il checkout di un prodotto esaurito
+        // Lookup mirato (no findAll + filtro): l'entità è l'Information
+        // per la sua disponibilità (BR-03). Il checkout di un prodotto
         // è rifiutato qui, coerente con l'estensione 2a (out of stock).
         Prodotto prodotto = prodottoDAO.findByNome(nomeProdotto);
         if (prodotto == null) {

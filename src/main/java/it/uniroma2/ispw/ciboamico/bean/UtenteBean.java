@@ -6,7 +6,7 @@ import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 
 import java.util.regex.Pattern;
 
-// Bean/DTO per la sessione utente — tenuto da SessionManager (UC-11)
+// Bean/DTO per la sessione utente — tenuto da SessionManager
 
 public class UtenteBean {
 

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// Ordine singolo diretto (D-03): un compratore, un venditore, più voci
+// Ordine singolo diretto (D-03)
 
 public class Ordine {
 
@@ -40,7 +40,7 @@ public class Ordine {
         ricalcolaTotale();
     }
 
-    // Ricalcola il totale: somma delle voci, poi eventuale sconto del buono promozionale (Ord...
+    // Ricalcola il totale
 
     public void ricalcolaTotale() {
         double subtotale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
@@ -85,7 +85,7 @@ public class Ordine {
         this.stato = nuovoStato;
     }
 
-    // Ripristina lo stato senza validazione — usato SOLO dai DAO per il caricamento da persis...
+    // Ripristina lo stato senza validazione (solo DAO)
 
     public void ripristinaStato(StatoOrdineEnum stato) {
         this.stato = stato;
@@ -99,7 +99,7 @@ public class Ordine {
     public double getTotale() { return totale; }
     public BuonoPromozionale getBuonoApplicato() { return buonoApplicato; }
     public List<VoceOrdine> getVoci() {
-        // Defensive copy: i chiamanti non devono poter mutare le voci interne.
+        // Defensive copy: i chiamanti non devono poter mutare le voci
         return new ArrayList<>(voci);
     }
 }

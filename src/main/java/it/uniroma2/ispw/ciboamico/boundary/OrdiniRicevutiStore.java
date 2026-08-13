@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Store di presentazione degli ordini confermati (nessuna logica di business)
+// Store di presentazione degli ordini confermati (nessuna logica
 
 public final class OrdiniRicevutiStore implements OrdineEventListener {
 
@@ -31,7 +31,7 @@ public final class OrdiniRicevutiStore implements OrdineEventListener {
     @Override
     public void onOrdineConfermato(OrdineEvent event) {
         ordini.add(event);
-        // Notifica attiva ai listener di presentazione (push, non polling).
+        // Notifica attiva ai listener di presentazione (push, non
         List<OrdineArrivatoListener> copia;
         synchronized (arrivatoListeners) {
             copia = new ArrayList<>(arrivatoListeners);
@@ -41,7 +41,7 @@ public final class OrdiniRicevutiStore implements OrdineEventListener {
         }
     }
 
-    // Registra un listener di presentazione che viene avvisato (push) quando un nuovo ordine...
+    // Registra un listener di presentazione che viene avvisato (push)
 
     public void addOrdineArrivatoListener(OrdineArrivatoListener listener) {
         if (listener == null) {

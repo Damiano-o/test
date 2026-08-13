@@ -81,7 +81,7 @@ class ControllerErrorCoverageTest {
 
     @Test
     void buonoVenditoreErrato() throws Exception {
-        // buono di un venditore diverso da quello del prodotto "Miele locale" (marco@cibo.it)
+        // buono di un venditore diverso da quello del prodotto "Miele
         RuoloVenditore rvAltro = new RuoloVenditore("RM", "altro@cibo.it");
         rvAltro.setStato(StatoVenditoreEnum.APPROVATO);
         BuonoPromozionale buono = new BuonoPromozionale("ALTRU", rvAltro,
@@ -96,7 +96,7 @@ class ControllerErrorCoverageTest {
 
     @Test
     void buonoSuccesso() throws Exception {
-        // buono valido del venditore del prodotto "Miele locale" (marco@cibo.it)
+        // buono valido del venditore del prodotto "Miele locale"
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
         OrdineBean ris = buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente());
@@ -106,7 +106,7 @@ class ControllerErrorCoverageTest {
 
     @Test
     void buonoGiaUsato() throws Exception {
-        // monouso: dopo il primo riscatto da parte di mario@cibo.it, il secondo
+        // monouso: dopo il primo riscatto da parte di mario@cibo.it, il
         // utilizzo dello stesso codice deve essere rifiutato (BR monouso).
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
@@ -115,7 +115,7 @@ class ControllerErrorCoverageTest {
         OrdineBean primo = buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente());
         assertEquals("SALUTI20", primo.getCodiceBuono());
 
-        // Secondo utilizzo dello stesso codice: deve lanciare BusinessValidationException.
+        // Secondo utilizzo dello stesso codice: deve lanciare
         assertThrows(BusinessValidationException.class,
                 () -> buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente()));
     }

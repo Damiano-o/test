@@ -9,7 +9,7 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCUtenteDAO;
 
-// Factory JDBC: persistenza su MySQL con PreparedStatement (anti SQL-injection)
+// Factory JDBC: persistenza su MySQL con PreparedStatement (anti
 
 public class JDBCDAOFactory implements DAOFactory {
 

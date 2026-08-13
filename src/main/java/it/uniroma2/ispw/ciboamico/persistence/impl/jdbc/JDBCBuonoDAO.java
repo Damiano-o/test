@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// DAO JDBC per BuonoPromozionale — tabella piatta (codice, venditore_email, date, tipo_sc...
+// DAO JDBC per BuonoPromozionale — tabella piatta (codice,
 
 public class JDBCBuonoDAO implements BuonoDAO {
 

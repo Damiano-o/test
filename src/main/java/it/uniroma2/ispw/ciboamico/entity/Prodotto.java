@@ -36,7 +36,7 @@ public class Prodotto {
         this.venditore = venditore;
     }
 
-    // Riduce la disponibilità verificando l'invariante di business (BR-03)
+    // Riduce la disponibilità verificando l'invariante di business
 
     public void riduciDisponibilita(int quantita) throws BusinessValidationException {
         if (quantita > quantitaDisponibile) {

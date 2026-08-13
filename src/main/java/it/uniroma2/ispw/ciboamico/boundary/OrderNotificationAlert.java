@@ -7,13 +7,13 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-// ConcreteObserver di presentazione (boundary) dell'evento ordine confermato
+// ConcreteObserver di presentazione (boundary) dell'evento ordine
 
 public class OrderNotificationAlert implements OrdineEventListener {
 
     @Override
     public void onOrdineConfermato(OrdineEvent event) {
-        // La notifica può arrivare da un thread di dominio: l'aggiornamento
+        // La notifica può arrivare da un thread di dominio:
         // della UI JavaFX va schedulato sul thread grafico.
         Platform.runLater(() -> {
             UtenteBean logged = SessionManager.getInstance().getLoggedUser();

@@ -15,7 +15,7 @@ public class AutenticazioneBean {
     private String email;
     private String password;
 
-    // Factory method di conversione esterno→interno: partendo da email e password grezze dell...
+    // Factory method di conversione esterno→interno
 
     public static AutenticazioneBean fromCredenziali(String email, String password) throws AutenticazioneException {
         AutenticazioneBean bean = new AutenticazioneBean();

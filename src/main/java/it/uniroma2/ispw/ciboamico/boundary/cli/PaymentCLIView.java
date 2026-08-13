@@ -37,7 +37,7 @@ public class PaymentCLIView implements IView {
         String intestatario = utente.getUsername() != null ? utente.getUsername() : "";
 
         try {
-            // Conversione esterno→interno + autorizzazione delegate al controller
+            // Conversione esterno→interno + autorizzazione delegate al
             // di presentazione (DRY con la vista grafica), non alla CLI.
             OrdineBean risultato = controller.paga(
                     ordine, utente, numero, intestatario, "12/29", cvv);

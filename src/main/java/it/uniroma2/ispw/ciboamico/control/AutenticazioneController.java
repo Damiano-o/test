@@ -26,7 +26,7 @@ public class AutenticazioneController {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    // Tenta l'accesso: verifica esistenza account e password (Request del bean credenziali gi...
+    // Tenta l'accesso: verifica esistenza account e password (Request
 
     public UtenteBean login(AutenticazioneBean credenziali)
             throws AutenticazioneException, DAOException {
@@ -43,12 +43,12 @@ public class AutenticazioneController {
                     "ERR-CREDENZIALI");
         }
 
-        // Bean di output (entity→bean, come getProdottiDisponibili): la
+        // Bean di output
         // costruzione dell'UtenteBean risultante è ammessa nel controller
         // (formato interno→esterno); la sessione la gestisce il Facade.
-        // Il ruolo attivo è espresso in forma SEMANTICA ("CLIENTE"/"VENDITORE"),
-        // NON come nome della classe di implementazione: l'entity è l'Information
-        // Expert del proprio ruolo (Liskov: il bean non deve conoscere la gerarchia).
+        // Il ruolo attivo è espresso in forma SEMANTICA
+        // NON come nome della classe di implementazione: l'entity è
+        // Expert del proprio ruolo
         UtenteBean bean = new UtenteBean();
         bean.setUsername(utente.getNome());
         bean.setEmail(utente.getEmail());
@@ -56,7 +56,7 @@ public class AutenticazioneController {
         return bean;
     }
 
-    // Traduce i ruoli dell'utente in una etichetta semantica stabile per la presentazione
+    // Traduce i ruoli dell'utente in una etichetta semantica stabile
 
     private String ruoloAttivoDi(Utente utente) {
         if (utente.isVenditoreApprovato()) {

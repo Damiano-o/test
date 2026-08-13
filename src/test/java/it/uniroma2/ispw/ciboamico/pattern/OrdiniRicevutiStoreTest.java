@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test end-to-end della notifica attiva (Observer/push) dal controller di pagamento allo...
+// Test end-to-end della notifica attiva (Observer/push) dal
 
 class OrdiniRicevutiStoreTest {
 
@@ -40,7 +40,7 @@ class OrdiniRicevutiStoreTest {
         AtomicInteger notifichePush = new AtomicInteger(0);
         store.addOrdineArrivatoListener(ev -> notifichePush.incrementAndGet());
 
-        // Il cliente (mario) conferma un ordine verso il venditore (marco):
+        // Il cliente (mario) conferma un ordine verso il venditore
         // questo è ciò che fa PagamentoController.submitOrdine().
         publisher.notifyOrdineConfermato(
                 new OrdineEvent(1L, "mario@cibo.it", "marco@cibo.it", 5.50));

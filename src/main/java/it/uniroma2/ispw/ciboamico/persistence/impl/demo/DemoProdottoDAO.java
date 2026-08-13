@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// DAO Demo in-memory per prodotti marketplace e inventario domestico
+// DAO Demo in-memory per prodotti marketplace e inventario
 
 public class DemoProdottoDAO implements ProdottoDAO {
 

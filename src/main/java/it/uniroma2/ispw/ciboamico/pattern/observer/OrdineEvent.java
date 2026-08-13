@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.pattern.observer;
 
 import java.time.LocalDateTime;
 
-// Data Transfer Object immutabile che rappresenta l'evento di conferma di un ordine
+// DTO immutabile dell'evento ordine confermato
 
 public class OrdineEvent {
 

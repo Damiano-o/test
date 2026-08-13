@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-// Test della Simple Factory del PaymentGateway (passo 6 UC-04 / estensione 6a): verifica...
+// Test della Simple Factory del PaymentGateway (passo 6 UC-04 /
 
 class PaymentGatewayFactoryTest {
 
@@ -30,7 +30,7 @@ class PaymentGatewayFactoryTest {
 
     @Test
     void createGatewayApprovazioneSempreAutorizza() throws Exception {
-        // variante testabile: approvaSempre ignora la soglia (estensione 6a forzata)
+        // variante testabile: approvaSempre ignora la soglia (estensione
         PaymentGateway gateway = PaymentGatewayFactory.createGateway(true);
         assertTrue(gateway.autorizza(999_00L));
         assertTrue(gateway.autorizza(1_000_00L));

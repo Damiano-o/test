@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-// Test della Facade di autenticazione UC-11: la boundary usa un unico punto di ingresso (...
+// Test della Facade di autenticazione UC-11: la boundary usa un
 
 class AutenticazioneFacadeTest {
 
@@ -59,7 +59,7 @@ class AutenticazioneFacadeTest {
         assertNotNull(f);
     }
 
-    // ---- Gestione sessione (responsabilità del Facade, non del controller) ----
+    // ---- Gestione sessione (responsabilità del Facade, non del
 
     @Test
     void loginSalvaUtenteInSessione() throws Exception {

@@ -10,7 +10,7 @@ import java.util.List;
 public interface ProdottoDAO {
 
     List<Prodotto> findAll() throws DAOException;
-    // Nel dominio CiboAmico il Prodotto si identifica per nome (univoco nel catalogo del vend...
+    // Nel dominio CiboAmico il Prodotto si identifica per nome
 
     Prodotto findByNome(String nome) throws DAOException;
     Prodotto save(Prodotto prodotto) throws DAOException;

@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-// DAO FS: persistenza JSON (Gson) su file — NFR-01 (persistenza intercambiabile)
+// DAO FS: persistenza JSON (Gson) su file — NFR-01 (persistenza
 
 public class FSUtenteDAO implements UtenteDAO {
 

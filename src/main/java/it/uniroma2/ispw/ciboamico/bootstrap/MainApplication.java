@@ -28,7 +28,7 @@ public final class MainApplication extends Application {
 
         // Registrazione view (nomi simbolici, factory programmatiche).
         // Le Boundary costruiscono i propri controller tramite il registro
-        // applicativo, senza ricevere la DAOFactory: la View non conosce la
+        // applicativo, senza ricevere la DAOFactory: la View non conosce
         // persistenza.
         navigator.register("login", new LoginView()::build);
         navigator.register("home", new DashboardView()::build);
@@ -48,13 +48,13 @@ public final class MainApplication extends Application {
         bean.setPersistenza(ApplicationModeManager.getInstance().getActiveMode());
         Runner.avvia(bean, args, MainApplication::avviaViaRunner);
 
-        // In modalità DEMO, il seed è già a carico di Runner durante la
+        // In DEMO il seed è già a carico di Runner
         // composizione; qui si riporta solo la modalità per informazione.
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
     }
 
-    // Innesco dell'interfaccia GUI dopo che Runner ha composto il sistema
+    // Innesco della GUI dopo la composizione di Runner
 
     public static void avviaViaRunner() {
         launch(new String[0]);

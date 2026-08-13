@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-// Contesto condiviso delle view CLI: input da tastiera (Scanner), la DAOFactory attiva e...
+// Contesto condiviso delle view CLI: input da tastiera (Scanner),
 
 public final class CLIContext {
 

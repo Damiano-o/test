@@ -6,12 +6,12 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 
 import java.sql.*;
 
-// DAO JDBC per Utente — PreparedStatement anti SQL-injection (NFR-02)
+// DAO JDBC per Utente — PreparedStatement anti SQL-injection
 
 public class JDBCUtenteDAO implements UtenteDAO {
 
     private Connection getConnection() throws SQLException {
-        // Connessione centralizzata (config da config.properties via AppConfig,
+        // Connessione centralizzata (config da config.properties via
         // fallback locale) — le credenziali NON sono hardcoded qui
         // (vedi ConnectionManager).
         return ConnectionManager.getConnection();

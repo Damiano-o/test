@@ -24,7 +24,7 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-// Controller dello Use Case estensione "Pay" (passo 6 / estensione 6a di UC-04 Ordina un...
+// Controller dello Use Case estensione "Pay" (passo 6 / estensione
 
 public class PagamentoController {
 
@@ -46,7 +46,7 @@ public class PagamentoController {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    // Autorizza l'addebito (passo 6 / estensione 6a) e sottomette l'ordine
+    // Autorizza l'addebito (passo 6 / estensione 6a) e sottomette
 
     public OrdineBean processaPagamento(OrdineBean bean, UtenteBean utente, PaymentInfoBean payment)
             throws BusinessValidationException, DAOException {
@@ -72,7 +72,7 @@ public class PagamentoController {
         return submitOrdine(bean, utente);
     }
 
-    // Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica
+    // Flusso UC-04: verifica disponibilità → riepilogo → conferma →
 
     public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente)
             throws BusinessValidationException, DAOException {
@@ -98,9 +98,9 @@ public class PagamentoController {
         Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(compratore, venditore);
         ordine.aggiungiVoce(new VoceOrdine(prodotto, 1));
 
-        // Estensione 4a: se al checkout è stato applicato un buono promozionale,
-        // lo si applica all'ordine definitivo prima del salvataggio. Ordine.applicaBuono
-        // valida (Information Expert) che il buono appartenga al venditore dell'ordine.
+        // Estensione 4a: se al checkout è stato applicato un buono
+        // lo si applica all'ordine definitivo prima del salvataggio.
+        // valida (Information Expert) che il buono appartenga al venditore
         String codiceBuono = bean.getCodiceBuono();
         if (codiceBuono != null && !codiceBuono.isBlank()) {
             BuonoPromozionale buono = buonoDAO.findByCodice(codiceBuono);
@@ -114,9 +114,9 @@ public class PagamentoController {
         }
 
         ordineDAO.save(ordine);
-        // NOTIFICA ATTIVA (Pattern Observer): il control pubblica l'evento di
-        // conferma sul publisher singleton, il quale notifica i listener registrati
-        // (compratore e venditore) che ricevono il DTO OrdineEvent in sola lettura,
+        // NOTIFICA ATTIVA (Pattern Observer): il control pubblica l'evento
+        // conferma sul publisher singleton, il quale notifica i listener
+        // che ricevono il DTO solo lettura
         // mai l'entità.
         OrdineEventPublisher.getInstance().notifyOrdineConfermato(
                 new OrdineEvent(ordine.getIdOrdine(), compratore.getEmail(),

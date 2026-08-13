@@ -25,7 +25,7 @@ public class RuoloVenditore extends Ruolo {
     public Utente getUtente() { return utente; }
     void setUtente(Utente utente) { this.utente = utente; }
 
-    // Approvazione del venditore (BR-02): transizione IN_ATTESA → APPROVATO
+    // Approvazione del venditore (BR-02): transizione IN_ATTESA →
 
     public void approva() {
         if (stato == StatoVenditoreEnum.IN_ATTESA) {

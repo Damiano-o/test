@@ -4,7 +4,7 @@ import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.boundary.Navigator;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 
-// Abstract Factory concreta — famiglia GUI (JavaFX) delle Boundary (scope UC-04)
+// Abstract Factory concreta — famiglia GUI (JavaFX) delle Boundary
 
 public class JavaFXViewFactory extends ViewFactory {
 

@@ -9,7 +9,7 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSUtenteDAO;
 
-// Factory FS: persistenza su file JSON (Gson) — milestone M2, NFR-01
+// Factory FS: persistenza su file JSON (Gson) — milestone M2,
 
 public class FSDAOFactory implements DAOFactory {
 

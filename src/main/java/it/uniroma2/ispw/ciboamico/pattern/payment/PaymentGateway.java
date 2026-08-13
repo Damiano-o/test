@@ -6,7 +6,7 @@ import it.uniroma2.ispw.ciboamico.exception.PaymentRejectedException;
 
 public interface PaymentGateway {
 
-    // Richiede l'autorizzazione all'addebito per l'importo della transazione
+    // Autorizza l'addebito
 
     boolean autorizza(long importoInCent) throws PaymentRejectedException;
 

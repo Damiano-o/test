@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test del controller dell'estensione Applica Buono Promozionale (4a di UC-04): validazio...
+// Test del controller dell'estensione Applica Buono Promozionale
 
 class ApplicaBuonoPromozionaleControllerTest {
 
@@ -82,7 +82,7 @@ class ApplicaBuonoPromozionaleControllerTest {
 
     @Test
     void applicaBuonoProdottoNonSelezionatoLancia() {
-        // Prodotto non selezionato (nome vuoto): la conversione esterno→interno
+        // Prodotto non selezionato (nome vuoto): la conversione
         // via fromCheckout incapsula il Fail Fast.
         assertThrows(BusinessValidationException.class,
                 () -> OrdineBean.fromCheckout(" "));

@@ -28,7 +28,7 @@ public class InventarioView {
         public String getScadenza() { return scadenza; }
     }
 
-    // Nota: PropertyValueFactory usa reflection sulla property (nome/quantita/ scadenza)
+    // Nota: PropertyValueFactory usa reflection sulla property
 
     @SuppressWarnings("unchecked")
     public Parent build() {

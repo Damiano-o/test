@@ -1,6 +1,6 @@
 package it.uniroma2.ispw.ciboamico.exception;
 
-// Sottoclasse di BusinessValidationException per gli errori di autenticazione (email non...
+// Eccezione per errori di autenticazione
 
 public class AutenticazioneException extends BusinessValidationException {
 

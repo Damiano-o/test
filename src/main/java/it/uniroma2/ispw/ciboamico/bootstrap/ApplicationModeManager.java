@@ -6,7 +6,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.FSDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.JDBCDAOFactory;
 
-// Singleton: seleziona la modalità applicativa a runtime (JDBC | FS | DEMO) e fornisce la...
+// Singleton: seleziona la modalità applicativa a runtime (JDBC |
 
 public final class ApplicationModeManager {
 
@@ -20,8 +20,8 @@ public final class ApplicationModeManager {
     private DAOFactory factory;            // cache: stessa istanza per tutte le view
 
     private ApplicationModeManager() {
-        // NFR-01: legge la modalità di persistenza da AppConfig (unico punto
-        // d'accesso a config.properties), senza ricompilare; fallback a DEMO.
+        // NFR-01: legge la modalità di persistenza da AppConfig (unico
+        // d'accesso a config.properties), senza ricompilare; fallback a
         String mode = AppConfig.getInstance().getPersistenceType();
         try {
             setActiveMode(mode);

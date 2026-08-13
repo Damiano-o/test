@@ -20,7 +20,7 @@ import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
 import java.time.LocalDate;
 
-// Factory DEMO: DAO in-memory con dati seed (utenti, prodotti, ricette)
+// Factory DEMO: DAO in-memory con dati seed (utenti, prodotti,
 
 public class DemoDAOFactory implements DAOFactory {
 
@@ -33,7 +33,7 @@ public class DemoDAOFactory implements DAOFactory {
     @Override
     public BuonoDAO getBuonoDAO() { return buonoDAO; }
 
-    // Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO)
+    // Carica dati dimostrativi (chiamata dal bootstrap in modalità
 
     public synchronized void seedDemoData() throws DAOException {
         if (seeded) {

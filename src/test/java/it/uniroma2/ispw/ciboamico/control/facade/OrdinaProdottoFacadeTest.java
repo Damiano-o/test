@@ -22,7 +22,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test della Facade di checkout UC-04: la boundary usa un unico punto di ingresso (catalo...
+// Test della Facade di checkout UC-04: la boundary usa un unico
 
 class OrdinaProdottoFacadeTest {
 

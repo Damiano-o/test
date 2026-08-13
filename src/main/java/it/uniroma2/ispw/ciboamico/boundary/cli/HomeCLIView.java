@@ -8,7 +8,7 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
 import java.util.List;
 
-// Boundary CLI — Home (atterraggio post-login), scope UC-04 (Ordina un Prodotto)
+// Boundary CLI — Home (atterraggio post-login), scope UC-04
 
 public class HomeCLIView implements IView {
 

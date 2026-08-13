@@ -91,7 +91,7 @@ public class MarketplaceView {
         applicaBuono.setMaxWidth(Double.MAX_VALUE);
     }
 
-    // -------- Listener: rinvio al controller di presentazione --------
+    // -------- Listener: rinvio al controller di presentazione
 
     private void onAggiornaCatalogo() {
         try {

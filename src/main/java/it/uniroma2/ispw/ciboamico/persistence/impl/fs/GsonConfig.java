@@ -56,7 +56,7 @@ public final class GsonConfig {
                     }
                 })
                 // Polimorfismo Ruolo: Ruolo è astratta (non istanziabile da Gson);
-                // serializza un discriminante (nome ruolo) e i campi del sotto-tipo.
+                // serializza discriminante e campi del ruolo
                 .registerTypeAdapter(Ruolo.class, new TypeAdapter<Ruolo>() {
                     @Override
                     public void write(JsonWriter out, Ruolo ruolo) throws IOException {
@@ -87,7 +87,7 @@ public final class GsonConfig {
                             }
                             return rv;
                         }
-                        // default: CLIENTE (o valore non riconosciuto -> ruolo cliente neutro)
+                        // default: CLIENTE (o valore non riconosciuto -> ruolo cliente
                         return new RuoloCliente();
                     }
                 })

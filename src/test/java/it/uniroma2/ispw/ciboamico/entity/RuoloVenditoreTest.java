@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test di dominio per RuoloVenditore: transizione di approvazione (BR-02) e ripristino di...
+// Test di dominio per RuoloVenditore: transizione di approvazione
 
 class RuoloVenditoreTest {
 

@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test del controller principale di UC-04 Ordina Prodotto: catalogo e avvio del checkout
+// Test del controller principale di UC-04 Ordina Prodotto:
 
 class OrdinaProdottoControllerTest {
 
@@ -65,7 +65,7 @@ class OrdinaProdottoControllerTest {
         OrdineBean inCorso = controller.avviaCheckout(OrdineBean.fromCheckout("Caffè"));
         assertEquals("Caffè", inCorso.getNomeProdotto());
         assertEquals(4.50, inCorso.getTotale(), 1e-9);
-        // Il controller applicativo è state-less: la scrittura in SessionManager
+        // Il controller applicativo è state-less: la scrittura in
         // è responsabilità del Facade, non qui.
     }
 

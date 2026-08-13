@@ -13,7 +13,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 import java.util.List;
 
-// Controller di presentazione (UI) della MarketPlace (UC-04 Ordina Prodotto), condiviso d...
+// Controller di presentazione (UI) della MarketPlace (UC-04 Ordina
 
 public class MarketplaceUIController {
 
@@ -34,13 +34,13 @@ public class MarketplaceUIController {
         return facade.getProdottiDisponibili();
     }
 
-    // Mappa l'azione "aggiorna catalogo": recupera i prodotti e restituisce la riga di stato...
+    // Mappa l'azione "aggiorna catalogo": recupera i prodotti e
 
     public String aggiornaCatalogo() throws DAOException {
         return catalogoProdotti().size() + " prodotti disponibili nel marketplace locale.";
     }
 
-    // Mappa l'azione "ordina il prodotto selezionato": converte il nome prodotto (formato est...
+    // Mappa l'azione ordina
 
     public OrdineBean ordinaProdotto(String nomeProdotto)
             throws BusinessValidationException, DAOException {
@@ -54,7 +54,7 @@ public class MarketplaceUIController {
         return facade.avviaCheckout(inCorso);
     }
 
-    // Mappa l'azione "applica buono promozionale": convierte il codice buono e applica lo sco...
+    // Mappa l'azione "applica buono promozionale": convierte il codice
 
     public OrdineBean applicaBuono(String codiceBuono, String nomeProdotto)
             throws BusinessValidationException, DAOException {
@@ -65,7 +65,7 @@ public class MarketplaceUIController {
         return facade.applicaBuono(codiceBuono, inCorso, utente);
     }
 
-    // Formatta l'esito dell'operazione "applica buono" per la presentazione
+    // Formatta l'esito del buono
 
     public static String formattaEsitoBuono(OrdineBean ris) {
         return "Buono \"" + ris.getCodiceBuono()

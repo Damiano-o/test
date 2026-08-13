@@ -10,7 +10,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-// Factory con inizializzazione lazy e cache degli ordini creati nella sessione
+// Factory con inizializzazione lazy e cache degli ordini creati
 
 public final class OrdineLazyFactory {
 
@@ -25,7 +25,7 @@ public final class OrdineLazyFactory {
         private static OrdineLazyFactory INSTANCE;
     }
 
-    // Configura la factory con la DAOFactory attiva (chiamata al bootstrap)
+    // Configura la factory con la DAOFactory attiva (chiamata al
 
     public static synchronized void configure(DAOFactory factory) {
         if (factory == null) {

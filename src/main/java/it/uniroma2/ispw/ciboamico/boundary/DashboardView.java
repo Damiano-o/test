@@ -39,8 +39,8 @@ public class DashboardView {
                 new VBox(2, benvenuto, ruoloLabel));
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // Corpo diverso in base al ruolo (Liskov + Whole-Part): il venditore
-        // approvato non opera come cliente: vede il proprio pannello, non le
+        // Corpo diverso in base al ruolo
+        // approvato non opera come cliente: vede il proprio pannello, non
         // schede di acquisto lato cliente.
         VBox corpo;
         if (venditore) {
@@ -84,7 +84,7 @@ public class DashboardView {
         nota.getStyleClass().add("page-subtitle");
         nota.setWrapText(true);
 
-        // Elenco ordini ricevuti, auto-aggiornante (Observer: push, non polling).
+        // Elenco ordini ricevuti, auto-aggiornante (Observer: push, non
         Label titoloOrdini = new Label("Ordini ricevuti");
         titoloOrdini.getStyleClass().add("field-label");
         VBox elencoOrdini = new VBox(6);
@@ -94,7 +94,7 @@ public class DashboardView {
         String venditoreEmail = SessionManager.getInstance().getLoggedUser() != null
                 ? SessionManager.getInstance().getLoggedUser().getEmail() : null;
 
-        // Popolamento iniziale + aggiornamento automatico quando arriva un nuovo
+        // Popolamento iniziale + aggiornamento automatico quando arriva un
         // ordine: la notifica attiva (Observer) aggiorna la vista da sola.
         Runnable refresh = () -> {
             List<OrdineEvent> ricevuti = OrdiniRicevutiStore.getInstance()

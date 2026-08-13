@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-// Copertura completa di ScontoStrategyFactory (Simple Factory dei pattern Strategy di sco...
+// Copertura completa di ScontoStrategyFactory (Simple Factory dei
 
 class ScontoStrategyFactoryTest {
 

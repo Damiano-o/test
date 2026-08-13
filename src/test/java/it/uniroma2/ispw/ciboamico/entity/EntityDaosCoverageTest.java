@@ -88,7 +88,7 @@ class EntityDaosCoverageTest {
             publisher.notifyOrdineConfermato(new OrdineEvent(8L, "c@cibo.it", "marco@cibo.it", 4.0));
             assertEquals(1, count[0]);
 
-        // removeListener idempotente: rimuovere un non-registrato non lancia
+        // removeListener idempotente: rimuovere un non-registrato non
         publisher.removeListener(l);
         assertDoesNotThrow(() -> publisher.removeListener(e -> { }));
     }
@@ -170,7 +170,7 @@ class EntityDaosCoverageTest {
 
     @Test
     void ordineEventValidate() {
-        // Il DTO OrdineneEvent valida gli ingressi (numeroOrdine non null, clienteId non vuoto).
+        // Il DTO OrdineneEvent valida gli ingressi (numeroOrdine non null,
         assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(null, "c@cibo.it", "marco@cibo.it", 1.0));
         assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(1L, " ", "marco@cibo.it", 1.0));
         OrdineEvent ok = new OrdineEvent(5L, "c@cibo.it", "marco@cibo.it", 4.5);

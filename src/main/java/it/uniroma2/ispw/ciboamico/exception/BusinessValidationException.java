@@ -1,6 +1,6 @@
 package it.uniroma2.ispw.ciboamico.exception;
 
-// Eccezione di dominio per le violazioni delle regole di business e delle validazioni sem...
+// Eccezione di dominio per le violazioni delle regole di business
 
 public class BusinessValidationException extends CiboAmicoException {
 

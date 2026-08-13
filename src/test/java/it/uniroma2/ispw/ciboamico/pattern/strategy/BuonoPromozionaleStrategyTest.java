@@ -21,7 +21,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test del Buono Promozionale: sconto (Strategy), validità temporale, monouso e applicazi...
+// Test del Buono Promozionale: sconto (Strategy), validità
 
 class BuonoPromozionaleStrategyTest {
 
@@ -119,7 +119,7 @@ class BuonoPromozionaleStrategyTest {
         assertEquals(1, u.getBuoniUtilizzati().size());
     }
 
-    // ---------- Applicazione all'Ordine (Information Expert) ----------
+    // ---------- Applicazione all'Ordine (Information Expert)
     @Test
     void testApplicaBuonoScontaTotaleOrdine() throws Exception {
         RuoloVenditore rv = venditore();

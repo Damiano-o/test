@@ -12,7 +12,7 @@ public class PaymentInfoBean {
 
     private long importoInCent;
 
-    // Factory method di conversione esterno→interno: costruisce il bean dai dati carta grezzi...
+    // Factory method di conversione esterno→interno
 
     public static PaymentInfoBean fromCardData(String numeroCarta, String intestatario,
                                                String scadenza, String cvv, double totale)

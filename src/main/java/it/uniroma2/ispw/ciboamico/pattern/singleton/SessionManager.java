@@ -3,7 +3,7 @@ package it.uniroma2.ispw.ciboamico.pattern.singleton;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 
-// Singleton: custode dell'utente loggato e del checkout in corso (UC-04)
+// Singleton: custode dell'utente loggato e del checkout in corso
 
 public final class SessionManager {
 
@@ -24,7 +24,7 @@ public final class SessionManager {
     public UtenteBean getLoggedUser() { return loggedUser; }
     public void setLoggedUser(UtenteBean loggedUser) { this.loggedUser = loggedUser; }
 
-    // Chiude la sessione: pulisce utente loggato e anche l'eventuale checkout in corso, così...
+    // Chiude la sessione: pulisce utente loggato e anche l'eventuale
 
     public void logout() {
         this.loggedUser = null;

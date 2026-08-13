@@ -6,7 +6,7 @@ import it.uniroma2.ispw.ciboamico.boundary.gui.JavaFXViewFactory;
 
 import java.util.Locale;
 
-// Abstract Factory delle Boundary (pattern GoF, doppia interfaccia CLI/GUI)
+// Abstract Factory delle Boundary (pattern GoF, doppia interfaccia
 
 public abstract class ViewFactory {
 
@@ -18,7 +18,7 @@ public abstract class ViewFactory {
 
     }
 
-    // Punto d'accesso globale (Singleton lazy): restituisce la factory della family attiva
+    // Punto d'accesso globale (Singleton lazy): restituisce la factory
 
     public static synchronized ViewFactory getFactory() {
         if (instance == null) {

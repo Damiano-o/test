@@ -40,7 +40,7 @@ class ApplicationModeManagerTest {
 
     @Test
     void testConfigPropertiesEsiste() throws Exception {
-        // NFR-01: config.properties nelle risorse, letto all'avvio senza ricompilare
+        // NFR-01: config.properties nelle risorse, letto all'avvio senza
         var in = getClass().getClassLoader().getResourceAsStream("config.properties");
         assertNotNull(in, "config.properties deve esistere nelle risorse (NFR-01)");
         var props = new java.util.Properties();

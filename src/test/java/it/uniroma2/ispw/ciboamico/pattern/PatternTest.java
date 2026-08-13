@@ -77,8 +77,8 @@ class PatternTest {
 
     @Test
     void testNotificheAttiveConEntrambiINotifier() {
-        // Simula il setup di Runner.avvia (GUI e CLI): registra i due notifier
-        // di produzione più un listener osservatore, poi pubblica un evento e
+        // Simula il setup di Runner.avvia (GUI e CLI): registra i due
+        // di produzione più un listener osservatore, poi pubblica un
         // verifica che TUTTI ricevano la notifica (nessun listener perso).
         OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
         try {

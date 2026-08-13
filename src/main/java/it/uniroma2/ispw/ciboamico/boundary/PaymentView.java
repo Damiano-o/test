@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
-// Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione 6a UC-04)
+// Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione
 
 public class PaymentView {
 
@@ -76,7 +76,7 @@ public class PaymentView {
         return UiKit.pagina("Pagamento", "UC-04 · autorizzazione all'addebito", corpo, "marketplace");
     }
 
-    // -------- Listener: rinvio al controller di presentazione --------
+    // -------- Listener: rinvio al controller di presentazione
 
     private void onPaga(UtenteBean utente, OrdineBean ordine,
                         TextField numeroCarta, TextField intestatario,

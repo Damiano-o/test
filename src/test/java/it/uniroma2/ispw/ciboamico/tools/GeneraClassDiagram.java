@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
-// Reverse-engineering ausiliario: legge le classi Java reali del progetto e genera un fil...
+// Reverse-engineering ausiliario: legge le classi Java reali del
 
 public final class GeneraClassDiagram {
 

@@ -10,7 +10,7 @@ import it.uniroma2.ispw.ciboamico.boundary.OrdiniRicevutiStore;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 
-// Runner: unico punto di composizione dell'applicazione (in stile Layered / Abstract Fact...
+// Runner: unico punto di composizione dell'applicazione (in stile
 
 public final class Runner {
 
@@ -20,7 +20,7 @@ public final class Runner {
 
     }
 
-    // Compone il sistema dalla scelta dell'utente e innesca l'interfaccia
+    // Compone il sistema dalla scelta dell'utente e innesca
 
     public static synchronized void avvia(ApplicationModeBean scelta, String[] args, Runnable startUp) {
         if (composto) {
@@ -42,31 +42,25 @@ public final class Runner {
         // 2) LazyFactory degli ordini con la DAOFactory attiva (UC-04).
         OrdineLazyFactory.configure(modeManager.getDAOFactory());
 
-        // 3) Seed DEMO (utenti, prodotti, ricette) se la modalità lo richiede,
-        //    indipendente dall'interfaccia scelta.
+        // 3) Seed DEMO se la modalità lo richiede
         seedDemoDataSeNecessario(modeManager);
 
-        // 4) Pattern Observer: registra i listener una sola volta, così la
-        //    notifica attiva alla conferma dell'ordine raggiunge in produzione
-        //    compratore e venditore (e non solo nei test).
+        // 4) Registra i listener Observer (notifier + store presentazione)
         OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
         publisher.addListener(new UtenteNotifier());
         publisher.addListener(new VenditoreNotifier());
-        // Store di presentazione: accumula gli eventi confermati così le view
-        // (GUI/CLI) possono mostrare al venditore gli ordini ricevuti.
+        // Store di presentazione: accumula gli eventi per le view
         publisher.addListener(OrdiniRicevutiStore.getInstance());
         OrdiniRicevutiStore.getInstance().clear();
-        // 4b) Per la GUI si registra anche l'observer di presentazione: così la
-        //    notifica attiva diventa visibile (Alert) oltre che loggata. La CLI
-        //    ne fa a meno: usa i notifier testuali.
+        // 4b) GUI: alert di notifica visibile
         if (scelta.gui()) {
             publisher.addListener(new OrderNotificationAlert());
         }
 
-        // 5) Famiglia di boundary (Abstract Factory): GUI o CLI, una sola volta.
+        // 5) Famiglia di boundary (GUI o CLI)
         ViewFactory.configure(scelta.getInterfaccia());
 
-        // 6) Avvia l'interfaccia scelta.
+        // 6) Avvia l'interfaccia scelta
         startUp.run();
     }
 

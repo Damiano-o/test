@@ -24,7 +24,7 @@ class FSDaoTest {
 
     @BeforeEach
     void pulisciDati() {
-        // I file JSON persistono tra le run — pulizia per test indipendenti
+        // I file JSON persistono tra le run — pulizia per test
         try {
             Path dir = Path.of("data");
             if (Files.exists(dir)) {
@@ -50,7 +50,7 @@ class FSDaoTest {
 
     @Test
     void testUtenteFSConRuoloVenditoreNonCiclico() throws Exception {
-        // Regressione: il back-link al transient evita lo StackOverflow di Gson
+        // Regressione: il back-link al transient evita lo StackOverflow di
         // sulla persistenza FS di un Utente che possiede un RuoloVenditore
         // (relazione unidirezionale in persistenza).
         FSUtenteDAO dao = new FSUtenteDAO();
@@ -63,16 +63,16 @@ class FSDaoTest {
         assertNotNull(ricostruito);
         assertTrue(ricostruito.haRuolo(RuoloVenditore.class));
         assertEquals("RM", ricostruito.getRuolo(RuoloVenditore.class).getZona());
-        // il back-link non è persistito (resta null): la navigazione di dominio
-        // nei ruoli si ristabilisce a runtime quando serve (ricostruzione DAO)
+        // il back-link non è persistito (resta null): la navigazione di
+        // nei ruoli si ristabilisce a runtime quando serve (ricostruzione
         assertNull(ricostruito.getRuolo(RuoloVenditore.class).getUtente());
     }
 
     @Test
     void testBuonoFSCircolare() throws Exception {
-        // Persistenza FS completa di un venditore e dei suoi buoni (roundtrip):
-        // verifica che il ScontoStrategy sia ricostruita e il venditore risolto
-        // dal DAO utenti (niente ciclo Gson, grazie alla relazione unidirezionale).
+        // Persistenza FS completa di un venditore e dei suoi buoni
+        // verifica che il ScontoStrategy sia ricostruita e il venditore
+        // dal DAO utenti (niente ciclo Gson, grazie alla relazione
         FSUtenteDAO utenteDao = new FSUtenteDAO();
         Utente v = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");

@@ -10,7 +10,7 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-// Controller di presentazione (UI) della schermata di pagamento (passo 6 + estensione 6a...
+// Controller di presentazione (UI) della schermata di pagamento
 
 public class PaymentUIController {
 
@@ -24,7 +24,7 @@ public class PaymentUIController {
         this.facade = new OrdinaProdottoFacade();
     }
 
-    // Mappa l'azione "paga": converte i dati carta (formato esterno) nel PaymentInfoBean (for...
+    // Mappa l'azione "paga": converte i dati carta (formato esterno)
 
     public OrdineBean paga(OrdineBean ordine, UtenteBean utente,
                            String numeroCarta, String intestatario,

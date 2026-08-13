@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-// T10/T11/T12 — Autenticazione: login valido, email non valida, password errata
+// T10/T11/T12 — Autenticazione: login valido, email non valida,
 
 class AutenticazioneControllerTest {
 
@@ -82,7 +82,7 @@ class AutenticazioneControllerTest {
         Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
-        // La validazione dell'email avviene nel setter del bean (Fail Fast),
+        // La validazione dell'email avviene nel setter del bean (Fail
         // chiamato dalla conversione fromCredenziali.
         assertThrows(AutenticazioneException.class,
                 () -> AutenticazioneBean.fromCredenziali("user_at_cibo.it", "password123"));
@@ -93,7 +93,7 @@ class AutenticazioneControllerTest {
     void testLoginInvalidEmail() throws Exception {
         AutenticazioneController controller =
                 new AutenticazioneController(mock(DAOFactory.class));
-        // Email malformata: il bean rifiuta in fase di costruzione (Fail Fast).
+        // Email malformata: il bean rifiuta in fase di costruzione (Fail
         assertThrows(AutenticazioneException.class,
                 () -> AutenticazioneBean.fromCredenziali("user_at_cibo.it", "password123"));
     }
@@ -119,7 +119,7 @@ class AutenticazioneControllerTest {
 
     @Test
     void testLoginAccountInesistenteLancia() throws Exception {
-        // DAO che non trova l'account (ntorna null) -> credenziali respinte.
+        // DAO che non trova l'account (ntorna null) -> credenziali
         DAOFactory factory = mock(DAOFactory.class);
         UtenteDAO dao = mock(UtenteDAO.class);
         when(factory.getUtenteDAO()).thenReturn(dao);

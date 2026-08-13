@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.exception;
 
 import java.time.LocalDateTime;
 
-// Eccezione base astratta dell'applicazione CiboAmico (pattern BCE)
+// Eccezione base astratta dell'applicazione CiboAmico (pattern
 
 public abstract class CiboAmicoException extends Exception {
 
@@ -27,7 +27,7 @@ public abstract class CiboAmicoException extends Exception {
         this.timestamp = LocalDateTime.now();
     }
 
-    // Costruttore completo: separa il messaggio user-friendly dal dettaglio tecnico destinato...
+    // Costruttore completo: separa il messaggio user-friendly dal
 
     protected CiboAmicoException(String userMessage, String technicalMessage, String errorCode) {
         super(technicalMessage == null ? userMessage : technicalMessage);

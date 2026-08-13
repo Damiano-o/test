@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test del flusso di dominio dell'Ordine (UC-04) e del pattern Observer
+// Test del flusso di dominio dell'Ordine (UC-04) e del pattern
 
 class OrdineControllerTest {
 
@@ -35,7 +35,7 @@ class OrdineControllerTest {
 
     @Test
     void testObserverNotificaConferma() throws Exception {
-        // Il publisher notifica i listener registrati quando viene confermato un ordine,
+        // Il publisher notifica i listener registrati quando viene
         // passando il DTO OrdineEvent (mai l'entità Ordine).
         OrdineEventPublisher publisher = OrdineEventPublisher.getInstance();
         publisher.clearListeners();

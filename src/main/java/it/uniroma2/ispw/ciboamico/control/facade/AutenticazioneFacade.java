@@ -26,7 +26,7 @@ public final class AutenticazioneFacade {
         this(new AutenticazioneController());
     }
 
-    // Autentica un utente (UC-11): delega al controller la verifica delle credenziali (bean g...
+    // Autentica un utente (UC-11): delega al controller la verifica
 
     public UtenteBean login(AutenticazioneBean credenziali)
             throws AutenticazioneException, DAOException {

@@ -26,7 +26,7 @@ public class LoginCLIView implements IView {
         String password = ctx.leggiStringa("Password: ");
         try {
             // Conversione esterno→interno a carico della view: le
-            // stringhe del form diventano il bean credenziali passato al Facade.
+            // stringhe del form diventano il bean credenziali passato al
             UtenteBean utente = facade.login(
                     AutenticazioneBean.fromCredenziali(email, password));
             System.out.println("Benvenuto, " + utente.getUsername() + "! (ruolo: " + utente.getRuoloAttivo() + ")");

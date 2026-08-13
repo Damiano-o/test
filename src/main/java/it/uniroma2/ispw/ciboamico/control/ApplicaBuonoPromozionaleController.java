@@ -18,7 +18,7 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-// Controller dello Use Case estensione "Applica Buono Promozionale" (4a di UC-04 Ordina u...
+// Controller dello Use Case estensione "Applica Buono
 
 public class ApplicaBuonoPromozionaleController {
 
@@ -90,9 +90,9 @@ public class ApplicaBuonoPromozionaleController {
         }
 
         // Information Expert: il compratore autenticato va preferibilmente
-        // recuperato dal DAO (fonte ufficiale dei suoi dati). Se non ancora
-        // persistito (es. sessioni di test isolate), si ripiega su un compratore
-        // di sessione: l'Ordine non usa la password del compratore, quindi non
+        // recuperato dal DAO (fonte ufficiale dei suoi dati). Se non
+        // persistito (es. sessioni di test isolate), si ripiega su un
+        // Information Expert: compratore dal DAO, fallback di sessione
         // serve inventarne una.
         Utente compratore = (utente.getEmail() != null) ? utenteDAO.findByEmail(utente.getEmail()) : null;
         if (compratore == null) {

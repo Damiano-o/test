@@ -1,6 +1,6 @@
 package it.uniroma2.ispw.ciboamico.pattern.observer;
 
-// Interfaccia Observer del pattern Observer applicato agli eventi ordine
+// Interfaccia Observer del pattern Observer applicato agli eventi
 
 @FunctionalInterface
 public interface OrdineEventListener {

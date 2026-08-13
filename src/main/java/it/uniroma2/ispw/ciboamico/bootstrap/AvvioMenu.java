@@ -4,7 +4,7 @@ import it.uniroma2.ispw.ciboamico.boundary.cli.CLIContext;
 
 import java.util.Scanner;
 
-// Boundary di avvio: menu interattivo con cui l'utente sceglie l'interfaccia e la modalit...
+// Boundary di avvio: menu interattivo con cui l'utente sceglie
 
 public final class AvvioMenu {
 

@@ -22,7 +22,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// Test del controller dell'estensione Pagamento (passo 6 / estensione 6a di UC-04): autor...
+// Test del controller dell'estensione Pagamento (passo 6 /
 
 class PagamentoControllerTest {
 
@@ -115,7 +115,7 @@ class PagamentoControllerTest {
 
     @Test
     void testSubmitOrdineApplicaBuonoDalCheckout() throws Exception {
-        // Regressione: il buono applicato al checkout deve sopravvivere nel
+        // Regressione: il buono applicato al checkout deve sopravvivere
         // submit dell'ordine (lo sconto non va perso al pagamento).
         Utente utenteVenditore = new Utente("Marco", "marco@cibo.it", "h");
         RuoloVenditore rv = new RuoloVenditore("RM", "tel");

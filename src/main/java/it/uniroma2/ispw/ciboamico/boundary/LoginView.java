@@ -70,7 +70,7 @@ public class LoginView {
     private void onLogin(TextField email, PasswordField password, Label messaggio) {
         try {
             // Conversione esterno→interno a carico della view: le
-            // stringhe del form diventano il bean credenziali passato al Facade.
+            // stringhe del form diventano il bean credenziali passato al
             UtenteBean utente = facade.login(
                     AutenticazioneBean.fromCredenziali(email.getText(), password.getText()));
             messaggio.setText("Benvenuto, " + utente.getUsername() + "!");

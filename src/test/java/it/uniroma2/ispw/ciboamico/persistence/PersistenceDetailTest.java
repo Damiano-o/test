@@ -29,7 +29,7 @@ class PersistenceDetailTest {
                         try {
                             Files.deleteIfExists(file);
                         } catch (IOException ignored) {
-                            // La pulizia è best-effort; il test segnala eventuali dati residui.
+                            // La pulizia è best-effort; il test segnala eventuali dati
                         }
                     });
                 }

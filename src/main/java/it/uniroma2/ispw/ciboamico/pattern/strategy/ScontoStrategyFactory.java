@@ -1,6 +1,6 @@
 package it.uniroma2.ispw.ciboamico.pattern.strategy;
 
-// Simple Factory per la ricostruzione delle ScontoStrategy a partire dai dati piatti dell...
+// Simple Factory per la ricostruzione delle ScontoStrategy a
 
 public final class ScontoStrategyFactory {
 

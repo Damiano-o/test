@@ -1,6 +1,6 @@
 package it.uniroma2.ispw.ciboamico.exception;
 
-// Eccezione per gli errori durante l'accesso alla persistenza (DAO)
+// Eccezione per gli errori durante l'accesso alla persistenza
 
 public class DAOException extends CiboAmicoException {
 

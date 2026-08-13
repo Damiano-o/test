@@ -14,7 +14,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 import java.util.List;
 
-// Facade (GoF - Structural) per lo use case UC-04 "Ordina un Prodotto"
+// Facade (GoF - Structural) per lo use case UC-04 "Ordina un
 
 public final class OrdinaProdottoFacade {
 
@@ -30,7 +30,7 @@ public final class OrdinaProdottoFacade {
         this.buonoController = buonoController;
     }
 
-    // Facade costruita risolvendo i controller applicativi a parte: il controller principale...
+    // Facade costruita con i controller iniettati
 
     public OrdinaProdottoFacade(OrdinaProdottoController controller) {
         this(controller,
@@ -52,7 +52,7 @@ public final class OrdinaProdottoFacade {
         return controller.getProdottiDisponibili();
     }
 
-    // controller di presentazione ha già costruito l'ordine in checkout via OrdineBean#fromCh...
+    // controller di presentazione ha già costruito l'ordine in
 
     public OrdineBean avviaCheckout(OrdineBean inCorso)
             throws BusinessValidationException, DAOException {
@@ -70,7 +70,7 @@ public final class OrdinaProdottoFacade {
         return scontato;
     }
 
-    // PaymentInfoBean è già costruito dal controller di presentazione/boundary (conversione e...
+    // PaymentInfoBean già costruito dal controller di presentazione
 
     public OrdineBean processaPagamento(OrdineBean ordine, UtenteBean utente, PaymentInfoBean payment)
             throws BusinessValidationException, DAOException {

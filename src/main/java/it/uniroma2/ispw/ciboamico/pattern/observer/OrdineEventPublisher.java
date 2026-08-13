@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// Subject Singleton del pattern Observer per la gestione degli eventi ordine
+// Subject Singleton del pattern Observer per la gestione degli
 
 public class OrdineEventPublisher {
 
@@ -63,7 +63,7 @@ public class OrdineEventPublisher {
         }
     }
 
-    // Notifica tutti gli observer registrati che un ordine è stato confermato
+    // Notifica tutti gli observer registrati che un ordine è stato
 
     public void notifyOrdineConfermato(OrdineEvent event) {
         if (event == null) {

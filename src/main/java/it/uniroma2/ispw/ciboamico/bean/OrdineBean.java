@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.bean;
 
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 
-// Bean/DTO per l'ordine, scambiato tra la boundary e il controller applicativo (UC-04)
+// Bean/DTO per l'ordine, scambiato tra la boundary e il controller
 
 public class OrdineBean {
 
@@ -18,7 +18,7 @@ public class OrdineBean {
     public Long getIdOrdine() { return idOrdine; }
     public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }
 
-    // Factory method di conversione esterno→interno: partendo dal nome prodotto selezionato n...
+    // Factory method di conversione esterno→interno: partendo dal nome
 
     public static OrdineBean fromCheckout(String nomeProdotto) throws BusinessValidationException {
         OrdineBean bean = new OrdineBean();
