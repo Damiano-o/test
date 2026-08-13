@@ -68,7 +68,11 @@ public class OrdinaProdottoController {
                     ExceptionMessagesEnum.PRODOTTO_NON_DISPONIBILE.message,
                     "ERR-PRODOTTO-NON-DISPONIBILE");
         }
-        inCorso.setTotale(prodotto.getPrezzo());
+        // Se c'è già un buono applicato (totale scontato valorizzato), non
+        // sovrascriverlo col prezzo pieno: lo sconto resta valido.
+        if (inCorso.getCodiceBuono() == null || inCorso.getCodiceBuono().isBlank()) {
+            inCorso.setTotale(prodotto.getPrezzo());
+        }
         return inCorso;
     }
 }

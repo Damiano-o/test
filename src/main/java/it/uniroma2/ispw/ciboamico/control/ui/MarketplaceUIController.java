@@ -59,7 +59,13 @@ public class MarketplaceUIController {
                     ExceptionMessagesEnum.PRODOTTO_NON_SELEZIONATO.message,
                     "ERR-PRODOTTO-NON-SELEZIONATO");
         }
-        OrdineBean inCorso = OrdineBean.fromCheckout(nomeProdotto);
+        // Riusa l'ordine in corso se già presente (può avere un buono applicato),
+        // altrimenti crea un nuovo checkout dal nome prodotto selezionato.
+        OrdineBean inCorso = SessionManager.getInstance().getOrdineInCorso();
+        if (inCorso == null || inCorso.getNomeProdotto() == null
+                || !inCorso.getNomeProdotto().equalsIgnoreCase(nomeProdotto)) {
+            inCorso = OrdineBean.fromCheckout(nomeProdotto);
+        }
         return facade.avviaCheckout(inCorso);
     }
 
