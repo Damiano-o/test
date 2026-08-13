@@ -20,7 +20,7 @@ public class MarketplaceCLIView implements IView {
     public MarketplaceCLIView(CLIContext ctx, IView payment) {
         this.ctx = ctx;
         this.payment = payment;
-        this.controller = new MarketplaceUIController(ctx.getLoggedUser());
+        this.controller = new MarketplaceUIController();
     }
 
     @Override
@@ -35,6 +35,7 @@ public class MarketplaceCLIView implements IView {
             System.out.println("Il marketplace è riservato ai clienti.");
             return;
         }
+        this.controller.setUtente(utente);
         System.out.println("\n=== Marketplace (UC-04) ===");
         List<ProdottoBean> prodotti;
         try {
