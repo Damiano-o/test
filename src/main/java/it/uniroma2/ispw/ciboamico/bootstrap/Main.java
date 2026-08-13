@@ -15,13 +15,11 @@ public final class Main {
 
         ApplicationModeBean bean;
         if ("gui".equals(ui) || "cli".equals(ui)) {
-            // Avvio diretto (senza menu): interfaccia dall'argomento,
-            // persistenza da ApplicationModeManager (file config, default
             bean = new ApplicationModeBean();
             bean.setInterfaccia(ui);
             bean.setPersistenza(ApplicationModeManager.getInstance().getActiveMode());
         } else {
-            // Avvio normale: l'utente sceglie dal menu interattivo.
+
             bean = AvvioMenu.chiediScelta();
         }
 

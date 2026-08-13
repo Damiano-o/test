@@ -6,7 +6,7 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.FSDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.JDBCDAOFactory;
 
-// Singleton: seleziona la modalità applicativa a runtime (JDBC |
+// Singleton: seleziona la modalità applicativa a runtime 
 
 public final class ApplicationModeManager {
 

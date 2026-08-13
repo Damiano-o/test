@@ -53,8 +53,9 @@ public class MarketplaceView {
 
         BorderPane area = new BorderPane();
         VBox ordinePanel = new VBox(8,
-                UiKit.field("Prodotto da ordinare"), prodSelez, ordina,
-                new Label("Buono promozionale"), buonoField, applicaBuono);
+                UiKit.field("Prodotto da ordinare"), prodSelez,
+                new Label("Buono promozionale (opzionale)"), buonoField, applicaBuono,
+                ordina);
         ordinePanel.getStyleClass().add("form-panel");
         BorderPane.setMargin(ordinePanel, new Insets(0, 0, 0, 16));
         area.setCenter(catalogo);
