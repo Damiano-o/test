@@ -4,15 +4,12 @@ import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
-import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
-import it.uniroma2.ispw.ciboamico.entity.VoceOrdine;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.enums.ExceptionMessagesEnum;
 import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
-import it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
@@ -89,19 +86,14 @@ public class ApplicaBuonoPromozionaleController {
                     "ERR-BUONO-VENDITORE");
         }
 
-        // Information Expert: il compratore autenticato va preferibilmente
-        // recuperato dal DAO (fonte ufficiale dei suoi dati). Se non
-        // persistito (es. sessioni di test isolate), si ripiega su un
-        // Information Expert: compratore dal DAO, fallback di sessione
-        // serve inventarne una.
         Utente compratore = (utente.getEmail() != null) ? utenteDAO.findByEmail(utente.getEmail()) : null;
         if (compratore == null) {
             compratore = new Utente(utente.getUsername(), utente.getEmail(), "");
         }
-        Utente venditore = prodotto.getVenditore().getUtente();
-        Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(compratore, venditore);
-        ordine.aggiungiVoce(new VoceOrdine(prodotto, 1));
-        ordine.applicaBuono(buono);
+
+        // Information Expert: il buono applica da sé lo sconto sul prezzo del
+        // prodotto (non serve creare un Ordine completo per mostrare il totale).
+        double totaleScontato = buono.applicaSconto(prodotto.getPrezzo());
 
         if (utente.getEmail() != null) {
             Utente persona = utenteDAO.findByEmail(utente.getEmail());
@@ -117,7 +109,7 @@ public class ApplicaBuonoPromozionaleController {
         OrdineBean risultato = new OrdineBean();
         risultato.setIdOrdine(bean.getIdOrdine());
         risultato.setNomeProdotto(bean.getNomeProdotto());
-        risultato.setTotale(ordine.getTotale());
+        risultato.setTotale(totaleScontato);
         risultato.setCodiceBuono(buono.getCodice());
         return risultato;
     }

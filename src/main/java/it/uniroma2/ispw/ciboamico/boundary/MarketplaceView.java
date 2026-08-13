@@ -134,7 +134,8 @@ public class MarketplaceView {
         } catch (BusinessValidationException ex) {
             messaggio.setText(ex.getUserMessage());
         } catch (Exception ex) {
-            messaggio.setText("Problema tecnico: verificare il codice buono.");
+            ex.printStackTrace();
+            messaggio.setText("Problema tecnico: " + ex.getClass().getSimpleName());
         }
     }
 }
