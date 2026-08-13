@@ -49,12 +49,12 @@ public class DemoDAOFactory implements DAOFactory {
 
     private void seed() throws BusinessValidationException, DAOException {
         // Cliente che ordina
-        Utente mario = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("password123"));
+        Utente mario = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("123"));
         mario.aggiungiRuolo(new RuoloCliente());
         utenteDAO.save(mario);
 
         // Venditore approvato (dal marketplace locale)
-        Utente marco = new Utente("Marco", "marco@cibo.it", Utente.hashPassword("password123"));
+        Utente marco = new Utente("Marco", "marco@cibo.it", Utente.hashPassword("123"));
         RuoloVenditore rv = new RuoloVenditore("RM", "marco@cibo.it");
         rv.approva(); // BR-02: solo un venditore approvato pubblica prodotti
         marco.aggiungiRuolo(rv);

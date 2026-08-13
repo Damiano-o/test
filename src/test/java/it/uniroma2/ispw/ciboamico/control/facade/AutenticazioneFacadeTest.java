@@ -42,7 +42,7 @@ class AutenticazioneFacadeTest {
 
     @Test
     void loginConCredenzialiValideRestituisceUtente() throws Exception {
-        UtenteBean utente = facade.login(credenziali("mario@cibo.it", "password123"));
+        UtenteBean utente = facade.login(credenziali("mario@cibo.it", "123"));
         assertNotNull(utente);
         assertNotNull(utente.getUsername());
     }
@@ -63,13 +63,13 @@ class AutenticazioneFacadeTest {
 
     @Test
     void loginSalvaUtenteInSessione() throws Exception {
-        UtenteBean bean = facade.login(credenziali("mario@cibo.it", "password123"));
+        UtenteBean bean = facade.login(credenziali("mario@cibo.it", "123"));
         assertEquals(bean.getEmail(), SessionManager.getInstance().getLoggedUser().getEmail());
     }
 
     @Test
     void logoutPulisceSessione() throws Exception {
-        facade.login(credenziali("mario@cibo.it", "password123"));
+        facade.login(credenziali("mario@cibo.it", "123"));
         assertNotNull(SessionManager.getInstance().getLoggedUser());
         // Igiene di stato: un checkout in corso non deve essere ereditato
         // da un successivo utente dopo il logout.
