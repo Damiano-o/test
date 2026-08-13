@@ -108,7 +108,7 @@ class UIControllerTest {
         OrdineBean ris = new OrdineBean();
         ris.setCodiceBuono("BUNDLE20");
         ris.setTotale(8.0);
-        assertEquals("Buono \"BUNDLE20\" applicato ✓ — totale 8,00 EUR",
+        assertEquals("Buono \"BUNDLE20\" applicato ✓ — totale 8.00 EUR",
                 MarketplaceUIController.formattaEsitoBuono(ris));
     }
 
@@ -135,7 +135,7 @@ class UIControllerTest {
         OrdineBean ris = new OrdineBean();
         ris.setStato("CREATED");
         ris.setTotale(4.5);
-        assertEquals("Pagamento riuscito ✓ — ordine CREATED, totale 4,50 EUR",
+        assertEquals("Pagamento riuscito ✓ — ordine CREATED, totale 4.50 EUR",
                 PaymentUIController.formattaEsitoPagamento(ris));
     }
 }

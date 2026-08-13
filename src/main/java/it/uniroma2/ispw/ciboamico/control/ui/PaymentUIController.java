@@ -75,6 +75,6 @@ public class PaymentUIController {
      */
     public static String formattaEsitoPagamento(OrdineBean risultato) {
         return "Pagamento riuscito ✓ — ordine " + risultato.getStato()
-                + ", totale " + String.format("%.2f EUR", risultato.getTotale());
+                + ", totale " + String.format(java.util.Locale.ROOT, "%.2f EUR", risultato.getTotale());
     }
 }

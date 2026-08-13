@@ -106,6 +106,6 @@ public class MarketplaceUIController {
      */
     public static String formattaEsitoBuono(OrdineBean ris) {
         return "Buono \"" + ris.getCodiceBuono()
-                + "\" applicato ✓ — totale " + String.format("%.2f", ris.getTotale()) + " EUR";
+                + "\" applicato ✓ — totale " + String.format(java.util.Locale.ROOT, "%.2f", ris.getTotale()) + " EUR";
     }
 }
