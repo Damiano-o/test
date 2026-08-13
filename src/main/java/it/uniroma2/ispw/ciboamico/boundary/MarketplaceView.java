@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class MarketplaceView {
 
     private final MarketplaceUIController controller;
-    private final UtenteBean utente;
 
     // Controlli della vista
     private Button aggiorna;
@@ -36,16 +35,24 @@ public class MarketplaceView {
     private Label messaggio;
 
     public MarketplaceView() {
-        this.utente = SessionManager.getInstance().getLoggedUser();
-        this.controller = new MarketplaceUIController(utente);
+        // L'utente va letto al momento di build(), non nel costruttore:
+        // la view è istanziata all'avvio (prima del login) dal Navigator.
+        this.controller = new MarketplaceUIController();
     }
 
     public Parent build() {
+        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
         // Guardia: il venditore non accede al marketplace (funzione cliente)
-        if (utente != null && "VENDITORE".equalsIgnoreCase(utente.getRuoloAttivo())) {
+        if (utente == null) {
+            Navigator.getInstance().switchTo("login");
+            return new javafx.scene.layout.VBox();
+        }
+        if ("VENDITORE".equalsIgnoreCase(utente.getRuoloAttivo())) {
             Navigator.getInstance().switchTo("home");
             return new javafx.scene.layout.VBox();
         }
+        // Aggiorna l'utente del controller di presentazione al login corrente.
+        this.controller.setUtente(utente);
         inizializzaControlli();
         aggiorna.setOnAction(e -> onAggiornaCatalogo());
         ordina.setOnAction(e -> onOrdinaProdotto());

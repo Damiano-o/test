@@ -18,7 +18,7 @@ import java.util.List;
 public class MarketplaceUIController {
 
     private final OrdinaProdottoFacade facade;
-    private final UtenteBean utente;
+    private UtenteBean utente;
 
     public MarketplaceUIController(DAOFactory factory, UtenteBean utente) {
         this.facade = new OrdinaProdottoFacade(factory);
@@ -27,6 +27,15 @@ public class MarketplaceUIController {
 
     public MarketplaceUIController(UtenteBean utente) {
         this.facade = new OrdinaProdottoFacade();
+        this.utente = utente;
+    }
+
+    public MarketplaceUIController() {
+        this.facade = new OrdinaProdottoFacade();
+    }
+
+    // Aggiorna l'utente (l'utente loggato cambia tra le sessioni)
+    public void setUtente(UtenteBean utente) {
         this.utente = utente;
     }
 
