@@ -118,11 +118,6 @@ public class DashboardView {
         OrdiniRicevutiStore.getInstance().addOrdineArrivatoListener(
                 ev -> Platform.runLater(refresh));
 
-        Button vaiAlMarketplace = new Button("Vai al marketplace");
-        vaiAlMarketplace.getStyleClass().add("button-outline");
-        vaiAlMarketplace.setMaxWidth(Double.MAX_VALUE);
-        vaiAlMarketplace.setOnAction(e -> Navigator.getInstance().switchTo("marketplace"));
-
         Button esci = new Button("Esci");
         esci.getStyleClass().add("button-outline");
         esci.setMaxWidth(Double.MAX_VALUE);
@@ -131,8 +126,7 @@ public class DashboardView {
             Navigator.getInstance().switchTo("login");
         });
 
-        VBox corpo = new VBox(12, header, nota, titoloOrdini, elencoOrdini,
-                vaiAlMarketplace, esci);
+        VBox corpo = new VBox(12, header, nota, titoloOrdini, elencoOrdini, esci);
         corpo.setPadding(new Insets(20, 24, 20, 24));
         return corpo;
     }

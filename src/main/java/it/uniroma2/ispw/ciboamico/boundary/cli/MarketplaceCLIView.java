@@ -30,6 +30,11 @@ public class MarketplaceCLIView implements IView {
             System.out.println("Nessun utente loggato.");
             return;
         }
+        // Guardia: il venditore non accede al marketplace (funzione cliente)
+        if ("VENDITORE".equalsIgnoreCase(utente.getRuoloAttivo())) {
+            System.out.println("Il marketplace è riservato ai clienti.");
+            return;
+        }
         System.out.println("\n=== Marketplace (UC-04) ===");
         List<ProdottoBean> prodotti;
         try {

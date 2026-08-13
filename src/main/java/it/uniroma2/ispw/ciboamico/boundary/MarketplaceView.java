@@ -41,6 +41,11 @@ public class MarketplaceView {
     }
 
     public Parent build() {
+        // Guardia: il venditore non accede al marketplace (funzione cliente)
+        if (utente != null && "VENDITORE".equalsIgnoreCase(utente.getRuoloAttivo())) {
+            Navigator.getInstance().switchTo("home");
+            return new javafx.scene.layout.VBox();
+        }
         inizializzaControlli();
         aggiorna.setOnAction(e -> onAggiornaCatalogo());
         ordina.setOnAction(e -> onOrdinaProdotto());

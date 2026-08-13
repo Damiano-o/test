@@ -34,8 +34,7 @@ public class HomeCLIView implements IView {
 
         if (venditore) {
             System.out.println("[1] Ordini ricevuti");
-            System.out.println("[2] Marketplace");
-            System.out.println("[3] Esci");
+            System.out.println("[2] Esci");
         } else {
             System.out.println("[1] Marketplace (Ordina un prodotto)");
             System.out.println("[2] Pagamento");
@@ -46,8 +45,7 @@ public class HomeCLIView implements IView {
         if (venditore) {
             switch (scelta) {
                 case "1" -> mostraOrdiniRicevuti(utente);
-                case "2" -> marketplace.display();
-                case "3" -> esci();
+                case "2" -> esci();
                 default -> System.out.println("Scelta non valida.");
             }
         } else {
