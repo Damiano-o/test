@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.pattern.strategy;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
+import it.uniroma2.ispw.ciboamico.control.ApplicaBuonoPromozionaleController;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
@@ -25,19 +25,18 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test del Buono Promozionale: sconto (Strategy), validità temporale, monouso
  * e applicazione all'ordine (estensione 4a UC-04).
  *
- * @author Michele Damiano
  */
 class BuonoPromozionaleStrategyTest {
 
     private DemoDAOFactory factory;
-    private OrdinaProdottoController controller;
+    private ApplicaBuonoPromozionaleController controller;
 
     @BeforeEach
     void setup() {
         factory = new DemoDAOFactory();
         OrdineLazyFactory.reset();
         OrdineLazyFactory.configure(factory);
-        controller = new OrdinaProdottoController(factory);
+        controller = new ApplicaBuonoPromozionaleController(factory);
     }
 
     @AfterEach

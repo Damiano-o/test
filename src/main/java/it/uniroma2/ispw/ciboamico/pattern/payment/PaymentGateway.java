@@ -1,5 +1,7 @@
 package it.uniroma2.ispw.ciboamico.pattern.payment;
 
+import it.uniroma2.ispw.ciboamico.exception.PaymentRejectedException;
+
 /**
  * Gateway di pagamento esterno (passo 6 UC-04 / estensione 6a).
  * Disaccoppia il controller dall'implementazione concreta del PSP:

@@ -1,8 +1,10 @@
 package it.uniroma2.ispw.ciboamico.boundary.cli;
 
+import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.control.facade.AutenticazioneFacade;
+import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 
 /**
@@ -25,10 +27,13 @@ public class LoginCLIView implements IView {
         String email = ctx.leggiStringa("Email: ");
         String password = ctx.leggiStringa("Password: ");
         try {
-            UtenteBean utente = facade.login(email, password);
+            // Conversione esterno→interno a carico della view: le
+            // stringhe del form diventano il bean credenziali passato al Facade.
+            UtenteBean utente = facade.login(
+                    AutenticazioneBean.fromCredenziali(email, password));
             System.out.println("Benvenuto, " + utente.getUsername() + "! (ruolo: " + utente.getRuoloAttivo() + ")");
         } catch (AutenticazioneException e) {
-            System.out.println("Credenziali non valide.");
+            System.out.println(UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message);
         } catch (Exception e) {
             System.out.println("Errore di sistema: riprovare più tardi.");
         }

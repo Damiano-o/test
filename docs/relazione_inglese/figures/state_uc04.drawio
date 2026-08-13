@@ -1,0 +1,86 @@
+<mxfile host="Electron">
+  <diagram name="Pagina-1" id="F6vjAquT8m6ry2DRE38u">
+    <mxGraphModel dx="1488" dy="1012" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="7pYK3HS6aDALNUtYzmli-1" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="458" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-2" parent="1" style="ellipse;html=1;shape=endState;fillColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="1620" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Login" vertex="1">
+          <mxGeometry height="50" width="140" x="400" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Marketplace" vertex="1">
+          <mxGeometry height="50" width="160" x="390" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Checkout" vertex="1">
+          <mxGeometry height="50" width="150" x="860" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Payment" vertex="1">
+          <mxGeometry height="50" width="140" x="1210" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Product Error" vertex="1">
+          <mxGeometry height="50" width="160" x="430" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Voucher Applied" vertex="1">
+          <mxGeometry height="50" width="170" x="850" y="870" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;strokeWidth=1;fillColor=#FFFFFF;strokeColor=#000000;fontFamily=Helvetica;fontSize=12;fontStyle=1;" value="On Payment Error" vertex="1">
+          <mxGeometry height="50" width="160" x="850" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-10" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#000000;strokeWidth=1;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="7pYK3HS6aDALNUtYzmli-3" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-11" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;entryDx=0;entryDy=0;exitDx=0;exitDy=0;" target="7pYK3HS6aDALNUtYzmli-4" value="click [button == Login &amp;&amp; validCredentials == true]/ open Marketplace">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-12" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;" target="7pYK3HS6aDALNUtYzmli-5" value="click [button == Order product &amp;&amp; productValid == true]&lt;br&gt;/ compute total">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-13" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;" target="7pYK3HS6aDALNUtYzmli-6" value="click [button == Pay]&lt;br&gt;/ request authorization">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-14" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.75;exitY=1;entryX=0.5;entryY=0;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitDx=0;exitDy=0;" target="7pYK3HS6aDALNUtYzmli-7" value="click [button == Order product &amp;&amp; productValid == false]/ show error">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-15" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;entryDx=0;entryDy=0;" target="7pYK3HS6aDALNUtYzmli-4" value="click [button == OK] / reload catalog">
+          <mxGeometry relative="1" x="-0.1389" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="310" y="895" />
+              <mxPoint x="310" y="735" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-16" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;" target="7pYK3HS6aDALNUtYzmli-8" value="&lt;div&gt;&lt;br&gt;&lt;/div&gt;&amp;nbsp;click [button == Apply voucher &amp;amp;&amp;amp; voucherValid == true]&lt;br&gt;/ recalculate total">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-17" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0.5;entryY=1;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="7pYK3HS6aDALNUtYzmli-6" value="click [button == Pay]&lt;br&gt;/ request authorization">
+          <mxGeometry relative="1" x="0.5949" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-18" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitDx=0;exitDy=0;" target="7pYK3HS6aDALNUtYzmli-9" value="click [button == Pay &amp;&amp; authorized == false] / cancel order">
+          <mxGeometry relative="1" x="-0.5733" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-19" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;entryX=0.469;entryY=0.007;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;entryDx=0;entryDy=0;exitDx=0;exitDy=0;entryPerimeter=0;" target="7pYK3HS6aDALNUtYzmli-5" value="click [button == OK] / back to On Checkout">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="930" y="710.4" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="7pYK3HS6aDALNUtYzmli-20" edge="1" parent="1" source="7pYK3HS6aDALNUtYzmli-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#000000;strokeWidth=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitDx=0;exitDy=0;entryDx=0;entryDy=0;" target="7pYK3HS6aDALNUtYzmli-2" value="click [button == Pay &amp;&amp; authorized == true]&lt;br&gt;/ save order CREATED">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

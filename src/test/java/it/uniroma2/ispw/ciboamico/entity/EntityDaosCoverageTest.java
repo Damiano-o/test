@@ -81,12 +81,12 @@ class EntityDaosCoverageTest {
 
             // registrato: riceve la notifica
             publisher.addListener(l);
-            publisher.notifyOrdineConfermato(new OrdineEvent(7L, "c@cibo.it", 3.0));
+            publisher.notifyOrdineConfermato(new OrdineEvent(7L, "c@cibo.it", "marco@cibo.it", 3.0));
             assertEquals(1, count[0]);
 
             // rimosso: non riceve piu' (removeListener funziona)
             publisher.removeListener(l);
-            publisher.notifyOrdineConfermato(new OrdineEvent(8L, "c@cibo.it", 4.0));
+            publisher.notifyOrdineConfermato(new OrdineEvent(8L, "c@cibo.it", "marco@cibo.it", 4.0));
             assertEquals(1, count[0]);
 
         // removeListener idempotente: rimuovere un non-registrato non lancia
@@ -95,7 +95,7 @@ class EntityDaosCoverageTest {
     }
 
     @Test
-    void beanProdottoGetters() {
+    void beanProdottoGetters() throws Exception {
         ProdottoBean b = new ProdottoBean();
         b.setNome("Miele");
         b.setPrezzo(6.5);
@@ -166,15 +166,15 @@ class EntityDaosCoverageTest {
         assertEquals(1, dao.findAll().size());
         assertNotNull(dao.findByNome("pera"));      // case-insensitive
         assertNull(dao.findByNome("assente"));
-        assertNotNull(dao.findById((long) p.getNome().hashCode()));
+        assertNotNull(dao.findByNome("Pera"));
     }
 
     @Test
     void ordineEventValidate() {
         // Il DTO OrdineneEvent valida gli ingressi (numeroOrdine non null, clienteId non vuoto).
-        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(null, "c@cibo.it", 1.0));
-        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(1L, " ", 1.0));
-        OrdineEvent ok = new OrdineEvent(5L, "c@cibo.it", 4.5);
+        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(null, "c@cibo.it", "marco@cibo.it", 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new OrdineEvent(1L, " ", "marco@cibo.it", 1.0));
+        OrdineEvent ok = new OrdineEvent(5L, "c@cibo.it", "marco@cibo.it", 4.5);
         assertNotNull(ok.getTimestamp());
         assertEquals(5L, ok.getNumeroOrdine());
         assertEquals(4.5, ok.getTotale(), 1e-9);

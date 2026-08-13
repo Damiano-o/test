@@ -26,13 +26,20 @@ public class UtenteBean {
 
     /** Imposta l'email validandone la forma sintattica. */
     public void setEmail(String email) throws AutenticazioneException {
+        this.email = validaEmail(email);
+    }
+
+    /**
+     * Controllo sintattico dell'email (Fail Fast).
+     */
+    private static String validaEmail(String email) throws AutenticazioneException {
         if (email == null || !EMAIL_PATTERN.matcher(email.trim()).matches()) {
             throw new AutenticazioneException(
                     UserErrorMessagesEnum.MALFORMED_EMAIL_MSG.message,
                     ExceptionMessagesEnum.EMAIL_FORMAT.message + ": " + email,
                     "ERR-EMAIL-NON-VALIDA");
         }
-        this.email = email.trim();
+        return email.trim();
     }
 
     public String getRuoloAttivo() { return ruoloAttivo; }

@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
  *   <li><b>Value Object</b>: oggetto immutabile senza identità propria.</li>
  * </ul>
  *
- * @author Michele Damiano
  */
 public class OrdineEvent {
 
@@ -27,6 +26,9 @@ public class OrdineEvent {
 
     /** Identificativo del cliente che ha effettuato l'ordine. */
     private final String clienteId;
+
+    /** Identificativo del venditore del prodotto ordinato. */
+    private final String venditoreId;
 
     /** Importo totale dell'ordine (inclusi eventuali sconti). */
     private final double totale;
@@ -40,10 +42,11 @@ public class OrdineEvent {
      *
      * @param numeroOrdine identificativo univoco dell'ordine
      * @param clienteId    identificativo del cliente che ha effettuato l'ordine
+     * @param venditoreId  identificativo del venditore del prodotto ordinato
      * @param totale       importo totale dell'ordine
      * @throws IllegalArgumentException se numeroOrdine è null oppure clienteId è nullo/vuoto
      */
-    public OrdineEvent(Long numeroOrdine, String clienteId, double totale) {
+    public OrdineEvent(Long numeroOrdine, String clienteId, String venditoreId, double totale) {
         if (numeroOrdine == null) {
             throw new IllegalArgumentException("Il numero ordine non può essere null");
         }
@@ -52,6 +55,7 @@ public class OrdineEvent {
         }
         this.numeroOrdine = numeroOrdine;
         this.clienteId = clienteId;
+        this.venditoreId = venditoreId;
         this.totale = totale;
         this.timestamp = LocalDateTime.now();
     }
@@ -66,6 +70,11 @@ public class OrdineEvent {
         return clienteId;
     }
 
+    /** @return l'ID del venditore (può essere null se non valorizzato). */
+    public String getVenditoreId() {
+        return venditoreId;
+    }
+
     /** @return il totale in euro. */
     public double getTotale() {
         return totale;
@@ -78,7 +87,7 @@ public class OrdineEvent {
 
     @Override
     public String toString() {
-        return String.format("OrdineEvent{ordine=#%d, cliente='%s', totale=€%.2f, timestamp=%s}",
-                numeroOrdine, clienteId, totale, timestamp);
+        return String.format("OrdineEvent{ordine=#%d, cliente='%s', venditore='%s', totale=€%.2f, timestamp=%s}",
+                numeroOrdine, clienteId, venditoreId, totale, timestamp);
     }
 }

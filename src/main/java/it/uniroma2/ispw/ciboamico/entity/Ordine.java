@@ -118,5 +118,8 @@ public class Ordine {
     public StatoOrdineEnum getStato() { return stato; }
     public double getTotale() { return totale; }
     public BuonoPromozionale getBuonoApplicato() { return buonoApplicato; }
-    public List<VoceOrdine> getVoci() { return voci; }
+    public List<VoceOrdine> getVoci() {
+        // Defensive copy: i chiamanti non devono poter mutare le voci interne.
+        return new ArrayList<>(voci);
+    }
 }

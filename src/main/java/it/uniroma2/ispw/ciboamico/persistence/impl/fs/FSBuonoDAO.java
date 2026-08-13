@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * DAO FS per BuonoPromozionale — persistenza JSON (Gson).
- * Risolve il mismatch documentale/oggetti (De Angelis): serializza un DTO piatto
+ * Risolve il mismatch documentale/oggetti: serializza un DTO piatto
  * (senza l'interfaccia ScontoStrategy né RuoloVenditore) e, in lettura, ricostruisce
  * la Strategy tramite ScontoStrategyFactory e l'entità tramite UtenteDAO.
  */

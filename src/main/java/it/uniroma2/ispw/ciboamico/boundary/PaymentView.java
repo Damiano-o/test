@@ -2,7 +2,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.graphic.PaymentGraphicController;
+import it.uniroma2.ispw.ciboamico.control.ui.PaymentUIController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.geometry.Insets;
@@ -17,16 +17,16 @@ import javafx.scene.layout.VBox;
  *
  * <p>È un puro layout: legge l'ordine in checkout dalla sessione, raccoglie i
  * dati carta e delega l'autorizzazione al
- * {@link PaymentGraphicController} (controller grafico disaccoppiato), che
+ * {@link PaymentUIController} (controller di presentazione disaccoppiato), che
  * invoca il controller applicativo via Facade. La view scambia solo Bean ed
  * applica l'esito ai widget.</p>
  */
 public class PaymentView {
 
-    private final PaymentGraphicController controller;
+    private final PaymentUIController controller;
 
     public PaymentView() {
-        this.controller = new PaymentGraphicController();
+        this.controller = new PaymentUIController();
     }
 
     public Parent build() {
@@ -83,7 +83,7 @@ public class PaymentView {
         return UiKit.pagina("Pagamento", "UC-04 · autorizzazione all'addebito", corpo, "marketplace");
     }
 
-    // -------- Listener: rinvio al controller grafico --------
+    // -------- Listener: rinvio al controller di presentazione --------
 
     private void onPaga(UtenteBean utente, OrdineBean ordine,
                         TextField numeroCarta, TextField intestatario,
@@ -93,7 +93,7 @@ public class PaymentView {
                     ordine, utente,
                     numeroCarta.getText(), intestatario.getText(),
                     scadenza.getText(), cvv.getText());
-            esito.setText(PaymentGraphicController.formattaEsitoPagamento(risultato));
+            esito.setText(PaymentUIController.formattaEsitoPagamento(risultato));
             Navigator.getInstance().switchTo("marketplace");
         } catch (BusinessValidationException ex) {
             esito.setText(ex.getUserMessage());

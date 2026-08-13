@@ -1,5 +1,9 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
+import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
+import it.uniroma2.ispw.ciboamico.boundary.cli.CLIViewFactory;
+import it.uniroma2.ispw.ciboamico.boundary.gui.JavaFXViewFactory;
+
 import java.util.Locale;
 
 /**
@@ -33,9 +37,8 @@ public abstract class ViewFactory {
     public static synchronized ViewFactory getFactory() {
         if (instance == null) {
             instance = "cli".equalsIgnoreCase(family)
-                    ? new it.uniroma2.ispw.ciboamico.boundary.cli.CLIViewFactory(
-                            it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory())
-                    : new it.uniroma2.ispw.ciboamico.boundary.gui.JavaFXViewFactory();
+                    ? new CLIViewFactory(ApplicationModeManager.getInstance().getDAOFactory())
+                    : new JavaFXViewFactory();
         }
         return instance;
     }

@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test del flusso di dominio dell'Ordine (UC-04) e del pattern Observer.
  *
- * @author Michele Damiano
  */
 class OrdineControllerTest {
 
@@ -47,7 +46,7 @@ class OrdineControllerTest {
             final OrdineEvent[] ricevuto = {null};
             publisher.addListener(e -> { notificato[0] = true; ricevuto[0] = e; });
 
-            publisher.notifyOrdineConfermato(new OrdineEvent(1L, "mario@cibo.it", 12.5));
+            publisher.notifyOrdineConfermato(new OrdineEvent(1L, "mario@cibo.it", "marco@cibo.it", 12.5));
 
             assertTrue(notificato[0]);
             assertNotNull(ricevuto[0]);

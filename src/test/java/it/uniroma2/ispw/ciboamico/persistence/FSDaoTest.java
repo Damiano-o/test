@@ -1,9 +1,12 @@
 package it.uniroma2.ispw.ciboamico.persistence;
 
 import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSBuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSOrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSUtenteDAO;
+import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoImportoFissoStrategy;
+import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Test DAO FS: roundtrip su file JSON (NFR-01 persistenza).
  * I file vengono scritti in data/ sotto il progetto (cartella gitignored).
  
- * @author Michele Damiano
 */
 class FSDaoTest {
 
@@ -50,6 +52,55 @@ class FSDaoTest {
         assertEquals("Anna", trovato.getNome());}
 
     @Test
+    void testUtenteFSConRuoloVenditoreNonCiclico() throws Exception {
+        // Regressione: il back-link al transient evita lo StackOverflow di Gson
+        // sulla persistenza FS di un Utente che possiede un RuoloVenditore
+        // (relazione unidirezionale in persistenza).
+        FSUtenteDAO dao = new FSUtenteDAO();
+        Utente v = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        v.aggiungiRuolo(rv);
+        dao.save(v); // prima: StackOverflowError; ora: senza ciclo
+
+        Utente ricostruito = dao.findByEmail("marco@cibo.it");
+        assertNotNull(ricostruito);
+        assertTrue(ricostruito.haRuolo(RuoloVenditore.class));
+        assertEquals("RM", ricostruito.getRuolo(RuoloVenditore.class).getZona());
+        // il back-link non è persistito (resta null): la navigazione di dominio
+        // nei ruoli si ristabilisce a runtime quando serve (ricostruzione DAO)
+        assertNull(ricostruito.getRuolo(RuoloVenditore.class).getUtente());
+    }
+
+    @Test
+    void testBuonoFSCircolare() throws Exception {
+        // Persistenza FS completa di un venditore e dei suoi buoni (roundtrip):
+        // verifica che il ScontoStrategy sia ricostruita e il venditore risolto
+        // dal DAO utenti (niente ciclo Gson, grazie alla relazione unidirezionale).
+        FSUtenteDAO utenteDao = new FSUtenteDAO();
+        Utente v = new Utente("Marco", "marco@cibo.it", "h");
+        RuoloVenditore rv = new RuoloVenditore("RM", "tel");
+        v.aggiungiRuolo(rv);
+        utenteDao.save(v);
+
+        FSBuonoDAO dao = new FSBuonoDAO(utenteDao);
+        dao.save(new BuonoPromozionale("SALUTI20", rv,
+                LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
+                new ScontoPercentualeStrategy(0.20)));
+        dao.save(new BuonoPromozionale("FISSO", rv,
+                LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
+                new ScontoImportoFissoStrategy(5.0)));
+
+        BuonoPromozionale trovato = dao.findByCodice("SALUTI20");
+        assertNotNull(trovato);
+        assertEquals("SALUTI20", trovato.getCodice());
+        assertEquals("VENDITORE", trovato.getVenditore().getNomeRuolo());
+        // strategia percentuale ricostruita: -20% su 10 -> 8
+        assertEquals(8.0, trovato.applicaSconto(10.0), 1e-9);
+
+        assertEquals(2, dao.findByVenditoreEmail("marco@cibo.it").size());
+    }
+
+    @Test
     void testProdottoFSCircolare() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         RuoloVenditore v = new RuoloVenditore("RM", "tel");
@@ -74,8 +125,6 @@ class FSDaoTest {
         assertNotNull(trovato);
         assertEquals("Pomodori", trovato.getNome());
     }
-
-
 
     @Test
     void testOrdineFSCircolare() throws Exception {

@@ -1,4 +1,4 @@
-package it.uniroma2.ispw.ciboamico.control.graphic;
+package it.uniroma2.ispw.ciboamico.control.ui;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
@@ -29,11 +29,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * coordino l'interazione View→controller applicativo, indipendentemente dalla
  * UI (testabili in isolamento).
  */
-class GraphicControllerTest {
+class UIControllerTest {
 
     private DemoDAOFactory factory;
-    private MarketplaceGraphicController marketplace;
-    private PaymentGraphicController payment;
+    private MarketplaceUIController marketplace;
+    private PaymentUIController payment;
     private UtenteBean utente;
 
     @BeforeEach
@@ -44,8 +44,8 @@ class GraphicControllerTest {
         utente = new UtenteBean();
         utente.setUsername("Mario");
         utente.setEmail("mario@cibo.it");
-        marketplace = new MarketplaceGraphicController((DAOFactory) factory, utente);
-        payment = new PaymentGraphicController((DAOFactory) factory);
+        marketplace = new MarketplaceUIController((DAOFactory) factory, utente);
+        payment = new PaymentUIController((DAOFactory) factory);
         SessionManager.getInstance().setLoggedUser(utente);
     }
 
@@ -64,7 +64,7 @@ class GraphicControllerTest {
                 new Prodotto(nome, prezzo, 10, LocalDate.now().plusDays(7), UnitaEnum.PEZZI, rv));
     }
 
-    // ===== MarketplaceGraphicController =====
+    // ===== MarketplaceUIController =====
 
     @Test
     void catalogoProdottiRestituisceLista() throws Exception {
@@ -109,10 +109,10 @@ class GraphicControllerTest {
         ris.setCodiceBuono("BUNDLE20");
         ris.setTotale(8.0);
         assertEquals("Buono \"BUNDLE20\" applicato ✓ — totale 8,00 EUR",
-                MarketplaceGraphicController.formattaEsitoBuono(ris));
+                MarketplaceUIController.formattaEsitoBuono(ris));
     }
 
-    // ===== PaymentGraphicController =====
+    // ===== PaymentUIController =====
 
     @Test
     void pagaValidoAutorizzaECompleta() throws Exception {
@@ -136,6 +136,6 @@ class GraphicControllerTest {
         ris.setStato("CREATED");
         ris.setTotale(4.5);
         assertEquals("Pagamento riuscito ✓ — ordine CREATED, totale 4,50 EUR",
-                PaymentGraphicController.formattaEsitoPagamento(ris));
+                PaymentUIController.formattaEsitoPagamento(ris));
     }
 }

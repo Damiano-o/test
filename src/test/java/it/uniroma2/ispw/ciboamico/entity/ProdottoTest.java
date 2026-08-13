@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità (BR-03).
  
- * @author Michele Damiano
 */
 class ProdottoTest {
 

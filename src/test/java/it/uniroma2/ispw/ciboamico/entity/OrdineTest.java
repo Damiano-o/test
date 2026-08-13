@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * T05/T06/T07 — Ordine: totale e transizioni di stato (BR-04).
  
- * @author Michele Damiano
 */
 class OrdineTest {
 

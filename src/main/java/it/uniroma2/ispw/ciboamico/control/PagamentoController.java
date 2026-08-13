@@ -1,20 +1,25 @@
 package it.uniroma2.ispw.ciboamico.control;
 
+import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.entity.VoceOrdine;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
+import it.uniroma2.ispw.ciboamico.enums.ExceptionMessagesEnum;
+import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory;
 import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
 import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEventPublisher;
 import it.uniroma2.ispw.ciboamico.pattern.payment.PaymentGateway;
 import it.uniroma2.ispw.ciboamico.pattern.payment.PaymentGatewayFactory;
-import it.uniroma2.ispw.ciboamico.pattern.payment.PaymentRejectedException;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import it.uniroma2.ispw.ciboamico.exception.PaymentRejectedException;
+import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
@@ -34,6 +39,7 @@ public class PagamentoController {
 
     private final OrdineDAO ordineDAO;
     private final ProdottoDAO prodottoDAO;
+    private final BuonoDAO buonoDAO;
     private final PaymentGateway paymentGateway;
 
     /**
@@ -44,52 +50,20 @@ public class PagamentoController {
     public PagamentoController(DAOFactory factory) {
         this.ordineDAO = factory.getOrdineDAO();
         this.prodottoDAO = factory.getProdottoDAO();
+        this.buonoDAO = factory.getBuonoDAO();
         this.paymentGateway = PaymentGatewayFactory.createGateway();
     }
 
     /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public PagamentoController() {
-        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
-    }
-
-    /**
-     * Completa il checkout dai dati carta grezzi (vista): costruisce il
-     * {@link PaymentInfoBean}, autorizza l'addebito (passo 6/6a) e sottomette.
-     *
-     * @param ordine       ordine in corso (dalla sessione)
-     * @param utente       utente autenticato
-     * @param carta        numero di carta
-     * @param intestatario intestatario della carta
-     * @param scadenza     scadenza della carta
-     * @param cvv          codice di sicurezza
-     * @return OrdineBean con l'esito del pagamento
-     */
-    public OrdineBean processaPagamento(OrdineBean ordine, UtenteBean utente,
-                                        String carta, String intestatario,
-                                        String scadenza, String cvv)
-            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
-        if (ordine == null || ordine.getTotale() == null) {
-            throw new BusinessValidationException(
-                    "Nessun ordine in checkout.",
-                    "processaPagamento chiamato senza ordine in corso.",
-                    "ERR-ORDINE-MANCANTE");
-        }
-        PaymentInfoBean payment = new PaymentInfoBean();
-        payment.setImportoInCent(Math.round(ordine.getTotale() * 100));
-        payment.setNumeroCarta(carta);
-        payment.setIntestatario(intestatario);
-        payment.setScadenza(scadenza);
-        payment.setCvv(cvv);
-
-        OrdineBean risultato = processaPagamento(ordine, utente, payment);
-        SessionManager.getInstance().setOrdineInCorso(null);
-        return risultato;
+        this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
     /**
      * Autorizza l'addebito (passo 6 / estensione 6a) e sottomette l'ordine.
-     * Variante usata dal Facade e dai test, con {@link PaymentInfoBean} già
-     * costruito.
+     * Il {@link PaymentInfoBean} arriva già convertito e validato dalla
+     * boundary/controller di presentazione: il controller applicativo
+     * riceve i dati in formato interno, non stringhe grezze).
      *
      * @param bean    ordine da sottomettere dopo l'autorizzazione
      * @param utente  utente autenticato
@@ -97,14 +71,25 @@ public class PagamentoController {
      * @return OrdineBean con l'esito della transazione
      */
     public OrdineBean processaPagamento(OrdineBean bean, UtenteBean utente, PaymentInfoBean payment)
-            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
+            throws BusinessValidationException, DAOException {
+        if (bean == null) {
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.ORDINE_MANCANTE_MSG.message,
+                    ExceptionMessagesEnum.ORDINE_MANCANTE.message,
+                    "ERR-ORDINE-MANCANTE");
+        }
         if (payment == null || payment.getImportoInCent() <= 0) {
-            throw new BusinessValidationException("Dati di pagamento non validi");
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.DATI_PAGAMENTO_NON_VALIDI_MSG.message,
+                    ExceptionMessagesEnum.DATI_PAGAMENTO_NON_VALIDI.message,
+                    "ERR-PAGAMENTO-DATI");
         }
         try {
             paymentGateway.autorizza(payment.getImportoInCent());
         } catch (PaymentRejectedException e) {
-            throw new BusinessValidationException(e.getMessage());
+            // Exception chaining: si propaga un errore di dominio mantenendo
+            // traccia della causa interna.
+            throw new BusinessValidationException(e.getMessage(), e);
         }
         return submitOrdine(bean, utente);
     }
@@ -118,7 +103,7 @@ public class PagamentoController {
      * @return OrdineBean con id, totale e stato dell'ordine creato
      */
     public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente)
-            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
+            throws BusinessValidationException, DAOException {
         if (utente == null) {
             throw new IllegalStateException("Utente non autenticato");
         }
@@ -141,13 +126,29 @@ public class PagamentoController {
         Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(compratore, venditore);
         ordine.aggiungiVoce(new VoceOrdine(prodotto, 1));
 
+        // Estensione 4a: se al checkout è stato applicato un buono promozionale,
+        // lo si applica all'ordine definitivo prima del salvataggio. Ordine.applicaBuono
+        // valida (Information Expert) che il buono appartenga al venditore dell'ordine.
+        String codiceBuono = bean.getCodiceBuono();
+        if (codiceBuono != null && !codiceBuono.isBlank()) {
+            BuonoPromozionale buono = buonoDAO.findByCodice(codiceBuono);
+            if (buono == null) {
+                throw new BusinessValidationException(
+                        UserErrorMessagesEnum.BUONO_NON_VALIDO_MSG.message,
+                        ExceptionMessagesEnum.BUONO_NON_VALIDO.message,
+                        "ERR-BUONO-NON-VALIDO");
+            }
+            ordine.applicaBuono(buono);
+        }
+
         ordineDAO.save(ordine);
         // NOTIFICA ATTIVA (Pattern Observer): il control pubblica l'evento di
         // conferma sul publisher singleton, il quale notifica i listener registrati
         // (compratore e venditore) che ricevono il DTO OrdineEvent in sola lettura,
         // mai l'entità.
         OrdineEventPublisher.getInstance().notifyOrdineConfermato(
-                new OrdineEvent(ordine.getIdOrdine(), compratore.getEmail(), ordine.getTotale()));
+                new OrdineEvent(ordine.getIdOrdine(), compratore.getEmail(),
+                        venditore.getEmail(), ordine.getTotale()));
 
         OrdineBean risultato = new OrdineBean();
         risultato.setIdOrdine(ordine.getIdOrdine());

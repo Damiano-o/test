@@ -32,6 +32,12 @@ public class InventarioView {
         public String getScadenza() { return scadenza; }
     }
 
+    /**
+     * Nota: PropertyValueFactory usa reflection sulla property (nome/quantita/
+     * scadenza); il warning unchecked è intrinseco all'API JavaFX, non del
+     * nostro codice, perciò viene contenuto al metodo.
+     */
+    @SuppressWarnings("unchecked")
     public Parent build() {
         TableView<VoceInventarioDemo> tabella = new TableView<>();
 

@@ -3,7 +3,6 @@ package it.uniroma2.ispw.ciboamico.control;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.Ordine;
 import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
@@ -26,6 +25,7 @@ class ControllerErrorCoverageTest {
 
     private DemoDAOFactory factory;
     private OrdinaProdottoController controller;
+    private ApplicaBuonoPromozionaleController buonoController;
 
     @BeforeEach
     void setup() throws Exception {
@@ -33,13 +33,14 @@ class ControllerErrorCoverageTest {
         factory.seedDemoData();
         OrdineLazyFactory.configure(factory);
         controller = new OrdinaProdottoController(factory);
+        buonoController = new ApplicaBuonoPromozionaleController(factory);
     }
 
     private UtenteBean utente() throws Exception {
         UtenteBean u = new UtenteBean();
         u.setUsername("mario");
         u.setEmail("mario@cibo.it");
-        u.setRuoloAttivo("RuoloCliente");
+        u.setRuoloAttivo("CLIENTE");
         return u;
     }
 
@@ -52,7 +53,7 @@ class ControllerErrorCoverageTest {
     @Test
     void buonoCodiceMancante() {
         assertThrows(BusinessValidationException.class,
-                () -> controller.applicaBuonoPromozionale(null, new OrdineBean(), utente()));
+                () -> buonoController.applicaBuonoPromozionale(null, new OrdineBean(), utente()));
     }
 
     @Test
@@ -60,7 +61,7 @@ class ControllerErrorCoverageTest {
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
         assertThrows(BusinessValidationException.class,
-                () -> controller.applicaBuonoPromozionale("INESISTENTE", bean, utente()));
+                () -> buonoController.applicaBuonoPromozionale("INESISTENTE", bean, utente()));
     }
 
     @Test
@@ -76,7 +77,7 @@ class ControllerErrorCoverageTest {
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
         assertThrows(BusinessValidationException.class,
-                () -> controller.applicaBuonoPromozionale("SCADUTO1", bean, utente()));
+                () -> buonoController.applicaBuonoPromozionale("SCADUTO1", bean, utente()));
     }
 
     @Test
@@ -91,7 +92,7 @@ class ControllerErrorCoverageTest {
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
         assertThrows(BusinessValidationException.class,
-                () -> controller.applicaBuonoPromozionale("ALTRU", bean, utente()));
+                () -> buonoController.applicaBuonoPromozionale("ALTRU", bean, utente()));
     }
 
     @Test
@@ -99,8 +100,24 @@ class ControllerErrorCoverageTest {
         // buono valido del venditore del prodotto "Miele locale" (marco@cibo.it)
         OrdineBean bean = new OrdineBean();
         bean.setNomeProdotto("Miele locale");
-        OrdineBean ris = controller.applicaBuonoPromozionale("SALUTI20", bean, utente());
+        OrdineBean ris = buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente());
         assertEquals("SALUTI20", ris.getCodiceBuono());
         assertNotNull(ris.getTotale());
+    }
+
+    @Test
+    void buonoGiaUsato() throws Exception {
+        // monouso: dopo il primo riscatto da parte di mario@cibo.it, il secondo
+        // utilizzo dello stesso codice deve essere rifiutato (BR monouso).
+        OrdineBean bean = new OrdineBean();
+        bean.setNomeProdotto("Miele locale");
+
+        // Primo utilizzo: registra il buono come riscattato dall'utente.
+        OrdineBean primo = buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente());
+        assertEquals("SALUTI20", primo.getCodiceBuono());
+
+        // Secondo utilizzo dello stesso codice: deve lanciare BusinessValidationException.
+        assertThrows(BusinessValidationException.class,
+                () -> buonoController.applicaBuonoPromozionale("SALUTI20", bean, utente()));
     }
 }

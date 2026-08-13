@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test Bean: validazione sintattica e getter/setter.
  
- * @author Michele Damiano
 */
 class BeanTest {
 
@@ -34,14 +33,10 @@ class BeanTest {
 
     @Test
     void testProdottoBeanNomeVuoto() throws Exception {
+        // Fail Fast del setter: il nome vuoto lancia subito
+        // all'inserimento, non solo alla validate().
         ProdottoBean bean = new ProdottoBean();
-        bean.setNome("   ");
-        bean.setQuantita(2.0);
-        bean.setPrezzo(1.0);
-        bean.setScadenza(LocalDate.now().plusDays(10));
-        bean.setPosizione("Frigo");
-        bean.setUnitaMisura("LITRI");
-        assertThrows(Exception.class, bean::validate);
+        assertThrows(BusinessValidationException.class, () -> bean.setNome("   "));
     }
 
 

@@ -88,13 +88,6 @@ public final class UiKit {
         return s;
     }
 
-    /** Nome del ruolo attivo dell'utente loggato (o vuoto se non loggato). */
-    private static String ruoloAttivo() {
-        var utente = SessionManager.getInstance().getLoggedUser();
-        return utente != null && utente.getRuoloAttivo() != null
-                ? utente.getRuoloAttivo() : "";
-    }
-
     private static Button nav(String testo, String vista, String attiva) {
         Button b = new Button(testo);
         b.setMaxWidth(Double.MAX_VALUE);

@@ -14,15 +14,20 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.fs.FSUtenteDAO;
  */
 public class FSDAOFactory implements DAOFactory {
 
-    @Override
-    public UtenteDAO getUtenteDAO() { return new FSUtenteDAO(); }
+    private final UtenteDAO utenteDAO = new FSUtenteDAO();
+    private final ProdottoDAO prodottoDAO = new FSProdottoDAO();
+    private final OrdineDAO ordineDAO = new FSOrdineDAO();
+    private final BuonoDAO buonoDAO = new FSBuonoDAO(utenteDAO);
 
     @Override
-    public ProdottoDAO getProdottoDAO() { return new FSProdottoDAO(); }
+    public UtenteDAO getUtenteDAO() { return utenteDAO; }
 
     @Override
-    public OrdineDAO getOrdineDAO() { return new FSOrdineDAO(); }
+    public ProdottoDAO getProdottoDAO() { return prodottoDAO; }
 
     @Override
-    public BuonoDAO getBuonoDAO() { return new FSBuonoDAO(getUtenteDAO()); }
+    public OrdineDAO getOrdineDAO() { return ordineDAO; }
+
+    @Override
+    public BuonoDAO getBuonoDAO() { return buonoDAO; }
 }

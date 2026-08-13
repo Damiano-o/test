@@ -1,6 +1,11 @@
 package it.uniroma2.ispw.ciboamico.persistence.factory;
 
-import it.uniroma2.ispw.ciboamico.entity.*;
+import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
+import it.uniroma2.ispw.ciboamico.entity.Prodotto;
+import it.uniroma2.ispw.ciboamico.entity.RuoloCliente;
+import it.uniroma2.ispw.ciboamico.entity.RuoloVenditore;
+import it.uniroma2.ispw.ciboamico.entity.UnitaEnum;
+import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
@@ -59,7 +64,7 @@ public class DemoDAOFactory implements DAOFactory {
         // Venditore approvato (dal marketplace locale)
         Utente marco = new Utente("Marco", "marco@cibo.it", Utente.hashPassword("password123"));
         RuoloVenditore rv = new RuoloVenditore("RM", "marco@cibo.it");
-        rv.setStato(StatoVenditoreEnum.APPROVATO);
+        rv.approva(); // BR-02: solo un venditore approvato pubblica prodotti
         marco.aggiungiRuolo(rv);
         utenteDAO.save(marco);
 
@@ -75,11 +80,6 @@ public class DemoDAOFactory implements DAOFactory {
         buonoDAO.save(new BuonoPromozionale("SALUTI20", rv,
                 LocalDate.now().minusDays(1), LocalDate.now().plusDays(30),
                 new ScontoPercentualeStrategy(0.20)));
-    }
-
-    /** Hash SHA-256 con salt da config — riuso di {@code Utente.hashPassword} (DRY). */
-    private static String hash(String password) {
-        return Utente.hashPassword(password);
     }
 
     @Override

@@ -3,7 +3,7 @@ package it.uniroma2.ispw.ciboamico.boundary;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
-import it.uniroma2.ispw.ciboamico.control.graphic.MarketplaceGraphicController;
+import it.uniroma2.ispw.ciboamico.control.ui.MarketplaceUIController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.geometry.Insets;
@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
  * Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto).
  *
  * <p>È un puro layout: delega ogni operazione al
- * {@link MarketplaceGraphicController} (controller grafico disaccoppiato),
+ * {@link MarketplaceUIController} (controller di presentazione disaccoppiato),
  * che orchestra la logica di presentazione e invoca il controller applicativo
  * via Facade. La view scambia solo Bean e applica i risultati ai widget.</p>
  */
 public class MarketplaceView {
 
-    private final MarketplaceGraphicController controller;
+    private final MarketplaceUIController controller;
     private final UtenteBean utente;
 
     // Controlli della vista
@@ -43,7 +43,7 @@ public class MarketplaceView {
 
     public MarketplaceView() {
         this.utente = SessionManager.getInstance().getLoggedUser();
-        this.controller = new MarketplaceGraphicController(utente);
+        this.controller = new MarketplaceUIController(utente);
     }
 
     public Parent build() {
@@ -97,7 +97,7 @@ public class MarketplaceView {
         applicaBuono.setMaxWidth(Double.MAX_VALUE);
     }
 
-    // -------- Listener: rinvio al controller grafico --------
+    // -------- Listener: rinvio al controller di presentazione --------
 
     private void onAggiornaCatalogo() {
         try {
@@ -130,7 +130,7 @@ public class MarketplaceView {
         try {
             OrdineBean ris = controller.applicaBuono(
                     buonoField.getText(), prodSelez.getValue());
-            messaggio.setText(MarketplaceGraphicController.formattaEsitoBuono(ris));
+            messaggio.setText(MarketplaceUIController.formattaEsitoBuono(ris));
         } catch (BusinessValidationException ex) {
             messaggio.setText(ex.getUserMessage());
         } catch (Exception ex) {

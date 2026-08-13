@@ -1,7 +1,9 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
+import it.uniroma2.ispw.ciboamico.pattern.observer.OrdineEvent;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -11,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+
+import java.util.List;
 
 /**
  * Boundary JavaFX — Dashboard (home). Vetrina dell'applicazione: header di
@@ -25,6 +29,7 @@ public class DashboardView {
         String nome = utente != null ? utente.getUsername() : "ospite";
         String ruolo = utente != null && utente.getRuoloAttivo() != null
                 ? utente.getRuoloAttivo() : "—";
+        boolean venditore = "VENDITORE".equalsIgnoreCase(ruolo);
 
         // Avatar circolare con iniziale
         Label avatar = new Label(nome.isEmpty() ? "?" : nome.substring(0, 1).toUpperCase());
@@ -38,14 +43,27 @@ public class DashboardView {
                 new VBox(2, benvenuto, ruoloLabel));
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // Riga KPI dimostrativi
+        // Corpo diverso in base al ruolo (Liskov + Whole-Part): il venditore
+        // approvato non opera come cliente: vede il proprio pannello, non le
+        // schede di acquisto lato cliente.
+        VBox corpo;
+        if (venditore) {
+            corpo = corpoVenditore(header);
+        } else {
+            corpo = corpoCliente(header);
+        }
+
+        return UiKit.pagina("Dashboard", "Cosa vuoi fare?", corpo, "home");
+    }
+
+    /** Corpo per il cliente: funzionalità di acquisto/gestione domestica. */
+    private VBox corpoCliente(HBox header) {
         HBox kpiRow = new HBox(14,
                 kpi("🍅 Spreco evitato", "12,4 kg"),
                 kpi("⏳ In scadenza", "3 prodotti"),
                 kpi("🛒 Spesa al mese", "236 €"));
         kpiRow.setPadding(new Insets(14, 0, 6, 0));
 
-        // Funzionalità come card
         VBox menu = new VBox(12,
                 card("🍽️", "Trova ricette", "Ricette compatibili con la dispensa", "ricette"),
                 card("📦", "Inventario", "Gestisci i prodotti e le scadenze", "inventario"),
@@ -62,8 +80,67 @@ public class DashboardView {
 
         VBox corpo = new VBox(12, header, kpiRow, menu, esci);
         corpo.setPadding(new Insets(20, 24, 20, 24));
+        return corpo;
+    }
 
-        return UiKit.pagina("Dashboard", "Cosa vuoi fare?", corpo, "home");
+    /** Corpo per il venditore: nessuna scheda d'acquisto, solo stato venditore. */
+    private VBox corpoVenditore(HBox header) {
+        Label nota = new Label("Sei un venditore approvato: i tuoi prodotti sono "
+                + "pubblicati nel marketplace locale e puoi ricevere ordini dai clienti.");
+        nota.getStyleClass().add("page-subtitle");
+        nota.setWrapText(true);
+
+        // Elenco ordini ricevuti, auto-aggiornante (Observer: push, non polling).
+        Label titoloOrdini = new Label("Ordini ricevuti");
+        titoloOrdini.getStyleClass().add("field-label");
+        VBox elencoOrdini = new VBox(6);
+        elencoOrdini.getStyleClass().add("form-panel");
+        elencoOrdini.setPadding(new Insets(10, 12, 10, 12));
+
+        String venditoreEmail = SessionManager.getInstance().getLoggedUser() != null
+                ? SessionManager.getInstance().getLoggedUser().getEmail() : null;
+
+        // Popolamento iniziale + aggiornamento automatico quando arriva un nuovo
+        // ordine: la notifica attiva (Observer) aggiorna la vista da sola.
+        Runnable refresh = () -> {
+            List<OrdineEvent> ricevuti = OrdiniRicevutiStore.getInstance()
+                    .getOrdiniPerVenditore(venditoreEmail);
+            elencoOrdini.getChildren().clear();
+            if (ricevuti.isEmpty()) {
+                Label vuoto = new Label("Nessun ordine ricevuto finora.");
+                vuoto.getStyleClass().add("page-subtitle");
+                elencoOrdini.getChildren().add(vuoto);
+            } else {
+                for (OrdineEvent o : ricevuti) {
+                    Label riga = new Label(String.format(
+                            "Ordine #%d · cliente %s · %.2f EUR",
+                            o.getNumeroOrdine(), o.getClienteId(), o.getTotale()));
+                    riga.getStyleClass().add("prodotto-dett");
+                    elencoOrdini.getChildren().add(riga);
+                }
+            }
+        };
+        refresh.run();
+        OrdiniRicevutiStore.getInstance().addOrdineArrivatoListener(
+                ev -> Platform.runLater(refresh));
+
+        Button vaiAlMarketplace = new Button("Vai al marketplace");
+        vaiAlMarketplace.getStyleClass().add("button-outline");
+        vaiAlMarketplace.setMaxWidth(Double.MAX_VALUE);
+        vaiAlMarketplace.setOnAction(e -> Navigator.getInstance().switchTo("marketplace"));
+
+        Button esci = new Button("Esci");
+        esci.getStyleClass().add("button-outline");
+        esci.setMaxWidth(Double.MAX_VALUE);
+        esci.setOnAction(e -> {
+            SessionManager.getInstance().logout();
+            Navigator.getInstance().switchTo("login");
+        });
+
+        VBox corpo = new VBox(12, header, nota, titoloOrdini, elencoOrdini,
+                vaiAlMarketplace, esci);
+        corpo.setPadding(new Insets(20, 24, 20, 24));
+        return corpo;
     }
 
     /** KPI riassuntivo (valore + etichetta). */

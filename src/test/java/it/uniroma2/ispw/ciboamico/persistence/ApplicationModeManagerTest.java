@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test ApplicationModeManager: switch modalità e factory corretta.
  
- * @author Michele Damiano
 */
 class ApplicationModeManagerTest {
 

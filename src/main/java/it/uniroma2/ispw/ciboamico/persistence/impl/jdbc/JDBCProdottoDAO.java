@@ -36,24 +36,6 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
-    public Prodotto findById(Long id) throws DAOException {
-        String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
-                + "venditore_zona, venditore_recapito FROM prodotti WHERE id = ?";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mappa(rs);
-                }
-                return null;
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Errore ricerca prodotto", e);
-        }
-    }
-
-    @Override
     public Prodotto findByNome(String nome) throws DAOException {
         String sql = "SELECT id, nome, prezzo, quantita_disponibile, scadenza, unita, "
                 + "venditore_zona, venditore_recapito FROM prodotti WHERE nome = ?";

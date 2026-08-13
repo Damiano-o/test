@@ -28,7 +28,15 @@ public final class SessionManager {
 
     public UtenteBean getLoggedUser() { return loggedUser; }
     public void setLoggedUser(UtenteBean loggedUser) { this.loggedUser = loggedUser; }
-    public void logout() { this.loggedUser = null; }
+
+    /**
+     * Chiude la sessione: pulisce utente loggato e anche l'eventuale checkout
+     * in corso, così un nuovo utente non eredita l'ordine del precedente.
+     */
+    public void logout() {
+        this.loggedUser = null;
+        this.ordineInCorso = null;
+    }
 
     /** Ordine in checkout UC-04 (contiene il totale, scontato o pieno). */
     public OrdineBean getOrdineInCorso() { return ordineInCorso; }

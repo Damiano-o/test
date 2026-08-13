@@ -57,3 +57,18 @@ docs/relazione_italiana/figures/.$*.tmp
 # Backup locali relazione (non versionare)
 docs/archive_old/
 docs/relazione_italiana/archive/
+
+# Relazione INGLESE (consegnata): artefatti build/debug (non versionare)
+docs/relazione_inglese/*.aux
+docs/relazione_inglese/*.log
+docs/relazione_inglese/*.toc
+docs/relazione_inglese/*.lof
+docs/relazione_inglese/*.lot
+docs/relazione_inglese/*.out
+docs/relazione_inglese/*.fdb_latexmk
+docs/relazione_inglese/*.fls
+
+# Backup temporanei draw.io (non versionare)
+docs/relazione_inglese/figures/.$*.drawio.bkp
+docs/relazione_inglese/figures/.$*.drawio.dtmp
+docs/relazione_inglese/figures/.$*.tmp

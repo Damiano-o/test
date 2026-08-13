@@ -20,7 +20,6 @@ import java.util.logging.Logger;
  * <p>Pattern applicati: <b>Singleton</b> (istanza unica thread-safe) e
  * <b>Observer/Subject</b> (registrazione, de-registrazione e notifica).</p>
  *
- * @author Michele Damiano
  */
 public class OrdineEventPublisher {
 

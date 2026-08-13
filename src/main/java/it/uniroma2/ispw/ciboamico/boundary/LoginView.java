@@ -1,7 +1,9 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
+import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.facade.AutenticazioneFacade;
+import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -15,7 +17,7 @@ import javafx.scene.layout.VBox;
  * Boundary JavaFX — Login (UC-11).
  * La view NON conosce le Entity: scambia solo String/Bean con il
  * {@link AutenticazioneFacade}. Dopo il login naviga alla Home via
- * {@link it.uniroma2.ispw.ciboamico.boundary.Navigator}.
+ * {@link Navigator}.
  * Navigator (Bean-only).
  *
  * UI minimalista: card centrata sul fondo della scena, campo email/password,
@@ -75,11 +77,14 @@ public class LoginView {
 
     private void onLogin(TextField email, PasswordField password, Label messaggio) {
         try {
-            UtenteBean utente = facade.login(email.getText(), password.getText());
+            // Conversione esterno→interno a carico della view: le
+            // stringhe del form diventano il bean credenziali passato al Facade.
+            UtenteBean utente = facade.login(
+                    AutenticazioneBean.fromCredenziali(email.getText(), password.getText()));
             messaggio.setText("Benvenuto, " + utente.getUsername() + "!");
             Navigator.getInstance().switchTo("home");
         } catch (AutenticazioneException ex) {
-            messaggio.setText("Email o password non validi.");
+            messaggio.setText(UserErrorMessagesEnum.WRONG_PASSWORD_MSG.message);
             messaggio.setVisible(true);
             messaggio.setManaged(true);
         } catch (Exception ex) {

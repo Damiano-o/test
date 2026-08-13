@@ -11,8 +11,10 @@ import java.util.List;
 public interface ProdottoDAO {
 
     List<Prodotto> findAll() throws DAOException;
-    Prodotto findById(Long id) throws DAOException;
-    /** Lookup per nome (UC-04: la boundary seleziona il prodotto dal catalogo). */
+    /** Lookup per nome (UC-04: la boundary seleziona il prodotto dal catalogo).
+     *  Nel dominio CiboAmico il Prodotto si identifica per nome (univoco nel
+     *  catalogo del venditore): il nome è la chiave identitaria, non un id
+     *  surrogato. */
     Prodotto findByNome(String nome) throws DAOException;
     Prodotto save(Prodotto prodotto) throws DAOException;
     Prodotto update(Prodotto prodotto) throws DAOException;

@@ -1,0 +1,53 @@
+% CHAPTER 6 — PERSISTENCY
+\chapter{Persistency}
+\label{cap:persistenza}
+
+Persistence is interchangeable at runtime (NFR-01): three mutually exclusive
+backends are selected through the \textbf{Abstract Factory} pattern
+(\texttt{DAOFactory} plus one concrete factory per mode).
+
+\section{DB persistence layer (MySQL/JDBC)}
+The DB persistence layer uses \textbf{MySQL} as a relational DBMS. Data
+management is delegated to specific DAO classes (e.g.
+\texttt{JDBCUserDAO}, \texttt{JDBCOrdineDAO}), which run SQL queries for the
+CRUD operations on the entities.
+
+\textbf{Main entities:}
+\begin{itemize}
+    \item \textbf{Users}: registered, with their roles (Customer and Vendor);
+    \item \textbf{Orders}: transactional records with state, total and items;
+    \item \textbf{Products}: marketplace items (catalog and inventory);
+    \item \textbf{Vouchers}: discount codes (percentage or fixed amount).
+\end{itemize}
+
+Transactions are atomic (\texttt{ConnectionManager} uses
+\texttt{setAutoCommit(false)} with \texttt{commit/rollback} for the stock
+reduction).
+
+\textbf{Configuration}: the system is configured through the
+\texttt{config.properties} file by setting \texttt{persistence\_type = JDBC} and
+providing the required MySQL credentials.
+
+\section{FS persistence layer (File System)}
+The FS persistence layer stores the data on \textbf{JSON} files in the
+\texttt{data/} folder. Each entity is mapped to a dedicated file
+(e.g. \texttt{utenti.json}, \texttt{ordini.json}, \texttt{prodotti.json},
+\texttt{inventario.json}).
+
+\textbf{Management}: the \texttt{GsonConfig} class provides a consistent JSON
+serializer (helper for \texttt{LocalDate}/\texttt{LocalDateTime}) used by all
+the FS DAOs to guarantee the correct reading/writing of the records.
+
+\textbf{Configuration}: the mode is activated by setting
+\texttt{persistence\_type = FS} in the configuration file.
+
+\section{DEMO persistence layer (In-Memory)}
+The DEMO persistence layer keeps the data exclusively in the volatile memory
+(RAM), without permanent storage. The structures are populated with default
+values at startup and cleared at the end of the execution.
+
+\textbf{Use cases}: it is designed for unit testing, rapid development and
+demonstrations that require no database configuration.
+
+\textbf{Configuration}: the mode is activated by setting
+\texttt{persistence\_type = DEMO} (default).

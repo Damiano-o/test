@@ -1,0 +1,124 @@
+% !TeX program = pdflatex
+% ============================================================
+% CiboAmico — Final ISPW report (Tor Vergata, A.Y. 2025/2026)
+% Prof. Davide Falessi & Prof. Guglielmo De Angelis
+% ENGLISH version
+% ============================================================
+\documentclass[12pt,a4paper,oneside]{report}
+
+% --- Language and encoding ---
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+
+% --- Geometria e tipografia ---
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Images, tables ---
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+
+% --- Lists and symbols ---
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+
+% --- UML / diagrams ---
+\usepackage{tikz}
+\usetikzlibrary{shapes,shapes.geometric,positioning,arrows.meta}
+
+% --- Java code ---
+\usepackage{listings}
+\definecolor{codegray}{RGB}{245,245,245}
+\definecolor{codekeyword}{RGB}{0,0,204}
+\definecolor{codecomment}{RGB}{0,128,0}
+\definecolor{codestring}{RGB}{163,21,21}
+\lstset{
+    language=Java,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{codekeyword},
+    commentstyle=\color{codecomment},
+    stringstyle=\color{codestring},
+    backgroundcolor=\color{codegray},
+    frame=single,
+    breaklines=true,
+    columns=fullflexible,
+    captionpos=b
+}
+
+% --- Links ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% ============================================================
+\begin{document}
+
+% --- Title page ---
+\begin{titlepage}
+    \centering
+    \large
+    \textbf{UNIVERSITÀ DEGLI STUDI DI ROMA ``TOR VERGATA''} \\[0.3cm]
+    \large Macroarea di Ingegneria \\[1.2cm]
+
+    \scshape\Large Corso di Laurea in Ingegneria Informatica \\[0.3cm]
+    \large Ingegneria del Software e Progettazione Web (ISPW) \\[1.5cm]
+
+    \rule{\linewidth}{0.4mm} \\[0.4cm]
+    {\huge\bfseries CiboAmico} \\[0.3cm]
+    \large\itshape Platform for managing food at home, reducing waste and optimising the shopping experience \\
+    \rule{\linewidth}{0.4mm} \\[1.5cm]
+
+    \begin{minipage}{0.5\textwidth}
+        \begin{flushleft} \large
+            \emph{Supervisors:} \\
+            Prof. Davide Falessi \\
+            Prof. Guglielmo De Angelis
+        \end{flushleft}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.42\textwidth}
+        \begin{flushright} \large
+            \emph{Author:} \\
+            \textbf{Michele \textsc{Damiano}} \\
+            Student ID: 0324516 \\
+            \href{mailto:michele.damiano@students.uniroma2.eu}{\small michele.damiano@students.uniroma2.eu}
+        \end{flushright}
+    \end{minipage} \\[2.5cm]
+
+    \vfill
+    {\large Academic Year 2025/2026} \\[0.2cm]
+    {\large Submission date: \today}
+\end{titlepage}
+
+% --- Table of contents ---
+\tableofcontents
+\newpage
+
+% ============================================================
+% CHAPTERS
+% ============================================================
+\input{chapters/01_srs}
+\input{chapters/02_storyboards}
+\input{chapters/03_design}
+\input{chapters/04_testing}
+\input{chapters/05_exceptions}
+\input{chapters/06_persistency}
+\input{chapters/08_links}
+
+\end{document}

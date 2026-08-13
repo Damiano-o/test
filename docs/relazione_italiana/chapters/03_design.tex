@@ -93,7 +93,10 @@ per il checkout (\texttt{getProdottiDisponibili},
 e nasconde il sottosistema di business, formato dal controller base e dai
 controller delle estensioni (buono 4a e pagamento 6/6a). Il client (boundary
 o controller grafico) non conosce l'ordine di chiamata ai metodi dei
-controller applicativi.
+controller applicativi. Le operazioni delle estensioni (
+\texttt{applicaBuono}, \texttt{processaPagamento}) vivono solo nei rispettivi
+sottocontroller: la Facade li invoca direttamente e il controller base non le
+ri-espone (assenza di pass-through / indirection inutile).
 
 \section{Activity Diagram}
 \label{sec:comportamentale}

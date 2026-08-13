@@ -6,7 +6,9 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
  * Bean/DTO per l'ordine, scambiato tra la boundary e il controller
  * applicativo (UC-04). Segue il pattern BCE: incapsula la validazione
  * sintattica nei setter (Fail Fast) e una validazione di coerenza in
- * {@code validate()}.
+ * {@code validate()}. La conversione esterno→interno (dalla boundary al
+ * controller applicativo state-less) è incapsulata nel factory statico
+ * {@link #fromCheckout(String)}.
  */
 public class OrdineBean {
 
@@ -22,6 +24,23 @@ public class OrdineBean {
     public Long getIdOrdine() { return idOrdine; }
     public void setIdOrdine(Long idOrdine) { this.idOrdine = idOrdine; }
 
+    /**
+     * Factory method di conversione esterno→interno: partendo dal nome
+     * prodotto selezionato nella boundary (formato esterno) costruisce l'ordine
+     * in checkout (formato interno). La costruzione del bean è responsabilità
+     * del controller di presentazione, non del controller applicativo. Vedi anche
+     * {@link #setNomeProdotto(String)}.
+     *
+     * @param nomeProdotto prodotto selezionato dall'utente
+     * @return bean ordine in checkout valorizzato con il prodotto
+     * @throws BusinessValidationException se il prodotto non è selezionato
+     */
+    public static OrdineBean fromCheckout(String nomeProdotto) throws BusinessValidationException {
+        OrdineBean bean = new OrdineBean();
+        bean.setNomeProdotto(nomeProdotto);
+        return bean;
+    }
+
     /** Prodotto selezionato dalla boundary (chiave di lookup per UC-04). */
     public String getNomeProdotto() { return nomeProdotto; }
 
@@ -31,13 +50,18 @@ public class OrdineBean {
      * @throws BusinessValidationException se il prodotto non è selezionato
      */
     public void setNomeProdotto(String nomeProdotto) throws BusinessValidationException {
+        this.nomeProdotto = validaNomeProdotto(nomeProdotto);
+    }
+
+    /** Controllo sintattico del prodotto selezionato (Fail Fast) — metodo privato. */
+    private String validaNomeProdotto(String nomeProdotto) throws BusinessValidationException {
         if (nomeProdotto == null || nomeProdotto.isBlank()) {
             throw new BusinessValidationException(
                     "Seleziona un prodotto dal catalogo prima di procedere.",
                     "OrdineBean senza prodotto selezionato.",
                     "ERR-PRODOTTO-MANCANTE");
         }
-        this.nomeProdotto = nomeProdotto.trim();
+        return nomeProdotto.trim();
     }
 
     public Double getTotale() { return totale; }
@@ -59,11 +83,6 @@ public class OrdineBean {
      * @throws BusinessValidationException se il prodotto non è selezionato
      */
     public void validate() throws BusinessValidationException {
-        if (nomeProdotto == null || nomeProdotto.isBlank()) {
-            throw new BusinessValidationException(
-                    "Seleziona un prodotto dal catalogo prima di procedere.",
-                    "OrdineBean senza prodotto selezionato.",
-                    "ERR-PRODOTTO-MANCANTE");
-        }
+        validaNomeProdotto(nomeProdotto);
     }
 }

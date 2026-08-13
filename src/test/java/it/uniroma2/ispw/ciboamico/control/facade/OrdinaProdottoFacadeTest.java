@@ -1,6 +1,7 @@
 package it.uniroma2.ispw.ciboamico.control.facade;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.bean.PaymentInfoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
 import it.uniroma2.ispw.ciboamico.entity.Prodotto;
@@ -63,21 +64,30 @@ class OrdinaProdottoFacadeTest {
     }
 
     private void checkoutSenzaBuono(UtenteBean utente) throws Exception {
-        facade.avviaCheckout("Caffè");
+        OrdineBean inCorso = facade.avviaCheckout(OrdineBean.fromCheckout("Caffè"));
         facade.processaPagamento(
                 SessionManager.getInstance().getOrdineInCorso(), utente,
-                "0000000000000000", "Mario", "12/29", "000");
+                payment(Math.round(inCorso.getTotale() * 100)));
+    }
+
+    private static PaymentInfoBean payment(long importoInCent) throws Exception {
+        PaymentInfoBean payment = new PaymentInfoBean();
+        payment.setNumeroCarta("0000000000000000");
+        payment.setIntestatario("Mario");
+        payment.setScadenza("12/29");
+        payment.setCvv("000");
+        payment.setImportoInCent(importoInCent);
+        return payment;
     }
 
     @Test
     void checkoutSenzaBuonoCreaOrdine() throws Exception {
         salvaVenditoreConProdotto("Caffè", 4.50);
-        OrdineBean inCorso = facade.avviaCheckout("Caffè");
+        OrdineBean inCorso = facade.avviaCheckout(OrdineBean.fromCheckout("Caffè"));
         assertEquals("Caffè", inCorso.getNomeProdotto());
         assertEquals(4.50, inCorso.getTotale());
         OrdineBean esito = facade.processaPagamento(
-                SessionManager.getInstance().getOrdineInCorso(), utenteBean(),
-                "0000000000000000", "Mario", "12/29", "000");
+                SessionManager.getInstance().getOrdineInCorso(), utenteBean(), payment(450L));
         assertNotNull(esito.getIdOrdine());
         assertEquals("CREATED", esito.getStato());
     }
@@ -96,8 +106,9 @@ class OrdinaProdottoFacadeTest {
                 new ScontoPercentualeStrategy(0.20));
         factory.getBuonoDAO().save(buono);
 
-        facade.avviaCheckout("Pomodori");
-        OrdineBean scontato = facade.applicaBuono("BUNDLE20", "Pomodori", utenteBean());
+        facade.avviaCheckout(OrdineBean.fromCheckout("Pomodori"));
+        OrdineBean scontato = facade.applicaBuono(
+                "BUNDLE20", OrdineBean.fromCheckout("Pomodori"), utenteBean());
         assertNotNull(scontato.getCodiceBuono());
         assertEquals("BUNDLE20", scontato.getCodiceBuono());
     }
@@ -105,14 +116,17 @@ class OrdinaProdottoFacadeTest {
     @Test
     void avvioCheckoutSenzaProdottoLanciaBusinessValidation() {
         assertThrows(BusinessValidationException.class,
-                () -> facade.avviaCheckout(""));
+                () -> facade.avviaCheckout(OrdineBean.fromCheckout("")));
     }
 
     @Test
     void checkoutPagamentoRifiutatoLanciaBusinessValidation() throws Exception {
         salvaVenditoreConProdotto("Oro", 600.0);
-        facade.avviaCheckout("Oro");
-        // Soglia dello stub di pagamento: ~500 EUR → 600 EUR rifiutato
-        assertThrows(BusinessValidationException.class, () -> checkoutSenzaBuono(utenteBean()));
+        OrdineBean inCorso = facade.avviaCheckout(OrdineBean.fromCheckout("Oro"));
+        // Soglia dello stub di pagamento: ~500 EUR → 600 EUR rifiutato.
+        PaymentInfoBean payment = payment(Math.round(inCorso.getTotale() * 100));
+        assertThrows(BusinessValidationException.class, () ->
+                facade.processaPagamento(
+                        SessionManager.getInstance().getOrdineInCorso(), utenteBean(), payment));
     }
 }

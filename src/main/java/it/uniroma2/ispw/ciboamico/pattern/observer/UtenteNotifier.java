@@ -12,7 +12,6 @@ import java.util.logging.Logger;
  * l'isolamento dei layer. In produzione delegherebbe a un servizio di
  * notifica/email; qui logica funzionale pura.</p>
  *
- * @author Michele Damiano
  */
 public class UtenteNotifier implements OrdineEventListener {
 

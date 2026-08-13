@@ -14,15 +14,20 @@ import it.uniroma2.ispw.ciboamico.persistence.impl.jdbc.JDBCUtenteDAO;
  */
 public class JDBCDAOFactory implements DAOFactory {
 
-    @Override
-    public UtenteDAO getUtenteDAO() { return new JDBCUtenteDAO(); }
+    private final UtenteDAO utenteDAO = new JDBCUtenteDAO();
+    private final ProdottoDAO prodottoDAO = new JDBCProdottoDAO();
+    private final OrdineDAO ordineDAO = new JDBCOrdineDAO();
+    private final BuonoDAO buonoDAO = new JDBCBuonoDAO(utenteDAO);
 
     @Override
-    public ProdottoDAO getProdottoDAO() { return new JDBCProdottoDAO(); }
+    public UtenteDAO getUtenteDAO() { return utenteDAO; }
 
     @Override
-    public OrdineDAO getOrdineDAO() { return new JDBCOrdineDAO(); }
+    public ProdottoDAO getProdottoDAO() { return prodottoDAO; }
 
     @Override
-    public BuonoDAO getBuonoDAO() { return new JDBCBuonoDAO(getUtenteDAO()); }
+    public OrdineDAO getOrdineDAO() { return ordineDAO; }
+
+    @Override
+    public BuonoDAO getBuonoDAO() { return buonoDAO; }
 }

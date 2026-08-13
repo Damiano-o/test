@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.control;
 
+import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.BuonoPromozionale;
@@ -8,8 +9,10 @@ import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.entity.VoceOrdine;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
+import it.uniroma2.ispw.ciboamico.enums.ExceptionMessagesEnum;
+import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.dao.BuonoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
@@ -25,6 +28,10 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
  * (GRASP: Low Coupling), seguendo la stessa strategia del pattern di
  * riferimento. Conversione Bean &lt;-&gt; Entity interna, scambio con la
  * boundary limitato ai Bean (BCE).</p>
+ *
+ * <p>Controller applicativo <b>state-less</b>: riceve l'ordine in checkout già
+ * costruito dal controller di presentazione e non tocca la sessione (di competenza del
+ * Facade).</p>
  */
 public class ApplicaBuonoPromozionaleController {
 
@@ -45,42 +52,27 @@ public class ApplicaBuonoPromozionaleController {
 
     /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public ApplicaBuonoPromozionaleController() {
-        this(it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager.getInstance().getDAOFactory());
+        this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
     /**
-     * Applica un buono promozionale all'ordine (estensione 4a) e aggiorna
-     * l'ordine in corso in {@link SessionManager} con il totale scontato.
-     *
-     * @param codiceBuono  codice inserito dall'utente
-     * @param nomeProdotto prodotto selezionato
-     * @param utente       utente autenticato
-     * @return OrdineBean con totale aggiornato dopo lo sconto
-     */
-    public OrdineBean applicaBuono(String codiceBuono, String nomeProdotto, UtenteBean utente)
-            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
-        if (codiceBuono == null || codiceBuono.isBlank()) {
-            throw new BusinessValidationException("Inserisci un codice buono.");
-        }
-        OrdineBean bean = new OrdineBean();
-        bean.setNomeProdotto(nomeProdotto);
-        OrdineBean ris = applicaBuonoPromozionale(codiceBuono, bean, utente);
-        SessionManager.getInstance().setOrdineInCorso(ris);
-        return ris;
-    }
-
-    /**
-     * Estensione 4a: applica un buono valido all'ordine corrente.
+     * Estensione 4a: applica un buono valido all'ordine corrente. Unico metodo
+     * pubblico del controller applicativo, <b>state-less</b>: riceve
+     * l'ordine in checkout costruito dal controller di presentazione, non costruisce
+     * bean né tocca {@code SessionManager} (lo fa il Facade che orchestra).
      *
      * @param codiceBuono codice del buono da applicare
-     * @param bean        ordine in costruzione su cui applicare lo sconto
+     * @param bean        ordine in checkout su cui applicare lo sconto
      * @param utente      utente autenticato
      * @return OrdineBean con il totale ricalcolato dopo lo sconto
      */
     public OrdineBean applicaBuonoPromozionale(String codiceBuono, OrdineBean bean, UtenteBean utente)
-            throws BusinessValidationException, it.uniroma2.ispw.ciboamico.exception.DAOException {
+            throws BusinessValidationException, DAOException {
         if (codiceBuono == null || codiceBuono.isBlank()) {
-            throw new BusinessValidationException("Codice buono mancante");
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.BUONO_CODICE_OBBLIGATORIO_MSG.message,
+                    ExceptionMessagesEnum.BUONO_CODICE_OBBLIGATORIO.message,
+                    "ERR-BUONO-CODICE");
         }
         if (utente == null) {
             throw new IllegalStateException("Utente non autenticato");
@@ -89,13 +81,22 @@ public class ApplicaBuonoPromozionaleController {
 
         BuonoPromozionale buono = buonoDAO.findByCodice(codiceBuono);
         if (buono == null) {
-            throw new BusinessValidationException("Buono promozionale non valido");
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.BUONO_NON_VALIDO_MSG.message,
+                    ExceptionMessagesEnum.BUONO_NON_VALIDO.message,
+                    "ERR-BUONO-NON-VALIDO");
         }
         if (!buono.isValido()) {
-            throw new BusinessValidationException("Buono promozionale scaduto o non ancora attivo");
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.BUONO_NON_ATTIVO_MSG.message,
+                    ExceptionMessagesEnum.BUONO_NON_ATTIVO.message,
+                    "ERR-BUONO-NON-ATTIVO");
         }
         if (utente.getEmail() != null && haGiaUsatoBuono(utente.getEmail(), codiceBuono)) {
-            throw new BusinessValidationException("Buono già utilizzato da questo utente");
+            throw new BusinessValidationException(
+                    UserErrorMessagesEnum.BUONO_GIÀ_USATO_MSG.message,
+                    ExceptionMessagesEnum.BUONO_GIÀ_USATO.message,
+                    "ERR-BUONO-GIA-USATO");
         }
 
         Prodotto prodotto = prodottoDAO.findByNome(bean.getNomeProdotto());
@@ -109,10 +110,20 @@ public class ApplicaBuonoPromozionaleController {
         String emailVenditoreOrdine = prodotto.getVenditore().getUtente().getEmail();
         if (!emailVenditoreBuono.equals(emailVenditoreOrdine)) {
             throw new BusinessValidationException(
-                    "Il buono promozionale non appartiene al venditore di questo prodotto");
+                    UserErrorMessagesEnum.BUONO_VENDITORE_ERRATO_MSG.message,
+                    ExceptionMessagesEnum.BUONO_VENDITORE_ERRATO.message,
+                    "ERR-BUONO-VENDITORE");
         }
 
-        Utente compratore = new Utente(utente.getUsername(), utente.getEmail(), "");
+        // Information Expert: il compratore autenticato va preferibilmente
+        // recuperato dal DAO (fonte ufficiale dei suoi dati). Se non ancora
+        // persistito (es. sessioni di test isolate), si ripiega su un compratore
+        // di sessione: l'Ordine non usa la password del compratore, quindi non
+        // serve inventarne una.
+        Utente compratore = (utente.getEmail() != null) ? utenteDAO.findByEmail(utente.getEmail()) : null;
+        if (compratore == null) {
+            compratore = new Utente(utente.getUsername(), utente.getEmail(), "");
+        }
         Utente venditore = prodotto.getVenditore().getUtente();
         Ordine ordine = OrdineLazyFactory.getInstance().newOrdine(compratore, venditore);
         ordine.aggiungiVoce(new VoceOrdine(prodotto, 1));
@@ -120,9 +131,12 @@ public class ApplicaBuonoPromozionaleController {
 
         if (utente.getEmail() != null) {
             Utente persona = utenteDAO.findByEmail(utente.getEmail());
-            if (persona != null) {
+            if (persona != null && persona != compratore) {
                 persona.registraBuonoUtilizzato(buono.getCodice());
                 utenteDAO.save(persona);
+            } else if (compratore != null && compratore.getEmail() != null) {
+                compratore.registraBuonoUtilizzato(buono.getCodice());
+                utenteDAO.save(compratore);
             }
         }
 
@@ -135,7 +149,7 @@ public class ApplicaBuonoPromozionaleController {
     }
 
     private boolean haGiaUsatoBuono(String email, String codiceBuono)
-            throws it.uniroma2.ispw.ciboamico.exception.DAOException {
+            throws DAOException {
         Utente u = utenteDAO.findByEmail(email);
         return u != null && u.haUsatoBuono(codiceBuono);
     }

@@ -16,8 +16,29 @@ public final class AppConfig {
     /** Chiave della proprietà del salt password. */
     public static final String KEY_SALT = "ciboamico.salt";
 
+    /** Chiave della modalità di persistenza (NFR-01). */
+    public static final String KEY_PERSISTENCE_TYPE = "persistence_type";
+
+    /** Chiavi delle credenziali JDBC/MySQL (NFR-02). */
+    public static final String KEY_DB_URL = "ciboamico.db.url";
+    public static final String KEY_DB_USER = "ciboamico.db.user";
+    public static final String KEY_DB_PASSWORD = "ciboamico.db.password";
+
+    /** Valori ammessi per la modalità di persistenza (NFR-01). */
+    public static final String MODE_DEMO = "DEMO";
+    public static final String MODE_FS = "FS";
+    public static final String MODE_JDBC = "JDBC";
+
     /** Default only se la risorsa configurazione manca (compatibilità test). */
     private static final String DEFAULT_SALT = "ciboamico-salt";
+
+    /** Modalità di persistenza di default (DEMO in-memory, milestone M1). */
+    private static final String DEFAULT_PERSISTENCE_TYPE = MODE_DEMO;
+
+    /** Credenziali JDBC di sviluppo (fallback se assenti nel file). */
+    private static final String DEFAULT_DB_URL = "jdbc:mysql://localhost:3306/ciboamico";
+    private static final String DEFAULT_DB_USER = "root";
+    private static final String DEFAULT_DB_PASSWORD = "root";
 
     private final Properties props;
 
@@ -43,9 +64,29 @@ public final class AppConfig {
         return instance;
     }
 
-    /** Salt usato per l'hash SHA-256 delle password. */
+    /** Salt usato per l'hash SHA-256 delle password (NFR-03). */
     public String getSalt() {
         return props.getProperty(KEY_SALT, DEFAULT_SALT);
+    }
+
+    /** Modalità di persistenza attiva (NFR-01): DEMO, FS o JDBC. */
+    public String getPersistenceType() {
+        return props.getProperty(KEY_PERSISTENCE_TYPE, DEFAULT_PERSISTENCE_TYPE);
+    }
+
+    /** URL JDBC del database (NFR-02). */
+    public String getDbUrl() {
+        return props.getProperty(KEY_DB_URL, DEFAULT_DB_URL);
+    }
+
+    /** Utente JDBC del database (NFR-02). */
+    public String getDbUser() {
+        return props.getProperty(KEY_DB_USER, DEFAULT_DB_USER);
+    }
+
+    /** Password JDBC del database (NFR-02). */
+    public String getDbPassword() {
+        return props.getProperty(KEY_DB_PASSWORD, DEFAULT_DB_PASSWORD);
     }
 
     /** Proprietà generica con default. */

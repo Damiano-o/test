@@ -46,13 +46,6 @@ public class FSProdottoDAO implements ProdottoDAO {
     public List<Prodotto> findAll() throws DAOException { return caricaCatalogo(); }
 
     @Override
-    public Prodotto findById(Long id) throws DAOException {
-        return caricaCatalogo().stream()
-                .filter(p -> p.getNome().hashCode() == id)
-                .findFirst().orElse(null);
-    }
-
-    @Override
     public Prodotto findByNome(String nome) throws DAOException {
         return caricaCatalogo().stream()
                 .filter(p -> p.getNome().equalsIgnoreCase(nome))

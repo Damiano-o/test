@@ -45,13 +45,13 @@ class PersistenceDetailTest {
     }
 
     @Test
-    void testProdottoFindById() throws Exception {
+    void testProdottoFindByNome() throws Exception {
         FSProdottoDAO dao = new FSProdottoDAO();
         Prodotto prodotto = new Prodotto("Pomodori", 2.0, 50,
                 LocalDate.now().plusDays(7), UnitaEnum.GRAMMI, venditore());
         dao.save(prodotto);
 
-        Prodotto trovato = dao.findById((long) prodotto.getNome().hashCode());
+        Prodotto trovato = dao.findByNome("Pomodori");
 
         assertNotNull(trovato);
         assertEquals("Pomodori", trovato.getNome());

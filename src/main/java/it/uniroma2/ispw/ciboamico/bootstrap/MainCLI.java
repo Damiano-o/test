@@ -4,25 +4,31 @@ import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 
 /**
  * Entry point della modalità CLI.
- * Avvio: ApplicationModeManager → DAOFactory → ViewFactory (famiglia CLI) → login → home.
- * I controller applicativi sono gli stessi della GUI: cambia solo la famiglia
- * di boundary (Abstract Factory).
+ *
+ * <p>Come per {@link MainApplication}, non è un compositore: la composizione
+ * (DAOFactory, seed, Observer, famiglia CLI) è in {@link Runner}. Qui c'è solo
+ * l'innesco del loop testuale. I controller applicativi sono gli stessi della
+ * GUI: cambia solo la famiglia di boundary (Abstract Factory, scelta da
+ * Runner).</p>
+ *
+ * <p>Avvio: Main -&gt; Runner (composizione) -&gt; MainCLI.avviaViaRunner -&gt;
+ * loop login/home.</p>
  */
 public final class MainCLI {
 
     private MainCLI() { }
 
+    /** Entry point standalone: delega la composizione completa a Runner. */
     public static void main(String[] args) {
-        ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
-        System.out.println("CiboAmico (CLI) — modalità: " + modeManager.getActiveMode());
-        MainApplication.seedDemoDataSeNecessario();
-        // Configura la LazyFactory degli ordini con la DAOFactory attiva
-        // (stessa inizializzazione di Runner.avvia: necessaria per UC-04).
-        it.uniroma2.ispw.ciboamico.pattern.factory.OrdineLazyFactory
-                .configure(modeManager.getDAOFactory());
-        ViewFactory.configure("cli"); // famiglia CLI (Abstract Factory, Singleton)
-        ViewFactory factory = ViewFactory.getFactory();
+        ApplicationModeBean bean = new ApplicationModeBean();
+        bean.setInterfaccia("cli");
+        bean.setPersistenza(ApplicationModeManager.getInstance().getActiveMode());
+        Runner.avvia(bean, args, MainCLI::avviaViaRunner);
+    }
 
+    /** Innesco del loop CLI dopo che {@link Runner} ha composto il sistema. */
+    public static void avviaViaRunner() {
+        ViewFactory factory = ViewFactory.getFactory();
         boolean running = true;
         while (running) {
             factory.createLoginView().display();

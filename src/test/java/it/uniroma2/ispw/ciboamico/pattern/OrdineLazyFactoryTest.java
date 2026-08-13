@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test OrdineLazyFactory (Lazy Initialization + caching, id dal DAO).
  
- * @author Michele Damiano
 */
 class OrdineLazyFactoryTest {
 

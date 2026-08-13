@@ -1,13 +1,27 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
-import it.uniroma2.ispw.ciboamico.boundary.*;
+import it.uniroma2.ispw.ciboamico.boundary.DashboardView;
+import it.uniroma2.ispw.ciboamico.boundary.InventarioView;
+import it.uniroma2.ispw.ciboamico.boundary.ListaSpesaView;
+import it.uniroma2.ispw.ciboamico.boundary.LoginView;
+import it.uniroma2.ispw.ciboamico.boundary.MarketplaceView;
+import it.uniroma2.ispw.ciboamico.boundary.Navigator;
+import it.uniroma2.ispw.ciboamico.boundary.PaymentView;
+import it.uniroma2.ispw.ciboamico.boundary.RicetteView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
  * Entry point JavaFX dell'applicazione.
- * Registra tutte le Boundary nel Navigator e avvia la Login.
- * Flusso: Main → ApplicationModeManager → DAOFactory → Navigator → Login.
+ *
+ * <p>Non è un compositore: la composizione (modalità, factory, Observer,
+ * famiglia di view, seed DEMO) avviene in {@link Runner} (stile Layered).
+ * Questo file si limita a registrare le Boundary nel {@link Navigator} e ad
+ * avviare la Login. Se invocato standalone, delega la composizione a
+ * {@link Runner#avvia(ApplicationModeBean, String[], Runnable)}.</p>
+ *
+ * <p>Flusso: Main -&gt; Runner (composizione) -&gt; MainApplication.launch -&gt;
+ * start() -&gt; Navigator -&gt; Login.</p>
  */
 public final class MainApplication extends Application {
 
@@ -19,39 +33,43 @@ public final class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) {
-        // In modalità DEMO carica i dati seed (utenti, prodotti, ricette).
-        seedDemoDataSeNecessario();
-
         Navigator navigator = Navigator.getInstance();
         navigator.init(stage);
 
-        // Registrazione view (nomi simbolici, factory programmatiche)
-        // Le Boundary costruiscono i propri controller tramite il registro applicativo,
-        // senza ricevere la DAOFactory: la View non conosce la persistenza.
+        // Registrazione view (nomi simbolici, factory programmatiche).
+        // Le Boundary costruiscono i propri controller tramite il registro
+        // applicativo, senza ricevere la DAOFactory: la View non conosce la
+        // persistenza.
         navigator.register("login", new LoginView()::build);
         navigator.register("home", new DashboardView()::build);
         navigator.register("marketplace", new MarketplaceView()::build);
         navigator.register("payment", new PaymentView()::build);
+        navigator.register("ricette", new RicetteView()::build);
+        navigator.register("inventario", new InventarioView()::build);
+        navigator.register("listaspesa", new ListaSpesaView()::build);
+
         stage.setTitle("CiboAmico — " + modeManager.getActiveMode());
         navigator.switchTo("login");
     }
 
+    /** Entry point standalone: delega la composizione completa a Runner. */
     public static void main(String[] args) {
+        ApplicationModeBean bean = new ApplicationModeBean();
+        bean.setInterfaccia("gui");
+        bean.setPersistenza(ApplicationModeManager.getInstance().getActiveMode());
+        Runner.avvia(bean, args, MainApplication::avviaViaRunner);
+
+        // In modalità DEMO, il seed è già a carico di Runner durante la
+        // composizione; qui si riporta solo la modalità per informazione.
         ApplicationModeManager manager = ApplicationModeManager.getInstance();
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
-        launch(args);
     }
 
-    /** Seed DEMO condiviso tra GUI e CLI (doppia interfaccia). */
-    public static void seedDemoDataSeNecessario() {
-        ApplicationModeManager modeManager = ApplicationModeManager.getInstance();
-        if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
-                && modeManager.getDAOFactory() instanceof it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory demo) {
-            try {
-                demo.seedDemoData();
-            } catch (it.uniroma2.ispw.ciboamico.exception.DAOException e) {
-                System.err.println("Seed DEMO fallito: " + e.getTechnicalMessage());
-            }
-        }
+    /**
+     * Innesco dell'interfaccia GUI dopo che {@link Runner} ha composto il
+     * sistema. {@code launch} avvia il runtime JavaFX e invoca {@code start}.
+     */
+    public static void avviaViaRunner() {
+        launch(new String[0]);
     }
 }

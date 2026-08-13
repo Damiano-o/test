@@ -4,8 +4,8 @@ import it.uniroma2.ispw.ciboamico.bean.AutenticazioneBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.AutenticazioneController;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
+import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.entity.RuoloCliente;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.entity.Utente;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
@@ -17,17 +17,25 @@ import static org.mockito.Mockito.when;
 
 /**
  * T10/T11/T12 — Autenticazione: login valido, email non valida, password errata.
- 
- * @author Michele Damiano
-*/
+ *
+ * <p>Il controller applicativo è state-less: riceve il bean credenziali già
+ * costruito (conversione esterno→interno a carico della view via
+ * {@link AutenticazioneBean#fromCredenziali}). La gestione della sessione è
+ * di responsabilità del Facade (vedi {@code AutenticazioneFacadeTest}).</p>
+ *
+ */
 class AutenticazioneControllerTest {
 
-    private DAOFactory factoryConUtente(Utente utente) throws it.uniroma2.ispw.ciboamico.exception.DAOException {
+    private DAOFactory factoryConUtente(Utente utente) throws DAOException {
         DAOFactory factory = mock(DAOFactory.class);
         UtenteDAO dao = mock(UtenteDAO.class);
         when(factory.getUtenteDAO()).thenReturn(dao);
         when(dao.findByEmail(utente.getEmail())).thenReturn(utente);
         return factory;
+    }
+
+    private AutenticazioneBean credenziali(String email, String password) throws AutenticazioneException {
+        return AutenticazioneBean.fromCredenziali(email, password);
     }
 
     @Test
@@ -36,7 +44,7 @@ class AutenticazioneControllerTest {
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
-        UtenteBean bean = controller.login("user@cibo.it", "password123");
+        UtenteBean bean = controller.login(credenziali("user@cibo.it", "password123"));
 
         assertNotNull(bean);
     }
@@ -47,7 +55,7 @@ class AutenticazioneControllerTest {
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
-        UtenteBean bean = controller.login("user@cibo.it", "password123");
+        UtenteBean bean = controller.login(credenziali("user@cibo.it", "password123"));
 
         assertEquals("user@cibo.it", bean.getEmail());
     }
@@ -58,9 +66,7 @@ class AutenticazioneControllerTest {
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
-        AutenticazioneBean bean = new AutenticazioneBean();
-        bean.setEmail("user@cibo.it");
-        bean.setPassword("password123");
+        AutenticazioneBean bean = credenziali("user@cibo.it", "password123");
         UtenteBean risultato = controller.login(bean);
 
         assertNotNull(risultato);
@@ -72,9 +78,7 @@ class AutenticazioneControllerTest {
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
-        AutenticazioneBean bean = new AutenticazioneBean();
-        bean.setEmail("user@cibo.it");
-        bean.setPassword("password123");
+        AutenticazioneBean bean = credenziali("user@cibo.it", "password123");
         UtenteBean risultato = controller.login(bean);
 
         assertEquals("user@cibo.it", risultato.getEmail());
@@ -85,20 +89,20 @@ class AutenticazioneControllerTest {
         Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
-        // La validazione dell'email avviene nel setter del bean (Fail Fast).
-        AutenticazioneBean bean = new AutenticazioneBean();
-        assertThrows(AutenticazioneException.class, () -> bean.setEmail("user_at_cibo.it"));
-        bean.setEmail("user@cibo.it");
-        bean.setPassword("password123");
-        assertNotNull(controller.login(bean));
+        // La validazione dell'email avviene nel setter del bean (Fail Fast),
+        // chiamato dalla conversione fromCredenziali.
+        assertThrows(AutenticazioneException.class,
+                () -> AutenticazioneBean.fromCredenziali("user_at_cibo.it", "password123"));
+        assertNotNull(controller.login(credenziali("user@cibo.it", "password123")));
     }
 
     @Test
     void testLoginInvalidEmail() throws Exception {
         AutenticazioneController controller =
                 new AutenticazioneController(mock(DAOFactory.class));
+        // Email malformata: il bean rifiuta in fase di costruzione (Fail Fast).
         assertThrows(AutenticazioneException.class,
-                () -> controller.login("user_at_cibo.it", "password123"));
+                () -> AutenticazioneBean.fromCredenziali("user_at_cibo.it", "password123"));
     }
 
     @Test
@@ -108,19 +112,7 @@ class AutenticazioneControllerTest {
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
 
         assertThrows(AutenticazioneException.class,
-                () -> controller.login("user@cibo.it", "wrong"));
-    }
-
-    @Test
-    void testLoginSalvaUtenteInSessione() throws Exception {
-        SessionManager.getInstance().logout();
-        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
-        utente.aggiungiRuolo(new RuoloCliente());
-        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
-
-        UtenteBean bean = controller.login("user@cibo.it", "password123");
-        assertEquals(bean.getEmail(), SessionManager.getInstance().getLoggedUser().getEmail());
-        SessionManager.getInstance().logout();
+                () -> controller.login(credenziali("user@cibo.it", "wrong")));
     }
 
     @Test
@@ -128,18 +120,18 @@ class AutenticazioneControllerTest {
         Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
         // nessun ruolo aggiunto -> ruolo default CLIENTE
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
-        UtenteBean bean = controller.login("user@cibo.it", "password123");
+        UtenteBean bean = controller.login(credenziali("user@cibo.it", "password123"));
         assertEquals("CLIENTE", bean.getRuoloAttivo());
     }
 
     @Test
-    void testLogoutPulisceSessione() throws Exception {
-        Utente utente = new Utente("Mario", "user@cibo.it", Utente.hashPassword("password123"));
-        utente.aggiungiRuolo(new RuoloCliente());
-        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
-        controller.login("user@cibo.it", "password123");
-        assertNotNull(SessionManager.getInstance().getLoggedUser());
-        controller.logout();
-        assertNull(SessionManager.getInstance().getLoggedUser());
+    void testLoginAccountInesistenteLancia() throws Exception {
+        // DAO che non trova l'account (ntorna null) -> credenziali respinte.
+        DAOFactory factory = mock(DAOFactory.class);
+        UtenteDAO dao = mock(UtenteDAO.class);
+        when(factory.getUtenteDAO()).thenReturn(dao);
+        AutenticazioneController controller = new AutenticazioneController(factory);
+        assertThrows(AutenticazioneException.class,
+                () -> controller.login(credenziali("utente@cibo.it", "password123")));
     }
 }

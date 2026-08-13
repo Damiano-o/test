@@ -1,5 +1,6 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
+import it.uniroma2.ispw.ciboamico.config.AppConfig;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.FSDAOFactory;
@@ -10,37 +11,30 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.JDBCDAOFactory;
  * (JDBC | FS | DEMO) e fornisce la DAOFactory corretta — switch senza
  * modificare la logica di business (NFR-01, milestone M1/M2).
  * L'istanza è creata lazy e thread-safe con {@code synchronized}.
+ *
+ * <p>La lettura di {@code config.properties} è centralizzata in
+ * {@link AppConfig} (unico punto d'accesso, DRY): qui si legge solo la
+ * modalità già tipizzata, senza ridichiarare il caricamento del file.</p>
  */
 public final class ApplicationModeManager {
 
     private static ApplicationModeManager instance;
 
-    public static final String MODE_JDBC = "JDBC";
-    public static final String MODE_FS = "FS";
-    public static final String MODE_DEMO = "DEMO";
+    /** Alias dei valori validi definiti in {@link AppConfig}. */
+    public static final String MODE_JDBC = AppConfig.MODE_JDBC;
+    public static final String MODE_FS = AppConfig.MODE_FS;
+    public static final String MODE_DEMO = AppConfig.MODE_DEMO;
 
     private String activeMode = MODE_DEMO; // default: demo in-memory (milestone M1)
     private DAOFactory factory;            // cache: stessa istanza per tutte le view
 
     private ApplicationModeManager() {
-        caricaConfigurazione();
-    }
-
-    /**
-     * NFR-01: legge config.properties (risorse) e imposta la modalità di
-     * persistenza all'avvio, senza ricompilare (fallback silenzioso a DEMO).
-     */
-    private void caricaConfigurazione() {
-        try (var in = ApplicationModeManager.class.getClassLoader()
-                .getResourceAsStream("config.properties")) {
-            if (in == null) {
-                return; // risorsa assente: resta DEMO
-            }
-            var props = new java.util.Properties();
-            props.load(in);
-            String mode = props.getProperty("persistence_type", MODE_DEMO);
+        // NFR-01: legge la modalità di persistenza da AppConfig (unico punto
+        // d'accesso a config.properties), senza ricompilare; fallback a DEMO.
+        String mode = AppConfig.getInstance().getPersistenceType();
+        try {
             setActiveMode(mode);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             // configurazione non valida: non bloccare l'avvio, resta DEMO
             this.activeMode = MODE_DEMO;
             this.factory = null;

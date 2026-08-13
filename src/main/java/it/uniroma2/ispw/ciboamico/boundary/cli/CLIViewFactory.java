@@ -29,7 +29,7 @@ public class CLIViewFactory extends ViewFactory {
 
     @Override
     public IView createMarketplaceView() {
-        return new MarketplaceCLIView(ctx);
+        return new MarketplaceCLIView(ctx, createPaymentView());
     }
 
     @Override

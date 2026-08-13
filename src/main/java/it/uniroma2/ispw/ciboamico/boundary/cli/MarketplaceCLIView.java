@@ -4,25 +4,28 @@ import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
 import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.boundary.IView;
-import it.uniroma2.ispw.ciboamico.control.facade.OrdinaProdottoFacade;
+import it.uniroma2.ispw.ciboamico.control.ui.MarketplaceUIController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
 import java.util.List;
 
 /**
  * Boundary CLI — Marketplace (UC-04 Ordina un Prodotto). Mostra i prodotti
  * disponibili, applica un eventuale buono promozionale (estensione 4a) e crea
- * l'ordine delegando al {@link OrdinaProdottoFacade} (scambio solo Bean).
+ * l'ordine delegando al {@link MarketplaceUIController} (controller
+ * grafico disaccoppiato, riusabile da GUI e CLI), che orchestra il Facade
+ * scambiando solo Bean (MVC: conversione esterno→interno nel grafico).
  */
 public class MarketplaceCLIView implements IView {
 
     private final CLIContext ctx;
-    private final OrdinaProdottoFacade facade;
+    private final MarketplaceUIController controller;
+    private final IView payment;
 
-    public MarketplaceCLIView(CLIContext ctx) {
+    public MarketplaceCLIView(CLIContext ctx, IView payment) {
         this.ctx = ctx;
-        this.facade = new OrdinaProdottoFacade();
+        this.payment = payment;
+        this.controller = new MarketplaceUIController(ctx.getLoggedUser());
     }
 
     @Override
@@ -35,7 +38,7 @@ public class MarketplaceCLIView implements IView {
         System.out.println("\n=== Marketplace (UC-04) ===");
         List<ProdottoBean> prodotti;
         try {
-            prodotti = facade.getProdottiDisponibili();
+            prodotti = controller.catalogoProdotti();
         } catch (Exception e) {
             System.out.println("Problema di accesso al catalogo: riprovare più tardi.");
             return;
@@ -53,13 +56,13 @@ public class MarketplaceCLIView implements IView {
             return;
         }
         try {
-            // Delego al Grafico la creazione dell'ordine in corso (checkout)
-            facade.avviaCheckout(nomeProdotto);
+            // Delego al Grafico la conversione esterno→interno + checkout
+            controller.ordinaProdotto(nomeProdotto);
 
             // Estensione 4a: buono promozionale opzionale (invio = nessuno)
             String codiceBuono = ctx.leggiStringa("Codice buono (opzionale, invio per saltare): ").trim();
             if (!codiceBuono.isEmpty()) {
-                OrdineBean scontato = facade.applicaBuono(codiceBuono, nomeProdotto, utente);
+                OrdineBean scontato = controller.applicaBuono(codiceBuono, nomeProdotto);
                 System.out.printf("✓ Buono \"%s\" applicato — totale %.2f EUR%n",
                         scontato.getCodiceBuono(), scontato.getTotale());
             }
@@ -70,6 +73,6 @@ public class MarketplaceCLIView implements IView {
             System.out.println("Errore di sistema: riprovare più tardi.");
             return;
         }
-        new PaymentCLIView(ctx).display();
+        payment.display();
     }
 }

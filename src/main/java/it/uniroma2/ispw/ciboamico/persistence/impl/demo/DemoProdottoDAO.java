@@ -21,13 +21,6 @@ public class DemoProdottoDAO implements ProdottoDAO {
     public List<Prodotto> findAll() { return new ArrayList<>(catalogo.values()); }
 
     @Override
-    public Prodotto findById(Long id) {
-        return catalogo.values().stream()
-                .filter(p -> p.getNome().hashCode() == id)
-                .findFirst().orElse(null);
-    }
-
-    @Override
     public Prodotto findByNome(String nome) {
         return catalogo.values().stream()
                 .filter(p -> p.getNome().equalsIgnoreCase(nome))
