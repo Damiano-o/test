@@ -1,16 +1,10 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
-/**
- * Contratto comune delle viste GUI e CLI.
- * Sia le viste GUI (JavaFX) sia le viste CLI implementano {@code display()}.
- * Le Boundary NON conoscono le Entity: scambiano solo String/Bean con i
- * controller applicativi (regola bean-only).
- */
+// Contratto comune delle viste GUI e CLI
+
 public interface IView {
 
-    /**
-     * Mostra la schermata. Nella GUI delega al Navigator; nella CLI
-     * esegue il menu testuale (Scanner) e chiama i controller applicativi.
-     */
+    // Mostra la schermata
+
     void display();
 }

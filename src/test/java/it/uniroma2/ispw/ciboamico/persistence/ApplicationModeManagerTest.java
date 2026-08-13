@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test ApplicationModeManager: switch modalità e factory corretta.
- 
-*/
+// Test ApplicationModeManager: switch modalità e factory corretta
+
 class ApplicationModeManagerTest {
 
     @org.junit.jupiter.api.AfterEach

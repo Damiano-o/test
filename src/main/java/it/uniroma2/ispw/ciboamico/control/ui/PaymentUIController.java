@@ -10,20 +10,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-/**
- * Controller di presentazione (UI) della schermata di pagamento (passo 6 +
- * estensione 6a di UC-04 Ordina Prodotto), condiviso da GUI e CLI.
- *
- * <p>Coordina l'interazione tra
- * la {@code PaymentView} e il controller applicativo <b>disaccoppiato</b>:
- * raccoglie i dati carta (input utente), costruisce la mappa input → processi
- * di business (via {@link OrdinaProdottoFacade}) e restituisce il risultato
- * pronto per la presentazione. La view resta un puro layout.</p>
- *
- * <p>Non dipende da JavaFX: è testabile in isolamento e riusabile sia dalla
- * vista grafica sia da quella testuale (CLI). Se la view evolve, si tocca solo
- * questo controller di presentazione, non il controller applicativo.</p>
- */
+// Controller di presentazione (UI) della schermata di pagamento (passo 6 + estensione 6a...
+
 public class PaymentUIController {
 
     private final OrdinaProdottoFacade facade;
@@ -32,25 +20,12 @@ public class PaymentUIController {
         this.facade = new OrdinaProdottoFacade(factory);
     }
 
-    /** Costruttore di comodo per la boundary: factory attiva di runtime. */
     public PaymentUIController() {
         this.facade = new OrdinaProdottoFacade();
     }
 
-    /**
-     * Mappa l'azione "paga": converte i dati carta (formato esterno) nel
-     * {@link PaymentInfoBean} (formato interno), poi delega l'autorizzazione
-     * al controller applicativo via Facade. La conversione esterno→interno è
-     * responsabilità del controller di presentazione.
-     *
-     * @param ordine       ordine in checkout
-     * @param utente       utente autenticato
-     * @param numeroCarta  numero carta (input grezzo dalla view)
-     * @param intestatario intestatario della carta
-     * @param scadenza     scadenza della carta
-     * @param cvv          codice di sicurezza
-     * @return l'ordine risultante dopo l'autorizzazione
-     */
+    // Mappa l'azione "paga": converte i dati carta (formato esterno) nel PaymentInfoBean (for...
+
     public OrdineBean paga(OrdineBean ordine, UtenteBean utente,
                            String numeroCarta, String intestatario,
                            String scadenza, String cvv)
@@ -67,12 +42,8 @@ public class PaymentUIController {
         return facade.processaPagamento(ordine, utente, payment);
     }
 
-    /**
-     * Formatta l'esito del pagamento andato a buon fine.
-     *
-     * @param risultato ordine risultante dalla transazione
-     * @return stringa di riepilogo da mostrare nella view
-     */
+    // Formatta l'esito del pagamento andato a buon fine
+
     public static String formattaEsitoPagamento(OrdineBean risultato) {
         return "Pagamento riuscito ✓ — ordine " + risultato.getStato()
                 + ", totale " + String.format(java.util.Locale.ROOT, "%.2f EUR", risultato.getTotale());

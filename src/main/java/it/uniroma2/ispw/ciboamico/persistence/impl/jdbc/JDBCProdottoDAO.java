@@ -11,10 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO JDBC per Prodotto — PreparedStatement anti SQL-injection (NFR-02).
- * BR-01: i prodotti scaduti non compaiono nel marketplace.
- */
+// DAO JDBC per Prodotto — PreparedStatement anti SQL-injection (NFR-02)
+
 public class JDBCProdottoDAO implements ProdottoDAO {
 
     @Override

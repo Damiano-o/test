@@ -9,13 +9,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 
 import java.util.List;
 
-/**
- * Boundary CLI — Marketplace (UC-04 Ordina un Prodotto). Mostra i prodotti
- * disponibili, applica un eventuale buono promozionale (estensione 4a) e crea
- * l'ordine delegando al {@link MarketplaceUIController} (controller
- * grafico disaccoppiato, riusabile da GUI e CLI), che orchestra il Facade
- * scambiando solo Bean (MVC: conversione esterno→interno nel grafico).
- */
+// Boundary CLI — Marketplace (UC-04 Ordina un Prodotto)
+
 public class MarketplaceCLIView implements IView {
 
     private final CLIContext ctx;

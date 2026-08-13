@@ -13,16 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-/**
- * Boundary JavaFX — Login (UC-11).
- * La view NON conosce le Entity: scambia solo String/Bean con il
- * {@link AutenticazioneFacade}. Dopo il login naviga alla Home via
- * {@link Navigator}.
- * Navigator (Bean-only).
- *
- * UI minimalista: card centrata sul fondo della scena, campo email/password,
- * bottone primario pieno, messaggio errore rosso tenue. Stile da styles.css.
- */
+// Boundary JavaFX — Login (UC-11)
+
 public class LoginView {
 
     private final AutenticazioneFacade facade;

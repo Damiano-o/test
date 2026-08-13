@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO Demo in-memory per ordini.
- */
+// DAO Demo in-memory per ordini
+
 public class DemoOrdineDAO implements OrdineDAO {
 
     private final Map<Long, Ordine> memoria = new HashMap<>();

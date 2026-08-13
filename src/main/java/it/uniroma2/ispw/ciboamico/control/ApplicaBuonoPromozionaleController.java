@@ -18,54 +18,28 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-/**
- * Controller dello Use Case estensione "Applica Buono Promozionale" (4a
- * di UC-04 Ordina un Prodotto).
- *
- * <p>Separa la logica di validazione/ applicazione di un buono promozionale
- * dal controller principale di UC-04, rendendo esplicita l'estensione nel
- * modello dei casi d'uso. Il controller principale lo istanzia on-demand
- * (GRASP: Low Coupling), seguendo la stessa strategia del pattern di
- * riferimento. Conversione Bean &lt;-&gt; Entity interna, scambio con la
- * boundary limitato ai Bean (BCE).</p>
- *
- * <p>Controller applicativo <b>state-less</b>: riceve l'ordine in checkout già
- * costruito dal controller di presentazione e non tocca la sessione (di competenza del
- * Facade).</p>
- */
+// Controller dello Use Case estensione "Applica Buono Promozionale" (4a di UC-04 Ordina u...
+
 public class ApplicaBuonoPromozionaleController {
 
     private final BuonoDAO buonoDAO;
     private final ProdottoDAO prodottoDAO;
     private final UtenteDAO utenteDAO;
 
-    /**
-     * Costruttore principale: riceve la {@link DAOFactory} attiva (testabile).
-     *
-     * @param factory factory di persistenza da cui risolvere i DAO
-     */
+    // Costruttore principale: riceve la DAOFactory attiva (testabile)
+
     public ApplicaBuonoPromozionaleController(DAOFactory factory) {
         this.buonoDAO = factory.getBuonoDAO();
         this.prodottoDAO = factory.getProdottoDAO();
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public ApplicaBuonoPromozionaleController() {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    /**
-     * Estensione 4a: applica un buono valido all'ordine corrente. Unico metodo
-     * pubblico del controller applicativo, <b>state-less</b>: riceve
-     * l'ordine in checkout costruito dal controller di presentazione, non costruisce
-     * bean né tocca {@code SessionManager} (lo fa il Facade che orchestra).
-     *
-     * @param codiceBuono codice del buono da applicare
-     * @param bean        ordine in checkout su cui applicare lo sconto
-     * @param utente      utente autenticato
-     * @return OrdineBean con il totale ricalcolato dopo lo sconto
-     */
+    // Estensione 4a: applica un buono valido all'ordine corrente
+
     public OrdineBean applicaBuonoPromozionale(String codiceBuono, OrdineBean bean, UtenteBean utente)
             throws BusinessValidationException, DAOException {
         if (codiceBuono == null || codiceBuono.isBlank()) {

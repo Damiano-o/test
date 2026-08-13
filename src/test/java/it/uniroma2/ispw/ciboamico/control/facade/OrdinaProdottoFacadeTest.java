@@ -22,11 +22,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test della Facade di checkout UC-04: la boundary usa un unico punto di
- * ingresso (catalogo, avvio checkout, buono, pagamento) senza conoscere i
- * metodi del controller.
- */
+// Test della Facade di checkout UC-04: la boundary usa un unico punto di ingresso (catalo...
+
 class OrdinaProdottoFacadeTest {
 
     private DemoDAOFactory factory;

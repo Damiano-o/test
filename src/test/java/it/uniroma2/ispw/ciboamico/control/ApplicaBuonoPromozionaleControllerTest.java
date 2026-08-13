@@ -21,10 +21,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test del controller dell'estensione Applica Buono Promozionale (4a di
- * UC-04): validazione e applicazione dello sconto.
- */
+// Test del controller dell'estensione Applica Buono Promozionale (4a di UC-04): validazio...
+
 class ApplicaBuonoPromozionaleControllerTest {
 
     private DemoDAOFactory factory;

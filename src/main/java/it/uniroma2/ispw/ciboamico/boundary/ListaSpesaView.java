@@ -9,11 +9,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-/**
- * Boundary JavaFX — Lista Spesa (demo). Elenca gli elementi da acquistare
- * (dati d'esempio) con checkbox selezionabili. La logica di generazione della
- * lista dagli ingredienti mancanti non è implementata.
- */
+// Boundary JavaFX — Lista Spesa (demo)
+
 public class ListaSpesaView {
 
     public Parent build() {
@@ -33,7 +30,6 @@ public class ListaSpesaView {
         return UiKit.pagina("Lista Spesa", "Cosa acquistare al mercato", corpo, "listaspesa");
     }
 
-    /** Riga della lista: checkbox + testo affiancati sulla stessa riga. */
     private void voceSpesa(VBox lista, String nome, String dettaglio) {
         CheckBox cb = new CheckBox();
         cb.setId("cb-" + nome.toLowerCase().replace(" ", "-"));

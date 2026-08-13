@@ -6,21 +6,12 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.FSDAOFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.JDBCDAOFactory;
 
-/**
- * Singleton: seleziona la modalità applicativa a runtime
- * (JDBC | FS | DEMO) e fornisce la DAOFactory corretta — switch senza
- * modificare la logica di business (NFR-01, milestone M1/M2).
- * L'istanza è creata lazy e thread-safe con {@code synchronized}.
- *
- * <p>La lettura di {@code config.properties} è centralizzata in
- * {@link AppConfig} (unico punto d'accesso, DRY): qui si legge solo la
- * modalità già tipizzata, senza ridichiarare il caricamento del file.</p>
- */
+// Singleton: seleziona la modalità applicativa a runtime (JDBC | FS | DEMO) e fornisce la...
+
 public final class ApplicationModeManager {
 
     private static ApplicationModeManager instance;
 
-    /** Alias dei valori validi definiti in {@link AppConfig}. */
     public static final String MODE_JDBC = AppConfig.MODE_JDBC;
     public static final String MODE_FS = AppConfig.MODE_FS;
     public static final String MODE_DEMO = AppConfig.MODE_DEMO;
@@ -41,7 +32,6 @@ public final class ApplicationModeManager {
         }
     }
 
-    /** Istanza unica (lazy, thread-safe via synchronized). */
     public static synchronized ApplicationModeManager getInstance() {
         if (instance == null) {
             instance = new ApplicationModeManager();
@@ -59,7 +49,6 @@ public final class ApplicationModeManager {
         this.factory = null; // invalidate cache on mode switch
     }
 
-    /** Factory della modalità attiva  — cache condivisa. */
     public DAOFactory getDAOFactory() {
         if (factory == null) {
             factory = switch (activeMode) {

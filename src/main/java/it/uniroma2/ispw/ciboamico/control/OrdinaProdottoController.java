@@ -13,22 +13,8 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 import java.util.List;
 
-/**
- * Controller di UC-04 Ordina un Prodotto (stile a un livello di controllo).
- *
- * <p>Coordina la logica di business del caso d'uso base (verifica
- * disponibilità, costruzione leggera del checkout). Le <em>estensioni</em>
- * del caso d'uso sono delegate a sottocontroller dedicati:
- * {@link ApplicaBuonoPromozionaleController} (estensione 4a) e
- * {@link PagamentoController} (passo 6 / estensione 6a), di cui il Facade
- * espone le operazioni direttamente, senza re-esporsi sul controller
- * principale (niente pass-through / indirection inutile). La view (boundary)
- * delega le operazioni di dominio esclusivamente tramite Scambi su Bean
- * (BCE).</p>
- *
- * <p>Controller applicativo <b>state-less</b>: riceve i bean già costruiti
- * dal controller di presentazione e non tocca la sessione (di pertinenza del Facade).</p>
- */
+// Controller di UC-04 Ordina un Prodotto (stile a un livello di controllo)
+
 public class OrdinaProdottoController {
 
     private final ProdottoDAO prodottoDAO;
@@ -37,12 +23,10 @@ public class OrdinaProdottoController {
         this.prodottoDAO = factory.getProdottoDAO();
     }
 
-    /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public OrdinaProdottoController() {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    /** Catalogo dei prodotti disponibili come Bean. */
     public List<ProdottoBean> getProdottiDisponibili() throws DAOException {
         return prodottoDAO.findAll().stream()
                 .map(p -> {
@@ -62,17 +46,8 @@ public class OrdinaProdottoController {
                 .toList();
     }
 
-    /**
-     * Avvia il checkout per il prodotto selezionato: verifica disponibilità
-     * (BR-03) e valorizza l'ordine in checkout con il prezzo pieno. Riceve il
-     * bean già costruito dal controller di presentazione via
-     * {@link OrdineBean#fromCheckout(String)} e non tocca {@code SessionManager}
-     * (la sessione è di competenza del Facade che orchestra lo use case).
-     *
-     * @param inCorso ordine in checkout costruito dal controller di presentazione
-     * @return l'ordine valorizzato col totale (prezzo pieno, prima degli sconti)
-     * @throws BusinessValidationException se il prodotto non è selezionato/disponibile
-     */
+    // Avvia il checkout per il prodotto selezionato: verifica disponibilità (BR-03) e valoriz...
+
     public OrdineBean avviaCheckout(OrdineBean inCorso)
             throws BusinessValidationException, DAOException {
         inCorso.validate();

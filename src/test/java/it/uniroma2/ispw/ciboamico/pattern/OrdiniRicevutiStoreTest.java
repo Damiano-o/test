@@ -12,12 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test end-to-end della notifica attiva (Observer/push) dal controller di
- * pagamento allo store di presentazione: simula un cliente che conferma un
- * ordine e verifica che il venditore riceva l'evento senza alcun polling
- * manuale (comportamento richiesto dal pattern Observer del De Angelis).
- */
+// Test end-to-end della notifica attiva (Observer/push) dal controller di pagamento allo...
+
 class OrdiniRicevutiStoreTest {
 
     private OrdineEventPublisher publisher;

@@ -20,7 +20,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Test dei rami di errore del controller applicativo per alzare la coverage LINE su UC-04. */
 class ControllerErrorCoverageTest {
 
     private DemoDAOFactory factory;

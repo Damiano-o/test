@@ -2,50 +2,22 @@ package it.uniroma2.ispw.ciboamico.pattern.observer;
 
 import java.time.LocalDateTime;
 
-/**
- * Data Transfer Object immutabile che rappresenta l'evento di conferma di un
- * ordine. Viene creato quando un Cliente conferma un ordine e propagato
- * attraverso l'{@link OrdineEventPublisher} per notificare gli observer
- * interessati (compratore e venditore).
- *
- * <p>Caratteristiche del design:</p>
- * <ul>
- *   <li><b>Immutabilità</b>: tutti i campi sono final e non esistono setter,
- *       garantendo thread-safety e prevenendo modifiche accidentali.</li>
- *   <li><b>Isolamento dei layer</b>: la View non riceve mai l'entità
- *       {@code Ordine} (che resta nel dominio), ma solo questo DTO di sola
- *       lettura — così lo strato di presentazione è completamente disaccoppiato.</li>
- *   <li><b>Value Object</b>: oggetto immutabile senza identità propria.</li>
- * </ul>
- *
- */
+// Data Transfer Object immutabile che rappresenta l'evento di conferma di un ordine
+
 public class OrdineEvent {
 
-    /** Identificativo univoco dell'ordine confermato. */
     private final Long numeroOrdine;
 
-    /** Identificativo del cliente che ha effettuato l'ordine. */
     private final String clienteId;
 
-    /** Identificativo del venditore del prodotto ordinato. */
     private final String venditoreId;
 
-    /** Importo totale dell'ordine (inclusi eventuali sconti). */
     private final double totale;
 
-    /** Timestamp della conferma dell'ordine. */
     private final LocalDateTime timestamp;
 
-    /**
-     * Costruisce un nuovo evento di ordine confermato.
-     * Il timestamp viene generato automaticamente al momento della creazione.
-     *
-     * @param numeroOrdine identificativo univoco dell'ordine
-     * @param clienteId    identificativo del cliente che ha effettuato l'ordine
-     * @param venditoreId  identificativo del venditore del prodotto ordinato
-     * @param totale       importo totale dell'ordine
-     * @throws IllegalArgumentException se numeroOrdine è null oppure clienteId è nullo/vuoto
-     */
+    // Costruisce un nuovo evento di ordine confermato
+
     public OrdineEvent(Long numeroOrdine, String clienteId, String venditoreId, double totale) {
         if (numeroOrdine == null) {
             throw new IllegalArgumentException("Il numero ordine non può essere null");
@@ -60,27 +32,22 @@ public class OrdineEvent {
         this.timestamp = LocalDateTime.now();
     }
 
-    /** @return il numero dell'ordine. */
     public Long getNumeroOrdine() {
         return numeroOrdine;
     }
 
-    /** @return l'ID del cliente. */
     public String getClienteId() {
         return clienteId;
     }
 
-    /** @return l'ID del venditore (può essere null se non valorizzato). */
     public String getVenditoreId() {
         return venditoreId;
     }
 
-    /** @return il totale in euro. */
     public double getTotale() {
         return totale;
     }
 
-    /** @return il momento esatto della conferma. */
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

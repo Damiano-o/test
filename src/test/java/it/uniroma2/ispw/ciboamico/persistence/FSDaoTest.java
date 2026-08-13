@@ -18,11 +18,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test DAO FS: roundtrip su file JSON (NFR-01 persistenza).
- * I file vengono scritti in data/ sotto il progetto (cartella gitignored).
- 
-*/
+// Test DAO FS: roundtrip su file JSON (NFR-01 persistenza)
+
 class FSDaoTest {
 
     @BeforeEach

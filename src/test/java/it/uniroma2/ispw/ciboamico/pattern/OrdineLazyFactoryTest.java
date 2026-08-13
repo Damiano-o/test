@@ -10,10 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test OrdineLazyFactory (Lazy Initialization + caching, id dal DAO).
- 
-*/
+// Test OrdineLazyFactory (Lazy Initialization + caching, id dal DAO)
+
 class OrdineLazyFactoryTest {
 
     private DemoDAOFactory factory;

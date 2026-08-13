@@ -7,15 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Ordine singolo diretto (D-03): un compratore, un venditore, più voci.
- * Referenzia due Utente (compratore e venditore) — Venditore è un Ruolo,
- * non una classe autonoma (whole-part).
- * Implementa la sola macchina a stati BR-04: la notifica di conferma è
-esternalizzata (il controller pubblica un {@code OrdineEvent} tramite
-{@code OrdineEventPublisher}, cosicché l'entity resta svincolata dai layer
-di presentazione).
- */
+// Ordine singolo diretto (D-03): un compratore, un venditore, più voci
+
 public class Ordine {
 
     private final Long idOrdine;
@@ -47,22 +40,15 @@ public class Ordine {
         ricalcolaTotale();
     }
 
-    /**
-     * Ricalcola il totale: somma delle voci, poi eventuale sconto del buono promozionale
-     * (Ordine = Context del pattern Strategy: delega lo sconto alla strategia del buono).
-     */
+    // Ricalcola il totale: somma delle voci, poi eventuale sconto del buono promozionale (Ord...
+
     public void ricalcolaTotale() {
         double subtotale = voci.stream().mapToDouble(VoceOrdine::getParziale).sum();
         totale = buonoApplicato != null ? buonoApplicato.applicaSconto(subtotale) : subtotale;
     }
 
-    /**
-     * Applica un buono promozionale all'ordine. Il buono deve appartenere al venditore
-     * dell'ordine (regola CiboAmico: coupon del medesimo commerciante).
-     * Al termine ricalcola il totale.
-     *
-     * @throws BusinessValidationException se il buono non appartiene al venditore dell'ordine
-     */
+    // Applica un buono promozionale all'ordine
+
     public void applicaBuono(BuonoPromozionale buono) throws BusinessValidationException {
         if (buono == null) {
             throw new BusinessValidationException("Il buono promozionale non può essere nullo");
@@ -80,12 +66,8 @@ public class Ordine {
         ricalcolaTotale();
     }
 
-    /**
-     * BR-04: transizioni valide.
-     * CREATED → CONFIRMED | ANNULLED
-     * CONFIRMED → IN_DELIVERY | ANNULLED
-     * IN_DELIVERY → DELIVERED
-     */
+    // BR-04: transizioni valide
+
     public void cambiaStato(StatoOrdineEnum nuovoStato)
             throws InvalidStateTransitionException {
         boolean valida = switch (stato) {
@@ -103,10 +85,8 @@ public class Ordine {
         this.stato = nuovoStato;
     }
 
-    /**
-     * Ripristina lo stato senza validazione — usato SOLO dai DAO per il caricamento
-     * da persistenza (lo stato salvato è già stato validato al momento della transizione).
-     */
+    // Ripristina lo stato senza validazione — usato SOLO dai DAO per il caricamento da persis...
+
     public void ripristinaStato(StatoOrdineEnum stato) {
         this.stato = stato;
     }

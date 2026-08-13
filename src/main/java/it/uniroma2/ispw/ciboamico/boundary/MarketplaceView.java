@@ -19,14 +19,8 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto).
- *
- * <p>È un puro layout: delega ogni operazione al
- * {@link MarketplaceUIController} (controller di presentazione disaccoppiato),
- * che orchestra la logica di presentazione e invoca il controller applicativo
- * via Facade. La view scambia solo Bean e applica i risultati ai widget.</p>
- */
+// Boundary JavaFX — Marketplace (UC-04 Ordina Prodotto)
+
 public class MarketplaceView {
 
     private final MarketplaceUIController controller;

@@ -1,13 +1,7 @@
 package it.uniroma2.ispw.ciboamico.bootstrap;
 
-/**
- * Bean di avvio: incapsula la scelta dell'utente a runtime.
- * Raggruppa interfaccia (GUI/CLI) e modalità di persistenza
- * (DEMO/FS/JDBC) in un unico oggetto passato al runner.
- *
- * La configurazione separa la scelta dell'interfaccia da quella della
- * persistenza e viene passata al runner come oggetto unico.
- */
+// Bean di avvio: incapsula la scelta dell'utente a runtime
+
 public final class ApplicationModeBean {
 
     private String interfaccia;

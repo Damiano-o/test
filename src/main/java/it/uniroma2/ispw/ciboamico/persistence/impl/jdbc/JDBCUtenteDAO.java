@@ -6,10 +6,8 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 
 import java.sql.*;
 
-/**
- * DAO JDBC per Utente — PreparedStatement anti SQL-injection (NFR-02).
- * Le eccezioni SQL sono incapsulate in DAOException (checked, NFR-06).
- */
+// DAO JDBC per Utente — PreparedStatement anti SQL-injection (NFR-02)
+
 public class JDBCUtenteDAO implements UtenteDAO {
 
     private Connection getConnection() throws SQLException {

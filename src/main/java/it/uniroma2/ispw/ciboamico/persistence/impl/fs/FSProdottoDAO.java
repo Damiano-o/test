@@ -12,9 +12,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO FS per Prodotto e inventario — JSON persistente (NFR-01).
- */
+// DAO FS per Prodotto e inventario — JSON persistente (NFR-01)
+
 public class FSProdottoDAO implements ProdottoDAO {
 
     private static final Path FILE_CATALOGO = Path.of("data", "prodotti.json");

@@ -4,13 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test di dominio per {@link RuoloVenditore}: transizione di approvazione
- * (BR-02) e ripristino di stato da persistenza.
- *
- * <p>L'invariante di business (solo un venditore
- * APPROVATO pubblica prodotti) è testata sull'Information Expert.</p>
- */
+// Test di dominio per RuoloVenditore: transizione di approvazione (BR-02) e ripristino di...
+
 class RuoloVenditoreTest {
 
     @Test

@@ -17,11 +17,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO JDBC per BuonoPromozionale — tabella piatta (codice, venditore_email, date,
- * tipo_sconto, valore_sconto). Risolve il mismatch relazionale/oggetti ricostruendo
- * la ScontoStrategy tramite ScontoStrategyFactory e il venditore tramite UtenteDAO.
- */
+// DAO JDBC per BuonoPromozionale — tabella piatta (codice, venditore_email, date, tipo_sc...
+
 public class JDBCBuonoDAO implements BuonoDAO {
 
     private final UtenteDAO utenteDAO;

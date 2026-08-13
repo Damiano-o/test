@@ -7,13 +7,8 @@ import it.uniroma2.ispw.ciboamico.control.ui.PaymentUIController;
 import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
-/**
- * Boundary CLI — Pagamento (passo 6 + estensione 6a UC-04).
- * Legge il prodotto in checkout da {@link SessionManager#getOrdineInCorso()},
- * raccoglie i dati carta e delega la conversione esterno→interno + il processo
- * al {@link PaymentUIController} (controller di presentazione condiviso con la
- * GUI), che orchestra il Facade scambiando solo Bean.
- */
+// Boundary CLI — Pagamento (passo 6 + estensione 6a UC-04)
+
 public class PaymentCLIView implements IView {
 
     private final CLIContext ctx;

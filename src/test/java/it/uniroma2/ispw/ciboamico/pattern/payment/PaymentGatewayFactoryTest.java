@@ -8,11 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Test della Simple Factory del PaymentGateway (passo 6 UC-04 / estensione 6a):
- * verifica che la factory restituisca uno StubPaymentGateway e che le due
- * varianti (default con soglia, approvaSempre) si comportino correttamente.
- */
+// Test della Simple Factory del PaymentGateway (passo 6 UC-04 / estensione 6a): verifica...
+
 class PaymentGatewayFactoryTest {
 
     @Test

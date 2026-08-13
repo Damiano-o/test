@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO Demo in-memory per prodotti marketplace e inventario domestico.
- * Stato di istanza: ogni factory ha il proprio spazio dati.
- */
+// DAO Demo in-memory per prodotti marketplace e inventario domestico
+
 public class DemoProdottoDAO implements ProdottoDAO {
 
     private final Map<Long, Prodotto> catalogo = new HashMap<>();

@@ -11,19 +11,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-/**
- * Componenti UI riutilizzabili del design system minimalista.
- * Sidebar di navigazione, header di pagina e card: unica fonte di un layout
- * coerente tra le Boundary JavaFX. Nessuna logica di business: si limita a
- * costruire nodi e gestire la navigazione via {@link Navigator}.
- */
+// Componenti UI riutilizzabili del design system minimalista
+
 public final class UiKit {
 
     private UiKit() {
-        // utility di layout, non istanziabile
+
     }
 
-    /** Root standard: sidebar a sinistra + corpo centrale. */
     public static BorderPane root(Node corpo) {
         BorderPane root = new BorderPane();
         root.setLeft(sidebar());
@@ -33,7 +28,6 @@ public final class UiKit {
         return root;
     }
 
-    /** Pagina con header (titolo+sottotitolo) e corpo scrollabile. */
     public static BorderPane pagina(String titolo, String sottotitolo, Node corpo, String attiva) {
         Label t = new Label(titolo);
         t.getStyleClass().add("screen-title");
@@ -53,17 +47,14 @@ public final class UiKit {
         return root;
     }
 
-    /** Sidebar con voce Home attiva. */
     public static VBox sidebar() {
         return sidebar("home");
     }
 
-    /** Pagina con header; la voce di sidebar evidenziata è {@code attiva}. */
     public static BorderPane pagina(String titolo, String sottotitolo, Node corpo) {
         return pagina(titolo, sottotitolo, corpo, "home");
     }
 
-    /** Sidebar di navigazione con la voce {@code attiva}, adattata al ruolo loggato. */
     public static VBox sidebar(String attiva) {
         Label brand = new Label("CiboAmico");
         brand.getStyleClass().add("brand-title");
@@ -71,11 +62,17 @@ public final class UiKit {
         VBox s = new VBox(2, brand);
         s.getStyleClass().add("sidebar");
 
-        s.getChildren().add(nav("Dashboard", "home", attiva));
-        s.getChildren().add(nav("Marketplace", "marketplace", attiva));
-        s.getChildren().add(nav("Ricette", "ricette", attiva));
-        s.getChildren().add(nav("Inventario", "inventario", attiva));
-        s.getChildren().add(nav("Lista Spesa", "listaspesa", attiva));
+        boolean venditore = isVenditoreLoggato();
+        if (venditore) {
+            s.getChildren().add(nav("Dashboard", "home", attiva));
+            s.getChildren().add(nav("Ordini ricevuti", "home", attiva));
+        } else {
+            s.getChildren().add(nav("Dashboard", "home", attiva));
+            s.getChildren().add(nav("Marketplace", "marketplace", attiva));
+            s.getChildren().add(nav("Ricette", "ricette", attiva));
+            s.getChildren().add(nav("Inventario", "inventario", attiva));
+            s.getChildren().add(nav("Lista Spesa", "listaspesa", attiva));
+        }
         Button esci = new Button("Esci");
         esci.getStyleClass().add("button-outline");
         esci.setMaxWidth(Double.MAX_VALUE);
@@ -86,6 +83,11 @@ public final class UiKit {
         s.getChildren().add(esci);
         VBox.setMargin(esci, new Insets(14, 0, 0, 0));
         return s;
+    }
+
+    private static boolean isVenditoreLoggato() {
+        return SessionManager.getInstance().getLoggedUser() != null
+                && "VENDITORE".equalsIgnoreCase(SessionManager.getInstance().getLoggedUser().getRuoloAttivo());
     }
 
     private static Button nav(String testo, String vista, String attiva) {
@@ -99,14 +101,12 @@ public final class UiKit {
         return b;
     }
 
-    /** Etichetta di sezione in un form. */
     public static Label field(String testo) {
         Label l = new Label(testo);
         l.getStyleClass().add("field-label");
         return l;
     }
 
-    /** Card riutilizzabile: nome, dettaglio, badge colorato di stato. */
     public static VBox card(String nome, String dettaglio, String badge, String badgeClasse) {
         Label n = new Label(nome);
         n.getStyleClass().add("prodotto-nome");
@@ -124,7 +124,6 @@ public final class UiKit {
         return card;
     }
 
-    /** Card semplice (nome + dettaglio, senza badge). */
     public static VBox card(String nome, String dettaglio) {
         Label n = new Label(nome);
         n.getStyleClass().add("prodotto-nome");

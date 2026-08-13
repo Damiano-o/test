@@ -7,10 +7,8 @@ import it.uniroma2.ispw.ciboamico.control.facade.AutenticazioneFacade;
 import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 import it.uniroma2.ispw.ciboamico.exception.AutenticazioneException;
 
-/**
- * Boundary CLI — Login (UC-11). Stesso flusso della LoginView JavaFX,
- * scambia SOLO UtenteBean/AutenticazioneBean con {@link AutenticazioneFacade}.
- */
+// Boundary CLI — Login (UC-11)
+
 public class LoginCLIView implements IView {
 
     private final CLIContext ctx;

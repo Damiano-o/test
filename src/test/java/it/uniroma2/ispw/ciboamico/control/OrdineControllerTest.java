@@ -13,10 +13,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test del flusso di dominio dell'Ordine (UC-04) e del pattern Observer.
- *
- */
+// Test del flusso di dominio dell'Ordine (UC-04) e del pattern Observer
+
 class OrdineControllerTest {
 
     private DemoDAOFactory factory() { return new DemoDAOFactory(); }
@@ -57,10 +55,6 @@ class OrdineControllerTest {
             publisher.clearListeners();
         }
     }
-
-
-
-
 
     @Test
     void testVoceOrdineParziale() throws Exception {

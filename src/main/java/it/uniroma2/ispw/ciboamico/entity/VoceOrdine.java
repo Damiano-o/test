@@ -1,9 +1,7 @@
 package it.uniroma2.ispw.ciboamico.entity;
 
+// Voce d'ordine: prodotto, quantità e prezzo snapshot al momento dell'acquisto
 
-/**
- * Voce d'ordine: prodotto, quantità e prezzo snapshot al momento dell'acquisto.
- */
 public class VoceOrdine {
 
     private final Prodotto prodotto;

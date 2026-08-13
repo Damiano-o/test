@@ -6,13 +6,8 @@ import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoStrategy;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-/**
- * Buono promozionale associato a uno specifico Venditore.
- * Il buono è valido solo all'interno dell'intervallo [dataInizio, dataScadenza]
- * e solo se applicato a un ordine del medesimo Venditore.
- * Lo sconto è calcolato tramite il pattern Strategy (ScontoStrategy),
- * consentendo sconti percentuali o a importo fisso senza modificare l'entità Ordine.
- */
+// Buono promozionale associato a uno specifico Venditore
+
 public class BuonoPromozionale {
 
     private final String codice;
@@ -45,7 +40,6 @@ public class BuonoPromozionale {
         this.strategiaSconto = strategiaSconto;
     }
 
-    /** Verifica che il buono sia attivo alla data corrente di sistema. */
     public boolean isValido(LocalDate dataCorrente) {
         return !dataCorrente.isBefore(dataInizio) && !dataCorrente.isAfter(dataScadenza);
     }
@@ -54,7 +48,6 @@ public class BuonoPromozionale {
         return isValido(LocalDate.now(ZoneId.systemDefault()));
     }
 
-    /** Applica lo sconto all'importo lordo usando la strategia incapsulata. */
     public double applicaSconto(double subtotale) {
         return strategiaSconto.applicaSconto(subtotale);
     }

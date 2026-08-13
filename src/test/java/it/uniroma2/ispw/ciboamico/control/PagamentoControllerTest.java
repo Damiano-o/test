@@ -22,10 +22,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test del controller dell'estensione Pagamento (passo 6 / estensione 6a di
- * UC-04): autorizzazione addebito + submit ordine.
- */
+// Test del controller dell'estensione Pagamento (passo 6 / estensione 6a di UC-04): autor...
+
 class PagamentoControllerTest {
 
     private DemoDAOFactory factory;

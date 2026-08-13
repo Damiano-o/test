@@ -5,10 +5,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import java.time.ZoneId;
 import java.time.LocalDate;
 
-/**
- * Prodotto pubblicato nel marketplace da un venditore.
- * Regole: prezzo > 0 (BR-06), quantità >= 0 (BR-03), non scaduto (BR-01).
- */
+// Prodotto pubblicato nel marketplace da un venditore
+
 public class Prodotto {
 
     private final String nome;
@@ -38,12 +36,8 @@ public class Prodotto {
         this.venditore = venditore;
     }
 
-    /**
-     * Riduce la disponibilità verificando l'invariante di business (BR-03).
-     * Information Expert: la Entity protegge le proprie invarianti; se la
-     * quantità richiesta supera quella disponibile lancia una
-     * BusinessValidationException (estensione 2a UC-04, out of stock).
-     */
+    // Riduce la disponibilità verificando l'invariante di business (BR-03)
+
     public void riduciDisponibilita(int quantita) throws BusinessValidationException {
         if (quantita > quantitaDisponibile) {
             throw new BusinessValidationException(

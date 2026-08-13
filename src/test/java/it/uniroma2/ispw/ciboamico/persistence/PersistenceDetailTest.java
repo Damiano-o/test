@@ -17,7 +17,6 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Test di dettaglio della persistenza rilevante per UC-04. */
 class PersistenceDetailTest {
 
     @BeforeEach

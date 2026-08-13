@@ -21,11 +21,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test del Buono Promozionale: sconto (Strategy), validità temporale, monouso
- * e applicazione all'ordine (estensione 4a UC-04).
- *
- */
+// Test del Buono Promozionale: sconto (Strategy), validità temporale, monouso e applicazi...
+
 class BuonoPromozionaleStrategyTest {
 
     private DemoDAOFactory factory;

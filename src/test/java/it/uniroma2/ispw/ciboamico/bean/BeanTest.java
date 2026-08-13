@@ -8,10 +8,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test Bean: validazione sintattica e getter/setter.
- 
-*/
+// Test Bean: validazione sintattica e getter/setter
+
 class BeanTest {
 
     @Test
@@ -38,8 +36,6 @@ class BeanTest {
         ProdottoBean bean = new ProdottoBean();
         assertThrows(BusinessValidationException.class, () -> bean.setNome("   "));
     }
-
-
 
     @Test
     void testOrdineBean() throws Exception {

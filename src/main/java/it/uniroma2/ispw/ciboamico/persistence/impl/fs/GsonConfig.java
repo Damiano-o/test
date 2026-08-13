@@ -19,10 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Configurazione Gson condivisa: TypeAdapter per java.time (LocalDate/LocalDateTime)
- * — necessari su Java 17+ dove la reflection su java.time è bloccata dal module system.
- */
+// Configurazione Gson condivisa: TypeAdapter per java
+
 public final class GsonConfig {
 
     private static final DateTimeFormatter DATA = DateTimeFormatter.ISO_LOCAL_DATE;

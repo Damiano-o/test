@@ -8,12 +8,8 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 
 import java.util.List;
 
-/**
- * Boundary CLI — Home (atterraggio post-login), scope UC-04 (Ordina un Prodotto).
- * Menu testuale minimale: per il cliente accesso al Marketplace, per il
- * venditore la voce per vedere gli ordini ricevuti (aggiornata via Observer,
- * nessuna business logic qui). L'applicazione implementa il solo UC Ordina.
- */
+// Boundary CLI — Home (atterraggio post-login), scope UC-04 (Ordina un Prodotto)
+
 public class HomeCLIView implements IView {
 
     private final CLIContext ctx;
@@ -64,14 +60,13 @@ public class HomeCLIView implements IView {
         }
     }
 
-    /** Logout: pulisce la sessione (simmetrico alla GUI) così il loop CLI
-     *  ripassa dal login e permette di cambiare utente. */
+    // ripassa dal login e permette di cambiare utente
+
     private void esci() {
         SessionManager.getInstance().logout();
         System.out.println("Arrivederci!");
     }
 
-    /** Mostra gli ordini ricevuti dal venditore loggato (solo lettura dallo store). */
     private void mostraOrdiniRicevuti(UtenteBean utente) {
         String email = utente != null ? utente.getEmail() : null;
         List<OrdineEvent> ricevuti = OrdiniRicevutiStore.getInstance()

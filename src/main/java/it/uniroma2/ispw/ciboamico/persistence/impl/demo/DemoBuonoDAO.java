@@ -7,11 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * DAO Demo in-memory per BuonoPromozionale.
- * Lo spazio dati è condiviso tra le chiamate della stessa factory (come gli altri DAO demo)
- * e isolato tra factory diverse, mantenendo i test indipendenti.
- */
+// DAO Demo in-memory per BuonoPromozionale
+
 public class DemoBuonoDAO implements BuonoDAO {
 
     private final Map<String, BuonoPromozionale> perCodice = new HashMap<>();

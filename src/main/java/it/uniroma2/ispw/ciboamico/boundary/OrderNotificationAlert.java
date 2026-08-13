@@ -7,26 +7,8 @@ import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
-/**
- * ConcreteObserver di presentazione (boundary) dell'evento ordine confermato.
- *
- * <p>Implementa il contratto {@link OrdineEventListener} del pattern Observer:
- * è una delle reazioni possibili alla notifica del {@code OrdineEventPublisher},
- * qui declinata per l'interfaccia grafica (JavaFX). A differenza dei notifier
- * testuali ({@code UtenteNotifier}/{@code VenditoreNotifier}, che loggano e in
- * produzione delegherebbero a un servizio di email), questo observer mostra un
- * {@link Alert} all'utente finale: è il punto in cui la notifica attiva diventa
- * visibile nella View senza accoppiare il dominio alla presentazione.</p>
- *
- * <p>Riceve solo il DTO {@link OrdineEvent} (sola lettura), mai l'entità
- * {@code Ordine}: rispetta l'isolamento dei layer (BCE). L'aggiornamento della
- * UI è demandato al thread JavaFX tramite {@link Platform#runLater}.</p>
- *
- * <p>Il messaggio mostrato dipende dal ruolo dell'utente loggato in
- * {@link SessionManager}: chi ha effettuato l'ordine vede la conferma come
- * cliente; il venditore del prodotto ordinato vede la conferma come venditore.
- * Nessun alert se chi è loggato non è coinvolto nell'evento.</p>
- */
+// ConcreteObserver di presentazione (boundary) dell'evento ordine confermato
+
 public class OrderNotificationAlert implements OrdineEventListener {
 
     @Override

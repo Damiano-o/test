@@ -7,10 +7,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * T05/T06/T07 — Ordine: totale e transizioni di stato (BR-04).
- 
-*/
+// T05/T06/T07 — Ordine: totale e transizioni di stato (BR-04)
+
 class OrdineTest {
 
     private Utente compratore() {

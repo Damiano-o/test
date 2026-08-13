@@ -1,14 +1,9 @@
 package it.uniroma2.ispw.ciboamico.pattern.strategy;
 
+// ConcreteStrategy: sconto percentuale sull'importo lordo
 
-/**
- * ConcreteStrategy: sconto percentuale sull'importo lordo.
- * Esempio: -20% su un totale di 10.00 € -> 8.00 €.
- * Il risultato non scende mai sotto zero.
- */
 public class ScontoPercentualeStrategy implements ScontoStrategy {
 
-    /** Percentuale di sconto in [0,1] (es. 0.20 = 20%). */
     private final double percentuale;
 
     public ScontoPercentualeStrategy(double percentuale) {

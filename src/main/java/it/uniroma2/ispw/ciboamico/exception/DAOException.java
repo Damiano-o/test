@@ -1,10 +1,7 @@
 package it.uniroma2.ispw.ciboamico.exception;
 
-/**
- * Eccezione per gli errori durante l'accesso alla persistenza (DAO).
- * Eredita la struttura (user/technical messaggio, codice errore, timestamp)
- * dalla base {@link CiboAmicoException}.
- */
+// Eccezione per gli errori durante l'accesso alla persistenza (DAO)
+
 public class DAOException extends CiboAmicoException {
 
     public DAOException(String message) {

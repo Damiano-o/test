@@ -6,11 +6,8 @@ import it.uniroma2.ispw.ciboamico.enums.UserErrorMessagesEnum;
 
 import java.util.regex.Pattern;
 
-/**
- * Bean/DTO per la sessione utente — tenuto da SessionManager (UC-11).
- * Segue il pattern BCE: incapsula la validazione sintattica dell'email nel
- * setter (Fail Fast).
- */
+// Bean/DTO per la sessione utente — tenuto da SessionManager (UC-11)
+
 public class UtenteBean {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[\\w.]+$");
@@ -24,14 +21,12 @@ public class UtenteBean {
 
     public String getEmail() { return email; }
 
-    /** Imposta l'email validandone la forma sintattica. */
     public void setEmail(String email) throws AutenticazioneException {
         this.email = validaEmail(email);
     }
 
-    /**
-     * Controllo sintattico dell'email (Fail Fast).
-     */
+    // Controllo sintattico dell'email (Fail Fast)
+
     private static String validaEmail(String email) throws AutenticazioneException {
         if (email == null || !EMAIL_PATTERN.matcher(email.trim()).matches()) {
             throw new AutenticazioneException(

@@ -19,12 +19,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test del controller principale di UC-04 Ordina Prodotto: catalogo e avvio
- * del checkout. La logica di business delle estensioni (buono, pagamento,
- * submit ordine) è testata dai rispettivi sottocontroller
- * ({@link ApplicaBuonoPromozionaleControllerTest}, {@link PagamentoControllerTest}).
- */
+// Test del controller principale di UC-04 Ordina Prodotto: catalogo e avvio del checkout
+
 class OrdinaProdottoControllerTest {
 
     private DemoDAOFactory factory;

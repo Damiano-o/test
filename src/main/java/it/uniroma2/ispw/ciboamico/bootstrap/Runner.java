@@ -10,39 +10,18 @@ import it.uniroma2.ispw.ciboamico.boundary.OrdiniRicevutiStore;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DemoDAOFactory;
 
-/**
- * Runner: unico punto di composizione dell'applicazione (in stile Layered /
- * Abstract Factory). Applica la scelta dell'utente
- * (ApplicationModeBean), compone il wiring di avvio e innesca l'interfaccia
- * selezionata tramite un callback ({@link Runnable}).
- *
- * <p>Responsabilità del compositore: modalità di persistenza, factory dei
- * dati (OrdineLazyFactory), pattern Observer (le notifiche raggiungono in
- * produzione sia compratore che venditore), famiglia di boundary
- * (ViewFactory, Abstract Factory) e seed DEMO. Nessuna di queste azioni va
- * duplicata negli entry point: essi si limitano a selezionare l'interfaccia
- * (GUI/CLI), che viene avviata DOPO che la composizione è completa.</p>
- *
- * <p>Separazione BCE: AvvioMenu (boundary, input) -&gt; Runner (control,
- * coordinamento) -&gt; MainApplication/MainCLI (avvio interfaccia).</p>
- */
+// Runner: unico punto di composizione dell'applicazione (in stile Layered / Abstract Fact...
+
 public final class Runner {
 
-    /** Protegge da doppie composizioni (idempotenza di avvio). */
     private static boolean composto = false;
 
     private Runner() {
-        // utility, non istanziabile
+
     }
 
-    /**
-     * Compone il sistema dalla scelta dell'utente e innesca l'interfaccia.
-     * Idempotente: una seconda chiamata è un no-op con avviso.
-     *
-     * @param scelta  interfaccia (GUI/CLI) e modalità di persistenza (DEMO/FS/JDBC)
-     * @param args    argomenti della riga di comando (passati all'interfaccia)
-     * @param startUp callback che avvia l'interfaccia selezionata (dopo la composizione)
-     */
+    // Compone il sistema dalla scelta dell'utente e innesca l'interfaccia
+
     public static synchronized void avvia(ApplicationModeBean scelta, String[] args, Runnable startUp) {
         if (composto) {
             System.err.println("Runner.avvia chiamato due volte: composizione già eseguita.");
@@ -91,7 +70,6 @@ public final class Runner {
         startUp.run();
     }
 
-    /** Seed DEMO condiviso tra GUI e CLI (doppia interfaccia). */
     private static void seedDemoDataSeNecessario(ApplicationModeManager modeManager) {
         if (ApplicationModeManager.MODE_DEMO.equals(modeManager.getActiveMode())
                 && modeManager.getDAOFactory() instanceof DemoDAOFactory demo) {

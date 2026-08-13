@@ -12,15 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
-/**
- * Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione 6a UC-04).
- *
- * <p>È un puro layout: legge l'ordine in checkout dalla sessione, raccoglie i
- * dati carta e delega l'autorizzazione al
- * {@link PaymentUIController} (controller di presentazione disaccoppiato), che
- * invoca il controller applicativo via Facade. La view scambia solo Bean ed
- * applica l'esito ai widget.</p>
- */
+// Boundary JavaFX — Schermata di Pagamento (passo 6 + estensione 6a UC-04)
+
 public class PaymentView {
 
     private final PaymentUIController controller;

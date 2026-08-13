@@ -12,17 +12,8 @@ import it.uniroma2.ispw.ciboamico.exception.DAOException;
 import it.uniroma2.ispw.ciboamico.persistence.dao.UtenteDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-/**
- * Controller di UC-11 Autenticazione (incluso dagli altri UC).
- *
- * <p>Verifica la correttezza delle credenziali (delegata alla Entity Utente,
- * Information Expert). Controller applicativo <b>state-less</b>:
- * riceve il bean credenziali già costruito dalla boundary via
- * {@link AutenticazioneBean#fromCredenziali(String, String)}, non costruisce
- * bean di input né tocca {@code SessionManager} (la sessione la gestisce il
- * Facade che orchestreggia lo use case). Qui resta la verifica semantica
- * (esistenza account + password) e la costruzione del bean di output.
- */
+// Controller di UC-11 Autenticazione (incluso dagli altri UC)
+
 public class AutenticazioneController {
 
     private final UtenteDAO utenteDAO;
@@ -31,28 +22,17 @@ public class AutenticazioneController {
         this.utenteDAO = factory.getUtenteDAO();
     }
 
-    /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public AutenticazioneController() {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    /**
-     * Tenta l'accesso: verifica esistenza account e password (Request del bean
-     * credenziali già costruito dalla boundary). Unico metodo pubblico
-     * (niente overload), state-less: non costruisce bean di input né tocca
-     * {@code SessionManager}.
-     *
-     * @param credenziali credenziali inserite nella view
-     * @return UtenteBean con i dati dell'utente autenticato (bean di output)
-     * @throws AutenticazioneException se le credenziali non sono corrette
-     * @throws DAOException se l'accesso ai dati fallisce
-     */
+    // Tenta l'accesso: verifica esistenza account e password (Request del bean credenziali gi...
+
     public UtenteBean login(AutenticazioneBean credenziali)
             throws AutenticazioneException, DAOException {
         return autentica(credenziali);
     }
 
-    /** Autentica email+password già validate: lookup DAO e verifica password. */
     private UtenteBean autentica(AutenticazioneBean credenziali)
             throws AutenticazioneException, DAOException {
         Utente utente = utenteDAO.findByEmail(credenziali.getEmail());
@@ -76,11 +56,8 @@ public class AutenticazioneController {
         return bean;
     }
 
-    /**
-     * Traduce i ruoli dell'utente in una etichetta semantica stabile per la
-     * presentazione. Un utente può avere più ruoli (Whole-Part): si privilegia
-     * il venditore approvato, altrimenti il ruolo più specifico disponibile.
-     */
+    // Traduce i ruoli dell'utente in una etichetta semantica stabile per la presentazione
+
     private String ruoloAttivoDi(Utente utente) {
         if (utente.isVenditoreApprovato()) {
             return "VENDITORE";
@@ -91,7 +68,6 @@ public class AutenticazioneController {
         return "CLIENTE";
     }
 
-    /** Offusca l'email nei log (privacy). */
     private String mask(String email) {
         if (email == null) {
             return "null";

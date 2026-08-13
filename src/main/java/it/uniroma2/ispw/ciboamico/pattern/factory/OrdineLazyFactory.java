@@ -10,14 +10,8 @@ import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Factory con inizializzazione lazy e cache degli ordini creati nella sessione.
- * L'identificativo viene richiesto al DAO, che conosce la propria strategia
- * di generazione degli id. L'istanza unica è gestita tramite un container
- * statico accesso in modo {@code synchronized} (thread-safe), con una
- * {configure(DAOFactory)} esplicita per poterla resettare tra le modalità
- * e nei test.
- */
+// Factory con inizializzazione lazy e cache degli ordini creati nella sessione
+
 public final class OrdineLazyFactory {
 
     private final OrdineDAO ordineDAO;
@@ -31,13 +25,8 @@ public final class OrdineLazyFactory {
         private static OrdineLazyFactory INSTANCE;
     }
 
-    /**
-     * Configura la factory con la DAOFactory attiva (chiamata al bootstrap).
-     * Il punto di configurazione è unico nel compositore {@code Runner}:
-     * al riavvio (o cambio modalità) viene ricreata l'istanza con la factory
-     * corrente. Separata da getInstance() per evitare doppia responsabilità
-     * (PMD SingleMethodSingleton).
-     */
+    // Configura la factory con la DAOFactory attiva (chiamata al bootstrap)
+
     public static synchronized void configure(DAOFactory factory) {
         if (factory == null) {
             throw new IllegalArgumentException("La DAOFactory di configurazione non può essere nulla.");
@@ -45,7 +34,6 @@ public final class OrdineLazyFactory {
         Container.INSTANCE = new OrdineLazyFactory(factory);
     }
 
-    /** Istanza configurata (da usare dopo il bootstrap); fallisce se non è stata chiamata configure(). */
     public static synchronized OrdineLazyFactory getInstance() {
         if (Container.INSTANCE == null) {
             throw new IllegalStateException("OrdineLazyFactory non configurata: chiamare configure(DAOFactory) prima (bootstrap).");
@@ -53,10 +41,8 @@ public final class OrdineLazyFactory {
         return Container.INSTANCE;
     }
 
-    /**
-     * Crea un nuovo ordine in stato CREATED assegnando l'id dal DAO.
-     * L'ordine viene aggiunto alla cache in RAM (non ancora persistito).
-     */
+    // Crea un nuovo ordine in stato CREATED assegnando l'id dal DAO
+
     public Ordine newOrdine(Utente compratore, Utente venditore)
             throws BusinessValidationException, DAOException {
         long id = ordineDAO.getNextId();
@@ -65,12 +51,10 @@ public final class OrdineLazyFactory {
         return ordine;
     }
 
-    /** Ordini creati nella sessione corrente (cache in RAM). */
     public List<Ordine> getCacheOrdini() {
         return new ArrayList<>(cacheOrdini);
     }
 
-    /** Resetta la cache e l'istanza (per test e cambio modalità). */
     public static synchronized void reset() {
         Container.INSTANCE = null;
     }

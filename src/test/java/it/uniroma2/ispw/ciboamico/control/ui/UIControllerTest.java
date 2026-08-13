@@ -24,11 +24,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test dei controller grafici di UC-04 (Marketplace/Pagamento): verifica che
- * coordino l'interazione View→controller applicativo, indipendentemente dalla
- * UI (testabili in isolamento).
- */
+// Test dei controller grafici di UC-04 (Marketplace/Pagamento): verifica che coordino l'i...
+
 class UIControllerTest {
 
     private DemoDAOFactory factory;

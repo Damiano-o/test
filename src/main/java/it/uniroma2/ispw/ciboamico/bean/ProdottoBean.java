@@ -4,11 +4,8 @@ import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
 
 import java.time.LocalDate;
 
-/**
- * Bean/DTO: unico canale Boundary→Control per i dati di inventario.
- * Segue il pattern BCE: incapsula la validazione sintattica dei dati
- * obbligatori in {@code validate()} (e la presenza del prodotto).
- */
+// Bean/DTO: unico canale Boundary→Control per i dati di inventario
+
 public class ProdottoBean {
 
     private String nome;
@@ -20,7 +17,6 @@ public class ProdottoBean {
 
     public Double getPrezzo() { return prezzo; }
 
-    /** Imposta il prezzo (obbligatorio, non positivo non valido). */
     public void setPrezzo(Double prezzo) throws BusinessValidationException {
         this.prezzo = validaPrezzo(prezzo);
     }
@@ -37,7 +33,6 @@ public class ProdottoBean {
 
     public String getNome() { return nome; }
 
-    /** Imposta il nome (obbligatorio, non vuoto). */
     public void setNome(String nome) throws BusinessValidationException {
         this.nome = validaNome(nome);
     }
@@ -54,7 +49,6 @@ public class ProdottoBean {
 
     public Double getQuantita() { return quantita; }
 
-    /** Imposta la quantità (obbligatoria, non negativa). */
     public void setQuantita(Double quantita) throws BusinessValidationException {
         this.quantita = validaQuantita(quantita);
     }
@@ -71,7 +65,6 @@ public class ProdottoBean {
 
     public LocalDate getScadenza() { return scadenza; }
 
-    /** Imposta la scadenza (obbligatoria). */
     public void setScadenza(LocalDate scadenza) throws BusinessValidationException {
         this.scadenza = validaScadenza(scadenza);
     }
@@ -91,7 +84,6 @@ public class ProdottoBean {
     public String getUnitaMisura() { return unitaMisura; }
     public void setUnitaMisura(String unitaMisura) { this.unitaMisura = unitaMisura; }
 
-    /** Valida che tutti i dati obbligatori del prodotto siano presenti. */
     public void validate() throws BusinessValidationException {
         validaNome(nome);
         validaQuantita(quantita);

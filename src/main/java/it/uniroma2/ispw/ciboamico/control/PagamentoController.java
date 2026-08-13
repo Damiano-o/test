@@ -24,17 +24,8 @@ import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-/**
- * Controller dello Use Case estensione "Pay" (passo 6 / estensione 6a di
- * UC-04 Ordina un Prodotto).
- *
- * <p>Separa l'autorizzazione dell'addebito dal successivo submit dell'ordine
- * dal controller principale di UC-04, rendendo esplicita l'estensione del
- * pagamento nel modello dei casi d'uso. Il controller principale lo istanzia
- * on-demand (GRASP: Low Coupling), come nel pattern di riferimento. La
- * boundary scambia esclusivamente Bean (BCE): da un lato {@link OrdineBean}
- * e {@link UtenteBean}, dall'altro i {@link PaymentInfoBean}.</p>
- */
+// Controller dello Use Case estensione "Pay" (passo 6 / estensione 6a di UC-04 Ordina un...
+
 public class PagamentoController {
 
     private final OrdineDAO ordineDAO;
@@ -42,11 +33,8 @@ public class PagamentoController {
     private final BuonoDAO buonoDAO;
     private final PaymentGateway paymentGateway;
 
-    /**
-     * Costruttore principale: riceve la {@link DAOFactory} attiva (testabile).
-     *
-     * @param factory factory di persistenza da cui risolvere i DAO
-     */
+    // Costruttore principale: riceve la DAOFactory attiva (testabile)
+
     public PagamentoController(DAOFactory factory) {
         this.ordineDAO = factory.getOrdineDAO();
         this.prodottoDAO = factory.getProdottoDAO();
@@ -54,22 +42,12 @@ public class PagamentoController {
         this.paymentGateway = PaymentGatewayFactory.createGateway();
     }
 
-    /** Costruttore no-arg: factory risolta dal gestore della modalità. */
     public PagamentoController() {
         this(ApplicationModeManager.getInstance().getDAOFactory());
     }
 
-    /**
-     * Autorizza l'addebito (passo 6 / estensione 6a) e sottomette l'ordine.
-     * Il {@link PaymentInfoBean} arriva già convertito e validato dalla
-     * boundary/controller di presentazione: il controller applicativo
-     * riceve i dati in formato interno, non stringhe grezze).
-     *
-     * @param bean    ordine da sottomettere dopo l'autorizzazione
-     * @param utente  utente autenticato
-     * @param payment dati di pagamento validati
-     * @return OrdineBean con l'esito della transazione
-     */
+    // Autorizza l'addebito (passo 6 / estensione 6a) e sottomette l'ordine
+
     public OrdineBean processaPagamento(OrdineBean bean, UtenteBean utente, PaymentInfoBean payment)
             throws BusinessValidationException, DAOException {
         if (bean == null) {
@@ -94,14 +72,8 @@ public class PagamentoController {
         return submitOrdine(bean, utente);
     }
 
-    /**
-     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine
-     * CREATED + notifica. Invocato dopo l'autorizzazione dell'addebito.
-     *
-     * @param bean   ordine da sottomettere
-     * @param utente utente autenticato
-     * @return OrdineBean con id, totale e stato dell'ordine creato
-     */
+    // Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica
+
     public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente)
             throws BusinessValidationException, DAOException {
         if (utente == null) {

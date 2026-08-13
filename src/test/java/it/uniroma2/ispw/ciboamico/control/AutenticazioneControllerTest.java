@@ -15,15 +15,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * T10/T11/T12 — Autenticazione: login valido, email non valida, password errata.
- *
- * <p>Il controller applicativo è state-less: riceve il bean credenziali già
- * costruito (conversione esterno→interno a carico della view via
- * {@link AutenticazioneBean#fromCredenziali}). La gestione della sessione è
- * di responsabilità del Facade (vedi {@code AutenticazioneFacadeTest}).</p>
- *
- */
+// T10/T11/T12 — Autenticazione: login valido, email non valida, password errata
+
 class AutenticazioneControllerTest {
 
     private DAOFactory factoryConUtente(Utente utente) throws DAOException {

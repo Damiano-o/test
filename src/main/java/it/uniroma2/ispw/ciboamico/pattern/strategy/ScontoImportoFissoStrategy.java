@@ -1,10 +1,7 @@
 package it.uniroma2.ispw.ciboamico.pattern.strategy;
 
+// ConcreteStrategy: sconto a importo fisso (es
 
-/**
- * ConcreteStrategy: sconto a importo fisso (es. -5.00 €).
- * L'importo finale non scende mai sotto lo zero.
- */
 public class ScontoImportoFissoStrategy implements ScontoStrategy {
 
     private final double importo;

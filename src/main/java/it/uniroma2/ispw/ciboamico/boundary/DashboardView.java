@@ -16,12 +16,8 @@ import javafx.scene.layout.VBox;
 
 import java.util.List;
 
-/**
- * Boundary JavaFX — Dashboard (home). Vetrina dell'applicazione: header di
- * benvenuto con avatar, KPI riassuntivi e le quattro funzionalità come card
- * navigabili. Solo interfaccia; la logica delle funzionalità è futura
- * (progetto dimostrativo).
- */
+// Boundary JavaFX — Dashboard (home)
+
 public class DashboardView {
 
     public Parent build() {
@@ -56,7 +52,6 @@ public class DashboardView {
         return UiKit.pagina("Dashboard", "Cosa vuoi fare?", corpo, "home");
     }
 
-    /** Corpo per il cliente: funzionalità di acquisto/gestione domestica. */
     private VBox corpoCliente(HBox header) {
         HBox kpiRow = new HBox(14,
                 kpi("🍅 Spreco evitato", "12,4 kg"),
@@ -83,7 +78,6 @@ public class DashboardView {
         return corpo;
     }
 
-    /** Corpo per il venditore: nessuna scheda d'acquisto, solo stato venditore. */
     private VBox corpoVenditore(HBox header) {
         Label nota = new Label("Sei un venditore approvato: i tuoi prodotti sono "
                 + "pubblicati nel marketplace locale e puoi ricevere ordini dai clienti.");
@@ -143,7 +137,6 @@ public class DashboardView {
         return corpo;
     }
 
-    /** KPI riassuntivo (valore + etichetta). */
     private VBox kpi(String testo, String valore) {
         Label v = new Label(valore);
         v.getStyleClass().add("kpi-value");
@@ -156,7 +149,6 @@ public class DashboardView {
         return box;
     }
 
-    /** Card cliccabile di una funzionalità. */
     private Button card(String icona, String titolo, String sottotitolo, String vista) {
         Label ic = new Label(icona);
         ic.getStyleClass().add("icon");

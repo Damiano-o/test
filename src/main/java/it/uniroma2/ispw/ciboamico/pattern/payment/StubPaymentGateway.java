@@ -4,18 +4,12 @@ import it.uniroma2.ispw.ciboamico.exception.PaymentRejectedException;
 
 import java.util.logging.Logger;
 
-/**
- * Stub in-memory del {@link PaymentGateway} (nessun PSP reale).
- * Simula in modo sincrono l'autorizzazione: esito positivo predefinito,
- * negativo se l'importo supera una soglia simulata. Coerente con gli stub
- * della persistenza in-memory (DemoDAOFactory): nessuna rete, deterministico
- * e testabile. L'estensione 6a è modellata lanciando {@link PaymentRejectedException}.
- */
+// Stub in-memory del PaymentGateway (nessun PSP reale)
+
 public final class StubPaymentGateway implements PaymentGateway {
 
     private static final Logger LOG = Logger.getLogger(StubPaymentGateway.class.getName());
 
-    /** Soglia simulata oltre la quale il pagamento è rifiutato. */
     private static final long SOGLIA_RIFIUTO = 500_00L; // 500,00 EUR in centesimi
 
     private final boolean approvaSempre;
@@ -24,7 +18,6 @@ public final class StubPaymentGateway implements PaymentGateway {
         this(false);
     }
 
-    /** Costruttore per test deterministici. */
     public StubPaymentGateway(boolean approvaSempre) {
         this.approvaSempre = approvaSempre;
     }

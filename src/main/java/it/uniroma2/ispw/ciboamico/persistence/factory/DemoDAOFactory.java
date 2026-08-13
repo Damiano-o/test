@@ -20,12 +20,8 @@ import it.uniroma2.ispw.ciboamico.pattern.strategy.ScontoPercentualeStrategy;
 
 import java.time.LocalDate;
 
-/**
- * Factory DEMO: DAO in-memory con dati seed (utenti, prodotti, ricette).
- * Riutilizza le stesse istanze DAO: lo spazio dati è condiviso tra chiamate
- * della stessa factory (ma isolato tra factory diverse — test indipendenti).
- * Il seed rende l'applicazione utilizzabile in modalità demo senza DB.
- */
+// Factory DEMO: DAO in-memory con dati seed (utenti, prodotti, ricette)
+
 public class DemoDAOFactory implements DAOFactory {
 
     private final UtenteDAO utenteDAO = new DemoUtenteDAO();
@@ -37,11 +33,8 @@ public class DemoDAOFactory implements DAOFactory {
     @Override
     public BuonoDAO getBuonoDAO() { return buonoDAO; }
 
-    /**
-     * Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO).
-     * Idempotente: una sola esecuzione anche se invocata più volte
-     * (riavvio della scena, doppio start, test), così i dati non duplicano.
-     */
+    // Carica dati dimostrativi (chiamata dal bootstrap in modalità DEMO)
+
     public synchronized void seedDemoData() throws DAOException {
         if (seeded) {
             return;
@@ -54,7 +47,6 @@ public class DemoDAOFactory implements DAOFactory {
         }
     }
 
-    /** Carica dati demo dello scope UC-04: 2 utenti (Cliente, Venditore), prodotti, buono. */
     private void seed() throws BusinessValidationException, DAOException {
         // Cliente che ordina
         Utente mario = new Utente("Mario", "mario@cibo.it", Utente.hashPassword("password123"));

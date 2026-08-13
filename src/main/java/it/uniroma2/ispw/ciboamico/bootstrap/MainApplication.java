@@ -11,18 +11,8 @@ import it.uniroma2.ispw.ciboamico.boundary.RicetteView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Entry point JavaFX dell'applicazione.
- *
- * <p>Non è un compositore: la composizione (modalità, factory, Observer,
- * famiglia di view, seed DEMO) avviene in {@link Runner} (stile Layered).
- * Questo file si limita a registrare le Boundary nel {@link Navigator} e ad
- * avviare la Login. Se invocato standalone, delega la composizione a
- * {@link Runner#avvia(ApplicationModeBean, String[], Runnable)}.</p>
- *
- * <p>Flusso: Main -&gt; Runner (composizione) -&gt; MainApplication.launch -&gt;
- * start() -&gt; Navigator -&gt; Login.</p>
- */
+// Entry point JavaFX dell'applicazione
+
 public final class MainApplication extends Application {
 
     private final ApplicationModeManager modeManager;
@@ -52,7 +42,6 @@ public final class MainApplication extends Application {
         navigator.switchTo("login");
     }
 
-    /** Entry point standalone: delega la composizione completa a Runner. */
     public static void main(String[] args) {
         ApplicationModeBean bean = new ApplicationModeBean();
         bean.setInterfaccia("gui");
@@ -65,10 +54,8 @@ public final class MainApplication extends Application {
         System.out.println("CiboAmico in modalità: " + manager.getActiveMode());
     }
 
-    /**
-     * Innesco dell'interfaccia GUI dopo che {@link Runner} ha composto il
-     * sistema. {@code launch} avvia il runtime JavaFX e invoca {@code start}.
-     */
+    // Innesco dell'interfaccia GUI dopo che Runner ha composto il sistema
+
     public static void avviaViaRunner() {
         launch(new String[0]);
     }

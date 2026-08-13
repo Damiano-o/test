@@ -8,12 +8,8 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
-/**
- * Reverse-engineering ausiliario: legge le classi Java reali del progetto e
- * genera un file PlantUML (class diagram design-level) coerente con il codice,
- * assegnando gli stereotipi BCE in base al package (boundary/control/entity/bean/DAO).
- * Output: target/uml/design-level.puml (poi renderizzato con plantuml.jar).
- */
+// Reverse-engineering ausiliario: legge le classi Java reali del progetto e genera un fil...
+
 public final class GeneraClassDiagram {
 
     private static final Path SRC = Path.of("src", "main", "java");

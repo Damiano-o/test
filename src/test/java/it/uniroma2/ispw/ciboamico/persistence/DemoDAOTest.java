@@ -14,7 +14,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Test dei DAO in memoria utilizzati dal flusso UC-04. */
 class DemoDAOTest {
 
     @Test

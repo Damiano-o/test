@@ -19,12 +19,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO FS per BuonoPromozionale — persistenza JSON (Gson).
- * Risolve il mismatch documentale/oggetti: serializza un DTO piatto
- * (senza l'interfaccia ScontoStrategy né RuoloVenditore) e, in lettura, ricostruisce
- * la Strategy tramite ScontoStrategyFactory e l'entità tramite UtenteDAO.
- */
+// DAO FS per BuonoPromozionale — persistenza JSON (Gson)
+
 public class FSBuonoDAO implements BuonoDAO {
 
     private static final Path FILE = Path.of("data", "buoni.json");
@@ -35,7 +31,6 @@ public class FSBuonoDAO implements BuonoDAO {
         this.utenteDAO = utenteDAO;
     }
 
-    /** DTO piatto usato da Gson: niente interfaccia Strategy, solo dati primitivi. */
     static class BuonoJsonDTO {
         String codice;
         String venditoreEmail;

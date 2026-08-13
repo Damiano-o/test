@@ -6,11 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
-/**
- * Boundary JavaFX — Ricette (demo). Solo interfaccia: elenca ricette di
- * esempio compatibili con ingredienti in dispensa e mostra qualche dettaglio.
- * La logica di generazione ricette/ingredienti non è implementata.
- */
+// Boundary JavaFX — Ricette (demo)
+
 public class RicetteView {
 
     public Parent build() {

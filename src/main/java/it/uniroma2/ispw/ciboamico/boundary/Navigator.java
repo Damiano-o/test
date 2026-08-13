@@ -7,11 +7,8 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Singleton: isola lo Stage JavaFX e gestisce il cambio schermata.
- * Le view si registrano con un nome simbolico; switchTo sostituisce la root
- * della Scene senza ricrearla (minimalismo, nessun CSS/FXML).
- */
+// Singleton: isola lo Stage JavaFX e gestisce il cambio schermata
+
 public final class Navigator {
 
     private static Navigator instance;
@@ -35,7 +32,6 @@ public final class Navigator {
         registry.put(viewName, factory);
     }
 
-    /** Cambia schermata: crea la Scene la prima volta, poi sostituisce la root. */
     public void switchTo(String viewName) {
         ViewBuilder factory = registry.get(viewName);
         if (factory == null) {
@@ -52,7 +48,6 @@ public final class Navigator {
         stage.show();
     }
 
-    /** Scene corrente della GUI. */
     public Scene getScene() {
         return stage.getScene();
     }

@@ -1,10 +1,7 @@
 package it.uniroma2.ispw.ciboamico.enums;
 
-/**
- * Messaggi tecnici (per il log) usati dalle eccezioni di dominio. Fonte
- * testuale centralizzata che mantiene coerente il layer di errore, senza
- * duplicare stringhe nei punti di lancio.
- */
+// Messaggi tecnici (per il log) usati dalle eccezioni di dominio
+
 public enum ExceptionMessagesEnum {
 
     EMAIL_FORMAT("Email address provided doesn't match with correct email format"),

@@ -17,7 +17,6 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Test mirati ad alzare la coverage LINE su entity, DAO Demo, bean e strategie. */
 class EntityDaosCoverageTest {
 
     private Utente utente(String email) {

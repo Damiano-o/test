@@ -11,9 +11,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO JDBC per Ordine — salvataggio stato e totale.
- */
+// DAO JDBC per Ordine — salvataggio stato e totale
+
 public class JDBCOrdineDAO implements OrdineDAO {
 
     private static final String COL_COMPRATORE = "compratore_email";

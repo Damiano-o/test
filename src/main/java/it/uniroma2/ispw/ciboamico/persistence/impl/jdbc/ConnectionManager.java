@@ -6,13 +6,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Gestione centralizzata della connessione JDBC.
- * Le credenziali NON sono hardcoded nel bytecode: vengono lette dal file
- * {@code config.properties} tramite {@link AppConfig} (unico punto d'accesso
- * alla configurazione, DRY), con fallback a valori di sviluppo locali.
- * (L'intercambiabilità DEMO/FS/JDBC è già mediata da {@code DAOFactory}.)
- */
+// Gestione centralizzata della connessione JDBC
+
 public final class ConnectionManager {
 
     private static final String URL = AppConfig.getInstance().getDbUrl();

@@ -1,11 +1,7 @@
 package it.uniroma2.ispw.ciboamico.pattern.strategy;
 
-/**
- * Simple Factory per la ricostruzione delle ScontoStrategy a partire dai dati
- * piatti della persistenza (tipo + valore). Concentra in un unico punto la logica
- * di conversione stringa/valore -> strategy concreta, preservando Open/Closed:
- * un nuovo tipo di sconto richiede solo un nuovo ramo qui, senza toccare i DAO.
- */
+// Simple Factory per la ricostruzione delle ScontoStrategy a partire dai dati piatti dell...
+
 public final class ScontoStrategyFactory {
 
     public static final String TIPO_PERCENTUALE = "PERCENTUALE";

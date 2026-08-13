@@ -7,10 +7,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità (BR-03).
- 
-*/
+// T08/T09 — Prodotto: validazioni prezzo (BR-06) e quantità (BR-03)
+
 class ProdottoTest {
 
     private RuoloVenditore venditoreApprovato() {

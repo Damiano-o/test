@@ -1,10 +1,7 @@
 package it.uniroma2.ispw.ciboamico.enums;
 
-/**
- * Messaggi mostrati all'utente finale (titoli ed errori) dalla UI. Fonte
- * testuale centralizzata per mantenere chiari e coerenti i testi sul confine
- * applicativo.
- */
+// Messaggi mostrati all'utente finale (titoli ed errori) dalla UI
+
 public enum UserErrorMessagesEnum {
 
     /* === TITLES === */

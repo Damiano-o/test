@@ -4,11 +4,8 @@ import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
-/**
- * Abstract Factory concreta — famiglia CLI delle Boundary (scope UC-04).
- * Rispetto alla famiglia JavaFX, crea viste testuali (Scanner) che
- * chiamano gli STESSI controller applicativi via Bean.
- */
+// Abstract Factory concreta — famiglia CLI delle Boundary (scope UC-04)
+
 public class CLIViewFactory extends ViewFactory {
 
     private final CLIContext ctx;

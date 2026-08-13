@@ -4,22 +4,14 @@ import it.uniroma2.ispw.ciboamico.boundary.cli.CLIContext;
 
 import java.util.Scanner;
 
-/**
- * Boundary di avvio: menu interattivo con cui l'utente sceglie
- * l'interfaccia e la modalità di persistenza.
- *
- * Loop di validazione: input non valido -&gt; ripete la domanda
- * (mai crashare su digitazione errata).
- * Uso lo scanner condiviso di CLIContext: UN solo canale su System.in
- * (evita lo Scanner multiplo che perde input via pipe).
- */
+// Boundary di avvio: menu interattivo con cui l'utente sceglie l'interfaccia e la modalit...
+
 public final class AvvioMenu {
 
     private AvvioMenu() {
-        // utility, non istanziabile
+
     }
 
-    /** Mostra il menu e restituisce la scelta dell'utente come bean. */
     public static ApplicationModeBean chiediScelta() {
         System.out.println("=========================================");
         System.out.println("         CIBOAMICO — avvio");

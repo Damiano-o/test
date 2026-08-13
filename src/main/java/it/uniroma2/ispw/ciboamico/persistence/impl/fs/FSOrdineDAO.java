@@ -12,9 +12,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO FS per Ordine — JSON persistente.
- */
+// DAO FS per Ordine — JSON persistente
+
 public class FSOrdineDAO implements OrdineDAO {
 
     private static final Path FILE = Path.of("data", "ordini.json");

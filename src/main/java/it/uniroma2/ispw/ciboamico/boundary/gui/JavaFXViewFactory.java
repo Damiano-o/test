@@ -4,12 +4,8 @@ import it.uniroma2.ispw.ciboamico.boundary.IView;
 import it.uniroma2.ispw.ciboamico.boundary.Navigator;
 import it.uniroma2.ispw.ciboamico.boundary.ViewFactory;
 
-/**
- * Abstract Factory concreta — famiglia GUI (JavaFX) delle Boundary (scope UC-04).
- * Le viste JavaFX sono registrate nel Navigator da MainApplication; questa
- * factory le espone attraverso il contratto comune {@code IView}, delegando
- * la visualizzazione al Navigator (switchTo).
- */
+// Abstract Factory concreta — famiglia GUI (JavaFX) delle Boundary (scope UC-04)
+
 public class JavaFXViewFactory extends ViewFactory {
 
     @Override

@@ -8,14 +8,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
-/**
- * Boundary JavaFX — Inventario (demo). Solo interfaccia: tabella dei prodotti
- * in dispensa con quantità e scadenza (dati d'esempio). La logica di
- * tracciamento scorte non è implementata.
- */
+// Boundary JavaFX — Inventario (demo)
+
 public class InventarioView {
 
-    /** Riga demo della tabella inventario. */
     public static class VoceInventarioDemo {
         private final String nome;
         private final String quantita;
@@ -32,11 +28,8 @@ public class InventarioView {
         public String getScadenza() { return scadenza; }
     }
 
-    /**
-     * Nota: PropertyValueFactory usa reflection sulla property (nome/quantita/
-     * scadenza); il warning unchecked è intrinseco all'API JavaFX, non del
-     * nostro codice, perciò viene contenuto al metodo.
-     */
+    // Nota: PropertyValueFactory usa reflection sulla property (nome/quantita/ scadenza)
+
     @SuppressWarnings("unchecked")
     public Parent build() {
         TableView<VoceInventarioDemo> tabella = new TableView<>();

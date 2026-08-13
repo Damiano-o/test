@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Copertura completa di ScontoStrategyFactory (Simple Factory dei pattern
- * Strategy di sconto): ogni ramo (percentuale, importo fisso, tipo ignoto)
- * deve produrre la strategia corretta o l'eccezione prevista.
- */
+// Copertura completa di ScontoStrategyFactory (Simple Factory dei pattern Strategy di sco...
+
 class ScontoStrategyFactoryTest {
 
     @Test

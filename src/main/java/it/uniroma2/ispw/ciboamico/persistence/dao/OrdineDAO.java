@@ -5,9 +5,8 @@ import it.uniroma2.ispw.ciboamico.exception.DAOException;
 
 import java.util.List;
 
-/**
- * Interfaccia DAO per Ordine.
- */
+// Interfaccia DAO per Ordine
+
 public interface OrdineDAO {
 
     Ordine save(Ordine ordine) throws DAOException;
@@ -15,7 +14,7 @@ public interface OrdineDAO {
     List<Ordine> findByVenditore(String venditoreEmail) throws DAOException;
     List<Ordine> findByCompratore(String compratoreEmail) throws DAOException;
 
-    /** Prossimo id disponibile per un nuovo ordine (Information Expert: il DAO
-     *  possiede i dati di persistenza e genera gli identificativi). */
+    // possiede i dati di persistenza e genera gli identificativi)
+
     long getNextId() throws DAOException;
 }
