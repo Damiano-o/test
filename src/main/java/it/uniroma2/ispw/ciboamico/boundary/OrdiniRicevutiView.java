@@ -1,9 +1,9 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.exception.InvalidStateTransitionException;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.GestisciOrdiniRicevutiController;
-import it.uniroma2.ispw.ciboamico.entity.StatoOrdineEnum;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
@@ -37,12 +37,8 @@ public class OrdiniRicevutiView {
         TextField idOrdine = new TextField();
         idOrdine.setPromptText("ID ordine");
         ComboBox<String> nuovoStato = new ComboBox<>();
-        nuovoStato.getItems().addAll(
-                StatoOrdineEnum.CONFERMATO.name(),
-                StatoOrdineEnum.IN_CONSEGNA.name(),
-                StatoOrdineEnum.CONSEGNATO.name(),
-                StatoOrdineEnum.ANNULLATO.name());
-        nuovoStato.setValue(StatoOrdineEnum.CONFERMATO.name());
+        nuovoStato.getItems().addAll(controller.getStatiAggiornabili());
+        nuovoStato.setValue("CONFIRMED");
         Label messaggio = new Label();
 
         Button aggiorna = new Button("Visualizza ordini");
@@ -60,11 +56,13 @@ public class OrdiniRicevutiView {
             try {
                 OrdineBean o = controller.aggiornaStato(
                         Long.parseLong(idOrdine.getText()),
-                        StatoOrdineEnum.valueOf(nuovoStato.getValue()));
+                        nuovoStato.getValue());
                 messaggio.setText("Stato aggiornato → " + o.getStato());
                 aggiorna.fire();
+            } catch (InvalidStateTransitionException ex) {
+                messaggio.setText(ex.getMessage());
             } catch (Exception ex) {
-                messaggio.setText("Errore: " + ex.getMessage());
+                messaggio.setText("Problema tecnico: riprovare più tardi.");
             }
         });
 

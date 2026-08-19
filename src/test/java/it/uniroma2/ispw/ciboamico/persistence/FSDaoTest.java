@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test DAO FS: roundtrip su file JSON (NFR-01 persistenza).
  * I file vengono scritti in data/ sotto il progetto (cartella gitignored).
- */
+ 
+ * @author Michele Damiano
+*/
 class FSDaoTest {
 
     @BeforeEach
@@ -39,6 +41,7 @@ class FSDaoTest {
 
     @Test
     void testUtenteFSCircolare() {
+
         FSUtenteDAO dao = new FSUtenteDAO();
         Utente u = new Utente("Anna", "anna@cibo.it", "hash");
         dao.save(u);
@@ -46,8 +49,17 @@ class FSDaoTest {
         Utente trovato = dao.findByEmail("anna@cibo.it");
 
         assertNotNull(trovato);
-        assertEquals("Anna", trovato.getNome());
     }
+    @Test
+    void testUtenteFSCircolareParte2() {
+        FSUtenteDAO dao = new FSUtenteDAO();
+        Utente u = new Utente("Anna", "anna@cibo.it", "hash");
+        dao.save(u);
+
+        Utente trovato = dao.findByEmail("anna@cibo.it");
+
+        assertNotNull(trovato);
+        assertEquals("Anna", trovato.getNome());}
 
     @Test
     void testProdottoFSCircolare() {
@@ -73,6 +85,7 @@ class FSDaoTest {
 
     @Test
     void testOrdineFSCircolare() {
+
         FSOrdineDAO dao = new FSOrdineDAO();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");
@@ -82,17 +95,37 @@ class FSDaoTest {
         Ordine trovato = dao.findById(99L);
 
         assertNotNull(trovato);
-        assertEquals("v@cibo.it", trovato.getVenditore().getEmail());
     }
+    @Test
+    void testOrdineFSCircolareParte2() {
+        FSOrdineDAO dao = new FSOrdineDAO();
+        Utente c = new Utente("C", "c@cibo.it", "h");
+        Utente v = new Utente("V", "v@cibo.it", "h");
+        Ordine ordine = new Ordine(99L, c, v);
+        dao.save(ordine);
+
+        Ordine trovato = dao.findById(99L);
+
+        assertNotNull(trovato);
+        assertEquals("v@cibo.it", trovato.getVenditore().getEmail());}
 
     @Test
     void testOrdineFSByVenditore() {
+
         FSOrdineDAO dao = new FSOrdineDAO();
         Utente c = new Utente("C", "c@cibo.it", "h");
         Utente v = new Utente("V", "v@cibo.it", "h");
         dao.save(new Ordine(1L, c, v));
 
         assertEquals(1, dao.findByVenditore("v@cibo.it").size());
-        assertEquals(1, dao.findByCompratore("c@cibo.it").size());
     }
+    @Test
+    void testOrdineFSByVenditoreParte2() {
+        FSOrdineDAO dao = new FSOrdineDAO();
+        Utente c = new Utente("C", "c@cibo.it", "h");
+        Utente v = new Utente("V", "v@cibo.it", "h");
+        dao.save(new Ordine(1L, c, v));
+
+        assertEquals(1, dao.findByVenditore("v@cibo.it").size());
+        assertEquals(1, dao.findByCompratore("c@cibo.it").size());}
 }

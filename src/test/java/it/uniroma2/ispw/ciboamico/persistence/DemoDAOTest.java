@@ -15,11 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test DAO Demo: roundtrip utente e prodotto.
- */
+ 
+ * @author Michele Damiano
+*/
 class DemoDAOTest {
 
     @Test
     void testUtenteRoundtrip() {
+
         DemoUtenteDAO dao = new DemoUtenteDAO();
         Utente u = new Utente("Mario", "mario@cibo.it", "hash");
         dao.save(u);
@@ -27,8 +30,17 @@ class DemoDAOTest {
         Utente trovato = dao.findByEmail("mario@cibo.it");
 
         assertNotNull(trovato);
-        assertEquals("Mario", trovato.getNome());
     }
+    @Test
+    void testUtenteRoundtripParte2() {
+        DemoUtenteDAO dao = new DemoUtenteDAO();
+        Utente u = new Utente("Mario", "mario@cibo.it", "hash");
+        dao.save(u);
+
+        Utente trovato = dao.findByEmail("mario@cibo.it");
+
+        assertNotNull(trovato);
+        assertEquals("Mario", trovato.getNome());}
 
     @Test
     void testProdottoSaveAndFind() {

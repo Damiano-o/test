@@ -40,7 +40,6 @@ ode[draw,ellipse,fill=white] at (9.5,5) {UC-08 Manage Pending Approvals};
 ode[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Manage Platform Catalogue};
 \node[draw,ellipse,fill=white] at (3,2.5) {UC-11 Authenticate};
 % include relationships
-\draw[->,dashed] (3,6) -- (3,7.5);       % UC-03 includes UC-02
 \draw[->,dashed] (6,8.5) -- (3,8.4);     % UC-04 includes UC-11
 \draw[->,dashed] (6,4.5) -- (3,4);       % UC-05 includes UC-11
 \draw[->,dashed] (6,3) -- (3,2.5);       % UC-06 includes UC-11
@@ -51,9 +50,9 @@ ode[draw,ellipse,fill=gray!60] at (9.5,1.5) {UC-10 Manage Platform Catalogue};
 \draw[->] (-1.8,7) -- (5.2,3.4);
 \draw[->] (-1.8,1) -- (8.7,7.8);
 \draw[->] (-1.8,9.5) -- (8.7,5.3);
-\draw[->] (-1.8,4) -- (2.2,2.9);
 \draw[->] (15,5) -- (12.5,6);
-\draw[->] (15,2) -- (11,3.5);
+% Payment Service: sistema esterno collegato a UC-04 (il sistema avvia l'API)
+\draw[->] (6,8.5) -- (13.5,4); % UC-04 -> Payment Service (evitando gli altri ovali)
 % legend
 \node[draw,fill=gray!60,text=white] at (1,11) {\footnotesize Grey = excluded from evaluation};
 \end{tikzpicture}
@@ -117,9 +116,10 @@ substitutions, D-01); (4) the System presents the compatible recipes.
 
 \subsection*{UC-03 Compute Shopping List}
 \textbf{Actors:} Client. \textbf{Pre:} a recipe exists and is approved.
-\textbf{MSS:} (1) the Client selects a recipe; (2) the System compares the
-recipe ingredients with the inventory; (3) the System presents the missing
-ingredients with quantities. \textbf{Post:} an exact shopping list is shown
+\textbf{MSS:} (1) the Client selects a recipe; (2) the System retrieves the
+recipe and the inventory; (3) the System compares the recipe ingredients
+with the inventory (strict or with substitutions, D-01); (4) the System
+presents the missing ingredients with quantities. \textbf{Post:} an exact shopping list is shown
 (FR-05).
 
 \subsection*{UC-05 Publish Product}
@@ -143,18 +143,18 @@ recipe in \emph{PROPOSED} state; (3) the System stores the recipe.
 \textbf{Extensions:} 1a fewer than two ingredients.
 
 \subsection*{UC-08 Manage Pending Approvals}
-	extbf{Actors:} Administrator. 	extbf{Pre:} administrator authenticated.
-	extbf{MSS:} (1)~the Administrator requests the pending approvals;
+\textbf{Actors:} Administrator. \textbf{Pre:} administrator authenticated.
+\textbf{MSS:} (1)~the Administrator requests the pending approvals;
 (2)~the System retrieves the categorised list of pending vendor registrations
 and recipes in \emph{PROPOSED} state; (3)~the Administrator selects a pending
 item; (4)~the System presents its details; (5)~the Administrator approves,
 suspends or rejects the item; (6)~the System updates the state, notifies the
-interested actor and confirms. 	extbf{Extensions:} 2a empty queue; 5a
-rejection/suspension returns to step 2. 	extbf{Post:} item status updated
+interested actor and confirms. \textbf{Extensions:} 2a empty queue; 5a
+rejection/suspension returns to step 2. \textbf{Post:} item status updated
 (APPROVED/SUSPENDED for vendors, APPROVED/REJECTED for recipes).
 
 \subsection*{UC-11 Authenticate}
-\textbf{Actors:} any primary actor. \textbf{MSS:} (1) the Actor provides
+\textbf{Actors:} Client, Vendor, Nutritionist, Administrator. \textbf{MSS:} (1) the Actor provides
 e-mail and password; (2) the System validates the credentials (NFR-03);
 (3) the System opens a session. \textbf{Extensions:} 2a invalid credentials.
-\textbf{Post:} the session is active; \emph{include} from UC-01..UC-07.
+\textbf{Post:} the session is active; \emph{include} from UC-04, UC-05, UC-06 (as in the diagram).

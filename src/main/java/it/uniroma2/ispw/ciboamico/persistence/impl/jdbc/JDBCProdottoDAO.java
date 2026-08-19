@@ -80,6 +80,24 @@ public class JDBCProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto update(Prodotto prodotto) {
+        String sql = "UPDATE prodotti SET prezzo = ?, quantita_disponibile = ?, "
+                + "venditore_zona = ?, venditore_recapito = ? WHERE nome = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, prodotto.getPrezzo());
+            ps.setInt(2, prodotto.getQuantitaDisponibile());
+            ps.setString(3, prodotto.getVenditore() != null ? prodotto.getVenditore().getZona() : null);
+            ps.setString(4, prodotto.getVenditore() != null ? prodotto.getVenditore().getRecapito() : null);
+            ps.setString(5, prodotto.getNome());
+            ps.executeUpdate();
+            return prodotto;
+        } catch (SQLException e) {
+            throw new DAOException("Errore aggiornamento prodotto", e);
+        }
+    }
+
+    @Override
     public List<ProdottoInventario> findInventario(String utenteEmail) {
         String sql = "SELECT id, nome, quantita, scadenza, posizione, unita "
                 + "FROM inventario WHERE utente_email = ? ORDER BY scadenza"; // FR-02

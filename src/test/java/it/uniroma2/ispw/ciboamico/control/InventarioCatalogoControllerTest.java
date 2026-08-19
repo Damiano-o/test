@@ -19,7 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test GestisciInventarioController (UC-01) e GestisciCatalogoVenditoreController (UC-05).
- */
+ 
+ * @author Michele Damiano
+*/
 class InventarioCatalogoControllerTest {
 
     private GestisciInventarioController inventarioController;
@@ -65,9 +67,14 @@ class InventarioCatalogoControllerTest {
     }
 
     @Test
-    void testAggiungiProdottoValido() {
+    void testAggiungiProdottoValidoRestituisceBean() {
         ProdottoBean bean = inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         assertNotNull(bean);
+    }
+
+    @Test
+    void testAggiungiProdottoValidoNomeCorretto() {
+        ProdottoBean bean = inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         assertEquals("Latte", bean.getNome());
     }
 
@@ -79,12 +86,18 @@ class InventarioCatalogoControllerTest {
     }
 
     @Test
-    void testInventarioOrdinatoPerScadenza() {
+    void testInventarioOrdinatoPerScadenzaContieneOrdine() {
+
         inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
         List<ProdottoBean> lista = inventarioController.visualizzaInventarioOrdinato("demo@cibo.it");
         assertFalse(lista.isEmpty());
-        assertEquals("Latte", lista.get(0).getNome());
     }
+    @Test
+    void testInventarioOrdinatoPerScadenzaContieneOrdineParte2() {
+        inventarioController.aggiungiProdotto(beanValido(), "demo@cibo.it");
+        List<ProdottoBean> lista = inventarioController.visualizzaInventarioOrdinato("demo@cibo.it");
+        assertFalse(lista.isEmpty());
+        assertEquals("Latte", lista.get(0).getNome());}
 
     @Test
     void testPubblicaProdottoVenditoreNonApprovato() {
@@ -96,11 +109,17 @@ class InventarioCatalogoControllerTest {
 
     @Test
     void testPubblicaProdottoVenditoreApprovato() {
+
         loginVenditore(true);
         ProdottoBean bean = catalogoController.pubblicaProdotto(beanValido());
         assertNotNull(bean);
-        assertEquals("Latte", bean.getNome());
     }
+    @Test
+    void testPubblicaProdottoVenditoreApprovatoParte2() {
+        loginVenditore(true);
+        ProdottoBean bean = catalogoController.pubblicaProdotto(beanValido());
+        assertNotNull(bean);
+        assertEquals("Latte", bean.getNome());}
 
     @Test
     void testPubblicaProdottoPrezzoNonValido() {

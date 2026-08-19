@@ -11,7 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Observer (notifier), SessionManager (singleton) e ruoli.
- */
+ 
+ * @author Michele Damiano
+*/
 class PatternTest {
 
     private Utente compratore() {
@@ -30,20 +32,31 @@ class PatternTest {
     void testVenditoreNotifier() {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new VenditoreNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO); // non deve lanciare
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED); // non deve lanciare
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
     void testUtenteNotifier() {
         Ordine ordine = new Ordine(1L, compratore(), venditore());
         ordine.subscribe(new UtenteNotifier());
-        ordine.cambiaStato(StatoOrdineEnum.CONFERMATO);
-        assertEquals(StatoOrdineEnum.CONFERMATO, ordine.getStato());
+        ordine.cambiaStato(StatoOrdineEnum.CONFIRMED);
+        assertEquals(StatoOrdineEnum.CONFIRMED, ordine.getStato());
     }
 
     @Test
     void testSessionManager() {
+
+        SessionManager manager = SessionManager.getInstance();
+        UtenteBean bean = new UtenteBean();
+        bean.setEmail("test@cibo.it");
+        bean.setUsername("Test");
+        manager.setLoggedUser(bean);
+
+        assertSame(bean, SessionManager.getInstance().getLoggedUser());
+    }
+    @Test
+    void testSessionManagerParte2() {
         SessionManager manager = SessionManager.getInstance();
         UtenteBean bean = new UtenteBean();
         bean.setEmail("test@cibo.it");
@@ -53,15 +66,25 @@ class PatternTest {
         assertSame(bean, SessionManager.getInstance().getLoggedUser());
 
         manager.logout();
-        assertNull(SessionManager.getInstance().getLoggedUser());
-    }
+        assertNull(SessionManager.getInstance().getLoggedUser());}
 
     @Test
     void testRuoloVenditoreStato() {
+
+        RuoloVenditore v = new RuoloVenditore("RM", "tel");
+        assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
+    }
+    @Test
+    void testRuoloVenditoreStatoParte2() {
+        RuoloVenditore v = new RuoloVenditore("RM", "tel");
+        assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
+        v.setStato(StatoVenditoreEnum.APPROVATO);
+        assertEquals("RM", v.getZona());}
+    @Test
+    void testRuoloVenditoreStatoParte3() {
         RuoloVenditore v = new RuoloVenditore("RM", "tel");
         assertEquals(StatoVenditoreEnum.IN_ATTESA, v.getStato());
         v.setStato(StatoVenditoreEnum.APPROVATO);
         assertEquals("RM", v.getZona());
-        assertEquals("tel", v.getRecapito());
-    }
+        assertEquals("tel", v.getRecapito());}
 }

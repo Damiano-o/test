@@ -12,7 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * T01/T02 — StrictMatchingStrategy: solo ricette 100% compatibili.
- */
+ 
+ * @author Michele Damiano
+*/
 class StrictMatchingStrategyTest {
 
     private Ricetta ricetta(String nome, Prodotto... ingredienti) {

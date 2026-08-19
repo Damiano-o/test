@@ -18,7 +18,9 @@ import static org.mockito.Mockito.when;
 
 /**
  * T10/T11/T12 — Autenticazione: login valido, email non valida, password errata.
- */
+ 
+ * @author Michele Damiano
+*/
 class AutenticazioneControllerTest {
 
     private String hash(String password) {
@@ -40,7 +42,7 @@ class AutenticazioneControllerTest {
     }
 
     @Test
-    void testLoginValid() {
+    void testLoginValidRestituisceBean() {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -48,11 +50,21 @@ class AutenticazioneControllerTest {
         UtenteBean bean = controller.login("user@cibo.it", "password123");
 
         assertNotNull(bean);
+    }
+
+    @Test
+    void testLoginValidEmailCorretta() {
+        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        utente.aggiungiRuolo(new RuoloCliente());
+        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
+
+        UtenteBean bean = controller.login("user@cibo.it", "password123");
+
         assertEquals("user@cibo.it", bean.getEmail());
     }
 
     @Test
-    void testLoginConBean() {
+    void testLoginConBeanRestituisceBean() {
         Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
         utente.aggiungiRuolo(new RuoloCliente());
         AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
@@ -63,6 +75,19 @@ class AutenticazioneControllerTest {
         UtenteBean risultato = controller.login(bean);
 
         assertNotNull(risultato);
+    }
+
+    @Test
+    void testLoginConBeanEmailCorretta() {
+        Utente utente = new Utente("Mario", "user@cibo.it", hash("password123"));
+        utente.aggiungiRuolo(new RuoloCliente());
+        AutenticazioneController controller = new AutenticazioneController(factoryConUtente(utente));
+
+        AutenticazioneBean bean = new AutenticazioneBean();
+        bean.setEmail("user@cibo.it");
+        bean.setPassword("password123");
+        UtenteBean risultato = controller.login(bean);
+
         assertEquals("user@cibo.it", risultato.getEmail());
     }
 

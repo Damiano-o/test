@@ -35,19 +35,41 @@ The system covers four functional areas:
 
 The system defines four primary actors:
 \begin{itemize}
-    \item \textbf{Utente (Client)}: manages the pantry and uses the recipe
+    \item \textbf{Client}: manages the pantry and uses the recipe
     engine and the marketplace to buy products;
-    \item \textbf{Venditore (Vendor)}: a local farmer or supplier who, once
+    \item \textbf{Vendor}: a local farmer or supplier who, once
     approved by the administrator, publishes products with prices;
-    \item \textbf{Nutrizionista (Nutritionist)}: the only actor allowed to
+    \item \textbf{Nutritionist}: the only actor allowed to
     create recipes, which are published with a \emph{PROPOSED} state;
-    \item \textbf{Amministratore (Administrator)}: approves vendors and
+    \item \textbf{Administrator}: approves vendors and
     recipes.
 \end{itemize}
 
 Two external systems are used through adapters: \textbf{OpenFoodFacts}
 (barcode-based product lookup) and the e-mail notification service
 (\emph{Jakarta Mail}).
+
+\section{Hardware and Software Requirements}
+
+CiboAmico is a desktop application with the following minimum runtime
+requirements:
+\begin{itemize}
+    \item Java Runtime Environment (JRE) 17 or later, with JavaFX 17+;
+    \item 4~GB of RAM and 500~MB of free disk space;
+    \item optional MySQL 8 server (the JDBC persistence mode); the
+    file-system (JSON) and in-memory demo modes require no external
+    services (NFR-01);
+    \item a working e-mail account for the notification service
+    (Jakarta Mail adapter) and an Internet connection for the
+    OpenFoodFacts barcode lookup.
+\end{itemize}
+
+\section{Implementation Remarks}
+
+The project deliberately implements the use cases under evaluation
+(UC-01..UC-08, UC-11); UC-10 is documented for model completeness but is
+excluded from the implementation and evaluation scope (see
+Chapter~\ref{ch:usecases}).
 
 \section{Document Structure}
 

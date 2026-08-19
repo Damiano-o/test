@@ -35,7 +35,7 @@ public class Ordine {
         this.compratore = compratore;
         this.venditore = venditore;
         this.data = LocalDateTime.now(ZoneId.systemDefault());
-        this.stato = StatoOrdineEnum.CREATO;
+        this.stato = StatoOrdineEnum.CREATED;
     }
 
     public void aggiungiVoce(VoceOrdine voce) {
@@ -49,17 +49,17 @@ public class Ordine {
 
     /**
      * BR-04: transizioni valide.
-     * CREATO → CONFERMATO | ANNULLATO
-     * CONFERMATO → IN_CONSEGNA | ANNULLATO
-     * IN_CONSEGNA → CONSEGNATO
+     * CREATED → CONFIRMED | ANNULLED
+     * CONFIRMED → IN_DELIVERY | ANNULLED
+     * IN_DELIVERY → DELIVERED
      */
     public void cambiaStato(StatoOrdineEnum nuovoStato) {
         boolean valida = switch (stato) {
-            case CREATO -> nuovoStato == StatoOrdineEnum.CONFERMATO
-                    || nuovoStato == StatoOrdineEnum.ANNULLATO;
-            case CONFERMATO -> nuovoStato == StatoOrdineEnum.IN_CONSEGNA
-                    || nuovoStato == StatoOrdineEnum.ANNULLATO;
-            case IN_CONSEGNA -> nuovoStato == StatoOrdineEnum.CONSEGNATO;
+            case CREATED -> nuovoStato == StatoOrdineEnum.CONFIRMED
+                    || nuovoStato == StatoOrdineEnum.ANNULLED;
+            case CONFIRMED -> nuovoStato == StatoOrdineEnum.IN_DELIVERY
+                    || nuovoStato == StatoOrdineEnum.ANNULLED;
+            case IN_DELIVERY -> nuovoStato == StatoOrdineEnum.DELIVERED;
             default -> false;
         };
         if (!valida) {

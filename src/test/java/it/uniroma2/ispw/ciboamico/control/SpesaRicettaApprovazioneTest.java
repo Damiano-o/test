@@ -17,7 +17,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test ListaSpesa (UC-03), Ricette Nutrizionista (UC-07), Approvazioni (UC-08/09).
- */
+ 
+ * @author Michele Damiano
+*/
 class SpesaRicettaApprovazioneTest {
 
     private DemoDAOFactory factory;
@@ -61,10 +63,15 @@ class SpesaRicettaApprovazioneTest {
 
     @Test
     void testCreaRicettaValida() {
+
         RicettaBean bean = ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         assertNotNull(bean);
-        assertEquals("Pasta al pomodoro", bean.getNome());
     }
+    @Test
+    void testCreaRicettaValidaParte2() {
+        RicettaBean bean = ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
+        assertNotNull(bean);
+        assertEquals("Pasta al pomodoro", bean.getNome());}
 
     @Test
     void testCreaRicettaMenoDiDueIngredienti() {
@@ -77,6 +84,7 @@ class SpesaRicettaApprovazioneTest {
 
     @Test
     void testCalcolaMancanze() {
+
         // Ricetta con 2 ingredienti nel catalogo
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Inventario: solo Pasta → manca Pomodoro
@@ -87,8 +95,20 @@ class SpesaRicettaApprovazioneTest {
         List<ProdottoBean> mancanti = listaSpesa.calcolaMancanze("demo@cibo.it", "Pasta al pomodoro");
 
         assertFalse(mancanti.isEmpty());
-        assertEquals("Pomodoro", mancanti.get(0).getNome());
     }
+    @Test
+    void testCalcolaMancanzeParte2() {
+        // Ricetta con 2 ingredienti nel catalogo
+        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
+        // Inventario: solo Pasta → manca Pomodoro
+        ProdottoInventario pasta = new ProdottoInventario("Pasta", 1000,
+                LocalDate.now().plusDays(100), "Dispensa", UnitaEnum.GRAMMI, null);
+        factory.getProdottoDAO().saveInventario("demo@cibo.it", pasta);
+
+        List<ProdottoBean> mancanti = listaSpesa.calcolaMancanze("demo@cibo.it", "Pasta al pomodoro");
+
+        assertFalse(mancanti.isEmpty());
+        assertEquals("Pomodoro", mancanti.get(0).getNome());}
 
     @Test
     void testApprovazioneVenditoreNonTrovato() {
@@ -98,19 +118,31 @@ class SpesaRicettaApprovazioneTest {
 
     @Test
     void testRicetteInAttesa() {
+
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         List<RicettaBean> inAttesa = approvazione.ricetteInAttesa();
         assertEquals(1, inAttesa.size());
-        assertEquals("Pasta al pomodoro", inAttesa.get(0).getNome());
     }
+    @Test
+    void testRicetteInAttesaParte2() {
+        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
+        List<RicettaBean> inAttesa = approvazione.ricetteInAttesa();
+        assertEquals(1, inAttesa.size());
+        assertEquals("Pasta al pomodoro", inAttesa.get(0).getNome());}
 
     @Test
     void testApprovaRicetta() {
+
+        ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
+        // Prima dell'approvazione: 1 ricetta in attesa
+        assertEquals(1, approvazione.ricetteInAttesa().size());
+    }
+    @Test
+    void testApprovaRicettaParte2() {
         ricetteCtrl.creaRicetta(ricettaConDueIngredienti());
         // Prima dell'approvazione: 1 ricetta in attesa
         assertEquals(1, approvazione.ricetteInAttesa().size());
         approvazione.approvaRicetta("Pasta al pomodoro", true);
         // Dopo l'approvazione: nessuna in attesa
-        assertTrue(approvazione.ricetteInAttesa().isEmpty());
-    }
+        assertTrue(approvazione.ricetteInAttesa().isEmpty());}
 }

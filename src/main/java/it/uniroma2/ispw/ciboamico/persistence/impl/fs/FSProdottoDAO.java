@@ -78,6 +78,20 @@ public class FSProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto update(Prodotto prodotto) {
+        List<Prodotto> prodotti = caricaCatalogo();
+        int id = prodotto.getNome().hashCode();
+        for (int i = 0; i < prodotti.size(); i++) {
+            if (prodotti.get(i).getNome().hashCode() == id) {
+                prodotti.set(i, prodotto);
+                salvaCatalogo(prodotti);
+                return prodotto;
+            }
+        }
+        throw new RuntimeException("Prodotto non trovato in catalogo per update");
+    }
+
+    @Override
     public List<ProdottoInventario> findInventario(String utenteEmail) {
         return caricaInventario();
     }

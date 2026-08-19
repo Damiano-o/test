@@ -1,11 +1,11 @@
 package it.uniroma2.ispw.ciboamico.boundary;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.exception.BusinessValidationException;
+import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.control.OrdinaProdottoController;
-import it.uniroma2.ispw.ciboamico.entity.Prodotto;
 import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
-import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 import it.uniroma2.ispw.ciboamico.bootstrap.ApplicationModeManager;
 import javafx.scene.Parent;
@@ -25,17 +25,14 @@ import java.util.List;
 public class MarketplaceView {
 
     private final OrdinaProdottoController ordinaController;
-    private final ProdottoDAO prodottoDAO;
 
     public MarketplaceView() {
         DAOFactory factory = ApplicationModeManager.getInstance().getDAOFactory();
         this.ordinaController = new OrdinaProdottoController(factory);
-        this.prodottoDAO = factory.getProdottoDAO();
     }
 
     public MarketplaceView(DAOFactory factory) {
         this.ordinaController = new OrdinaProdottoController(factory);
-        this.prodottoDAO = factory.getProdottoDAO();
     }
 
     public Parent build() {
@@ -49,10 +46,10 @@ public class MarketplaceView {
         Button aggiorna = new Button("Aggiorna catalogo");
         aggiorna.setId("btn-catalogo");
         aggiorna.setOnAction(e -> {
-            List<Prodotto> prodotti = prodottoDAO.findAll();
+            List<ProdottoBean> prodotti = ordinaController.getProdottiDisponibili();
             elenco.getItems().setAll(prodotti.stream()
                     .map(p -> p.getNome() + " — " + p.getPrezzo() + " EUR — "
-                            + p.getQuantitaDisponibile() + " disponibili")
+                            + p.getQuantita() + " disponibili")
                     .toList());
         });
 
@@ -63,11 +60,13 @@ public class MarketplaceView {
                 // id simbolico del prodotto = hash del nome (coerente con DAO demo)
                 OrdineBean bean = new OrdineBean();
                 bean.setIdOrdine((long) nomeProdotto.getText().hashCode());
-                OrdineBean risultato = ordinaController.submitOrdine(bean);
+                OrdineBean risultato = ordinaController.submitOrdine(bean, utente);
                 messaggio.setText("Ordine creato ✓ — stato " + risultato.getStato()
                         + ", totale " + String.format("%.2f", risultato.getTotale()) + " EUR");
+            } catch (BusinessValidationException ex) {
+                messaggio.setText(ex.getMessage());
             } catch (Exception ex) {
-                messaggio.setText("Errore: " + ex.getMessage());
+                messaggio.setText("Problema tecnico: riprovare più tardi.");
             }
         });
 

@@ -36,6 +36,16 @@ public class DemoProdottoDAO implements ProdottoDAO {
     }
 
     @Override
+    public Prodotto update(Prodotto prodotto) {
+        int id = prodotto.getNome().hashCode();
+        catalogo.entrySet().stream()
+                .filter(e -> e.getValue().getNome().hashCode() == id)
+                .findFirst()
+                .ifPresent(e -> catalogo.put(e.getKey(), prodotto));
+        return prodotto;
+    }
+
+    @Override
     public List<ProdottoInventario> findInventario(String utenteEmail) {
         return new ArrayList<>(inventari.getOrDefault(utenteEmail, new ArrayList<>()));
     }

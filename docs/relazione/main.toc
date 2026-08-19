@@ -1,0 +1,45 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Project Goal}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Scope}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Actors}{5}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Hardware and Software Requirements}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Implementation Remarks}{6}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Document Structure}{6}{section.1.6}%
+\contentsline {chapter}{\numberline {2}Related Systems}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Innovation Elements}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Design Rationale}{8}{section.2.2}%
+\contentsline {paragraph}{D-01 (Ingredient substitution engine)}{8}{section*.5}%
+\contentsline {paragraph}{D-02 (Dynamic role metamorfosi)}{8}{section*.6}%
+\contentsline {paragraph}{D-03 (Single direct order)}{8}{section*.7}%
+\contentsline {chapter}{\numberline {3}Requirements}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Functional Requirements}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Business Rules}{10}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Non-Functional Requirements}{10}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Requirements--Use-Case Traceability}{10}{section.3.4}%
+\contentsline {chapter}{\numberline {4}User Stories}{11}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Use Cases}{12}{chapter.5}%
+\contentsline {section}{\numberline {5.1}UC-04 Order a Product (exemplary template)}{12}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Other Use Cases (summary)}{13}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Storyboards}{15}{chapter.6}%
+\contentsline {section}{\numberline {6.1}State of the system}{16}{section.6.1}%
+\contentsline {chapter}{\numberline {7}Design}{17}{chapter.7}%
+\contentsline {section}{\numberline {7.1}BCE Architecture (VOPC)}{17}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Design-Level Class Diagram}{18}{section.7.2}%
+\contentsline {section}{\numberline {7.3}GoF Patterns}{18}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Activity Diagram (UC-04)}{19}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Sequence Diagram (UC-04)}{19}{section.7.5}%
+\contentsline {section}{\numberline {7.6}State Diagram (Ordine, BR-04)}{20}{section.7.6}%
+\contentsline {chapter}{\numberline {8}Testing}{21}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Strategy}{21}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Coverage}{21}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Test Classes and Covered Rules}{22}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Running the tests}{22}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Regression testing}{23}{section.8.5}%
+\contentsline {chapter}{\numberline {9}Exception Handling and Persistence}{24}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Exception Handling}{24}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Persistence}{24}{section.9.2}%
+\contentsline {chapter}{\numberline {10}Public Links and Conclusions}{26}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Public Links}{26}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Conclusions}{26}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Future Work}{26}{section.10.3}%

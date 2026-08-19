@@ -13,6 +13,7 @@ public interface ProdottoDAO {
     List<Prodotto> findAll();
     Prodotto findById(Long id);
     Prodotto save(Prodotto prodotto);
+    Prodotto update(Prodotto prodotto);
 
     List<ProdottoInventario> findInventario(String utenteEmail);
     ProdottoInventario saveInventario(String utenteEmail, ProdottoInventario prodotto);

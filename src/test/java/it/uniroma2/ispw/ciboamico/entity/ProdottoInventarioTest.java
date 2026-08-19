@@ -9,7 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * T16 — ProdottoInventario: scadenza entro 3 giorni (FR-03) e ordinamento (FR-02).
- */
+ 
+ * @author Michele Damiano
+*/
 class ProdottoInventarioTest {
 
     private ProdottoInventario prodotto(String nome, LocalDate scadenza) {
@@ -48,14 +50,36 @@ class ProdottoInventarioTest {
 
     @Test
     void testEqualsStessoContenuto() {
+
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        assertEquals(a, a);
+    }
+    @Test
+    void testEqualsStessoContenutoParte2() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        assertEquals(a, a);            // branch this == o
+        assertEquals(a, b);}
+    @Test
+    void testEqualsStessoContenutoParte3() {
+        LocalDate scadenza = LocalDate.now().plusDays(5);
+        ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
+        assertEquals(a, a);            // branch this == o
+        assertEquals(a, b);            // identità = nome+scadenza+posizione
+        assertEquals(a.hashCode(), b.hashCode());}
+    @Test
+    void testEqualsStessoContenutoParte4() {
         LocalDate scadenza = LocalDate.now().plusDays(5);
         ProdottoInventario a = new ProdottoInventario("Latte", 2, scadenza, "Frigo", UnitaEnum.PEZZI, null);
         ProdottoInventario b = new ProdottoInventario("Latte", 5, scadenza, "Frigo", UnitaEnum.PEZZI, null);
         assertEquals(a, a);            // branch this == o
         assertEquals(a, b);            // identità = nome+scadenza+posizione
         assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(a, "non-un-prodotto");  // branch instanceof false
-    }
+        assertNotEquals(a, "non-un-prodotto");}
 
     @Test
     void testEqualsDiverso() {

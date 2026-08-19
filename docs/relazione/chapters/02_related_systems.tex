@@ -39,3 +39,35 @@ systems above (design decisions D-01/D-02/D-03):
     one-buyer--one-vendor direct order with no cart, tailored to the
     short-supply-chain scenario.
 \end{enumerate}
+
+\section{Design Rationale}
+
+This section records the defence arguments for the three innovation
+elements, as they are the most frequently questioned during the oral
+examination.
+
+\paragraph{D-01 (Ingredient substitution engine)} The substitution engine
+implements the \emph{Strategy} pattern: each matching policy
+(\texttt{StrictMatchingStrategy}, \texttt{SubstitutionMatchingStrategy}) is
+an interchangeable algorithm, and new substitution policies (by price, by
+calories, by proximity) can be added without modifying the existing code
+(Open/Closed Principle). The engine is exposed through a single entry
+point, the \texttt{RicettaMatchingFacade} (Facade pattern), which decouples
+the presentation layer from the matching policies.
+
+\paragraph{D-02 (Dynamic role metamorfosi)} The classical alternative to
+role dynamism is rigid inheritance, which would force the system to
+destroy the in-memory instance and create a new one (with different
+references) every time a \texttt{Client} acquires the \texttt{Vendor} or
+\texttt{Nutritionist} role. CiboAmico adopts the \emph{Whole-Part} pattern:
+\texttt{Utente} (Whole) aggregates a collection of roles (Part), so the
+role metamorphosis happens at runtime without altering the identity of
+the object in memory. This avoids the Fragile Base Class problem and
+keeps the model extensible.
+
+\paragraph{D-03 (Single direct order)} The marketplace deliberately
+avoids the cart idiom: the short-supply-chain scenario is one
+buyer--one vendor per transaction. The order is created directly in the
+\emph{CREATED} state and progresses through the state machine defined by
+BR-04; the vendor is notified asynchronously through the
+\emph{Observer} pattern (\texttt{VenditoreNotifier}).

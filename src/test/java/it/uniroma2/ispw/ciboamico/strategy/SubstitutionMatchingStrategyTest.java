@@ -12,7 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * T03/T04 — SubstitutionMatchingStrategy (elemento innovativo D-01).
- */
+ 
+ * @author Michele Damiano
+*/
 class SubstitutionMatchingStrategyTest {
 
     private Ricetta ricetta(String nome, Prodotto... ingredienti) {

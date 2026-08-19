@@ -1,17 +1,18 @@
 package it.uniroma2.ispw.ciboamico.control;
 
 import it.uniroma2.ispw.ciboamico.bean.OrdineBean;
+import it.uniroma2.ispw.ciboamico.bean.ProdottoBean;
 import it.uniroma2.ispw.ciboamico.bean.UtenteBean;
 import it.uniroma2.ispw.ciboamico.entity.*;
+import java.util.List;
 import it.uniroma2.ispw.ciboamico.pattern.observer.VenditoreNotifier;
-import it.uniroma2.ispw.ciboamico.pattern.singleton.SessionManager;
 import it.uniroma2.ispw.ciboamico.persistence.dao.OrdineDAO;
 import it.uniroma2.ispw.ciboamico.persistence.dao.ProdottoDAO;
 import it.uniroma2.ispw.ciboamico.persistence.factory.DAOFactory;
 
 /**
  * Control di UC-04 Ordina Prodotto (1:1 con l'use case).
- * Stateless: legge l'utente loggato da SessionManager; scambia solo Bean con la Boundary.
+ * Stateless: l'utente corrente è passato dalla View (Opzione A); scambia solo Bean con la Boundary.
  */
 public class OrdinaProdottoController {
 
@@ -24,10 +25,24 @@ public class OrdinaProdottoController {
     }
 
     /**
-     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATO + notifica.
+     * Catalogo del marketplace come Bean (BCE: la boundary non tocca i DAO).
      */
-    public OrdineBean submitOrdine(OrdineBean bean) {
-        UtenteBean utente = SessionManager.getInstance().getLoggedUser();
+    public List<ProdottoBean> getProdottiDisponibili() {
+        return prodottoDAO.findAll().stream()
+                .map(p -> {
+                    ProdottoBean bean = new ProdottoBean();
+                    bean.setNome(p.getNome());
+                    bean.setPrezzo(p.getPrezzo());
+                    bean.setQuantita((double) p.getQuantitaDisponibile());
+                    return bean;
+                })
+                .toList();
+    }
+
+    /**
+     * Flusso UC-04: verifica disponibilità → riepilogo → conferma → ordine CREATED + notifica.
+     */
+    public OrdineBean submitOrdine(OrdineBean bean, UtenteBean utente) {
         if (utente == null) {
             throw new IllegalStateException("Utente non autenticato");
         }
@@ -36,6 +51,11 @@ public class OrdinaProdottoController {
         if (prodotto == null) {
             throw new IllegalStateException("Prodotto non disponibile (2.c)");
         }
+
+        // Estensione 2a (out of stock): la Entity verifica la quantità richiesta
+        // e riduce la disponibilità — BusinessValidationException se insufficiente.
+        prodotto.riduciDisponibilita(1);
+        prodottoDAO.update(prodotto);
 
         // Costruzione ordine singolo diretto (D-03)
         // Il venditore è risolto dal PRODOTTO acquistato: risalgo all'Utente

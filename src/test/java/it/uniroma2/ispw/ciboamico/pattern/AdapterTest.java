@@ -10,16 +10,24 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test Adapter (GoF): OpenFoodFacts (barcode) e JakartaMail (notifiche).
- */
+ 
+ * @author Michele Damiano
+*/
 class AdapterTest {
 
     @Test
     void testBarcodeTrovato() {
+
         OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
         ProdottoBean bean = adapter.findByBarcode("8000500310427");
         assertNotNull(bean);
-        assertEquals("Latte Intero", bean.getNome());
     }
+    @Test
+    void testBarcodeTrovatoParte2() {
+        OpenFoodFactsAdapter adapter = new OpenFoodFactsAdapter();
+        ProdottoBean bean = adapter.findByBarcode("8000500310427");
+        assertNotNull(bean);
+        assertEquals("Latte Intero", bean.getNome());}
 
     @Test
     void testBarcodeNonTrovato() {

@@ -7,7 +7,9 @@ Each user story follows the mandatory format
 \emph{``As a \textless role\textgreater, I want to
 \textless capability\textgreater, So that \textless benefit\textgreater''}
 and satisfies the INVEST criteria (Independent, Negotiable, Valuable,
-Estimable, Small, Testable).
+Estimable, Small, Testable). The login is not modelled as a story: per the
+course rule, authentication is a precondition of the primary use cases and
+is realised by UC-11 through the \emph{include} relationships.
 
 \begin{table}[H]
 \centering
@@ -38,9 +40,7 @@ ingredients, So that they are proposed to clients after approval. \\
 \rowcolor[gray]{0.85}
 US-10 & As a client, I want to view my order history, So that I
 can review my past purchases. \textit{(excluded from evaluation, see UC-10)} \\
-US-11 & As a user, I want to log in with my e-mail and password, So that
-I access my private data and role-based functions. \\
-US-12 & As an administrator, I want to approve vendors and recipes, So that
+US-11 & As an administrator, I want to approve vendors and recipes, So that
 only trusted actors and quality content reach the marketplace. \\
 \bottomrule
 \end{tabular}

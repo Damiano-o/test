@@ -15,7 +15,7 @@ adapter).
     \item \textbf{Unit tests}: business rules on entities (BR-01..BR-06),
     strategy matching, observer notifications, bean DTO validation;
     \item \textbf{Integration tests}: controllers against the demo DAO
-    factory, covering every use case (UC-01..UC-09, UC-11);
+    factory, covering every use case (UC-01..UC-08, UC-11);
     \item \textbf{Persistence tests}: JSON file-system DAOs with
     serialisation round-trips and Gson local-date adapters.
 \end{itemize}
@@ -34,16 +34,64 @@ and covered by manual tests (documented in the repository).
 \toprule
 \textbf{Metric} & \textbf{Value} \\
 \midrule
-Total automated tests & 82 \\
+Total automated tests & 143 \\
 JUnit 5 + Mockito & all passing \\
-Line coverage (JaCoCo) & 82.5\% \\
+Line coverage (JaCoCo) & 82.1\% \\
 Quality gate minimum & 80\% \\
-SonarCloud new-code coverage & 81.3\% \\
+Instruction coverage (JaCoCo) & 81.3\% \\
 Bugs / vulnerabilities / code smells & 0 / 0 / 0 \\
 Duplications & 0\% \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Test Classes and Covered Rules}
+
+Each test class verifies a specific component and the business rules it
+enforces:
+
+\begin{itemize}
+    \item \textbf{ProdottoTest} / \textbf{ProdottoInventarioTest} --
+    BR-01, BR-03, BR-06 (price, quantity, expiry validations) and
+    \textbf{riduciDisponibilita};
+    \item \textbf{OrdineTest} -- BR-04 (state machine: valid and invalid
+    transitions), \textbf{VoceOrdine} totals;
+    \item \textbf{UtenteRicettaTest} -- D-02 role metamorphosis
+    (Whole-Part), BR-05 (recipe with at least two ingredients);
+    \item \textbf{BeanTest} -- syntactic validation of the DTOs
+    (bean-only rule);
+    \item \textbf{AutenticazioneControllerTest} -- UC-11 (login valid,
+    invalid e-mail, wrong password);
+    \item \textbf{InventarioCatalogoControllerTest} -- UC-01 and UC-05
+    (inventory management, vendor publication with BR-02/BR-06);
+    \item \textbf{OrdinaProdottoControllerTest} -- UC-04 (order creation,
+    quantity check 2a, vendor resolution from the product);
+    \item \textbf{OrdineControllerTest} -- UC-06 (received orders,
+    state update with BR-04);
+    \item \textbf{SpesaRicettaApprovazioneTest} -- UC-03, UC-07, UC-08
+    (shopping list, recipe creation, approvals);
+    \item \textbf{RicettaMatchingFacadeTest} / \textbf{StrictMatchingStrategyTest}
+    / \textbf{SubstitutionMatchingStrategyTest} -- D-01 (matching
+    strategies);
+    \item \textbf{AdapterTest} -- OpenFoodFacts barcode lookup;
+    \item \textbf{PatternTest} -- Singleton, Observer, strategy patterns;
+    \item \textbf{DemoDAOTest} / \textbf{FSDaoTest} /
+    \textbf{PersistenceDetailTest} -- persistence round-trips (NFR-01);
+    \item \textbf{ApplicationModeManagerTest} -- NFR-01 (persistence
+    switch via \textbf{config.properties}).
+\end{itemize}
+
+\section{Running the tests}
+
+The suite is executed from the command line with:
+
+\begin{lstlisting}
+mvn test
+\end{lstlisting}
+
+The public repository and the SonarCloud dashboard (bugs, vulnerabilities
+and code smells at zero) are linked in Chapter~
+ef{ch:links}.
 
 \section{Regression testing}
 

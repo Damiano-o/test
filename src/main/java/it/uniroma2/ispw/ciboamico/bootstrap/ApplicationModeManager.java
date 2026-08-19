@@ -19,7 +19,30 @@ public final class ApplicationModeManager {
     private String activeMode = MODE_DEMO; // default: demo in-memory (milestone M1)
     private DAOFactory factory;            // cache: stessa istanza per tutte le view
 
-    private ApplicationModeManager() { }
+    private ApplicationModeManager() {
+        caricaConfigurazione();
+    }
+
+    /**
+     * NFR-01: legge config.properties (risorse) e imposta la modalità di
+     * persistenza all'avvio, senza ricompilare (fallback silenzioso a DEMO).
+     */
+    private void caricaConfigurazione() {
+        try (var in = ApplicationModeManager.class.getClassLoader()
+                .getResourceAsStream("config.properties")) {
+            if (in == null) {
+                return; // risorsa assente: resta DEMO
+            }
+            var props = new java.util.Properties();
+            props.load(in);
+            String mode = props.getProperty("persistence_type", MODE_DEMO);
+            setActiveMode(mode);
+        } catch (Exception e) {
+            // configurazione non valida: non bloccare l'avvio, resta DEMO
+            this.activeMode = MODE_DEMO;
+            this.factory = null;
+        }
+    }
 
     private static class Container {
         private static final ApplicationModeManager INSTANCE = new ApplicationModeManager();
